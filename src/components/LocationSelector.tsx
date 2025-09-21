@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import * as React from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 
 // Geolocation API interface
@@ -159,7 +160,7 @@ const LocationSelector: React.FC<LocationSelectorProps> = ({ onLocationSelect })
   );
 
   // Get towns for selected district
-  const availableTowns = selectedLocation ? odishaDistrictsWithTowns[selectedLocation] || [] : [];
+  const availableTowns = selectedLocation ? (odishaDistrictsWithTowns as Record<string, string[]>)[selectedLocation] || [] : [];
 
   useEffect(() => {
     if (selectedLocation) {

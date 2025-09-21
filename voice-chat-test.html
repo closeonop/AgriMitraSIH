@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voice Chat Test - AgriMitra AI</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f0f9ff;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #16a34a;
+            text-align: center;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+        }
+        button {
+            background: #16a34a;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #15803d;
+        }
+        button:disabled {
+            background: #9ca3af;
+            cursor: not-allowed;
+        }
+        .status {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .success { background: #dcfce7; color: #166534; }
+        .error { background: #fef2f2; color: #dc2626; }
+        .info { background: #dbeafe; color: #1d4ed8; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎤 Voice Chat Test - AgriMitra AI</h1>
+        
+        <div class="test-section">
+            <h3>Voice Chat Features Test</h3>
+            <p>This page tests the voice chat functionality that has been added to the AgriMitra AI chatbot.</p>
+            
+            <div id="status" class="status info">
+                Ready to test voice features...
+            </div>
+            
+            <button onclick="testSpeechSynthesis()">Test Text-to-Speech</button>
+            <button onclick="testVoiceControls()">Test Voice Controls</button>
+            <button onclick="checkBrowserSupport()">Check Browser Support</button>
+            <button onclick="stopAllSpeech()">Stop All Speech</button>
+        </div>
+
+        <div class="test-section">
+            <h3>Sample Farming Responses</h3>
+            <p>Click these buttons to hear how the AI assistant will sound:</p>
+            
+            <button onclick="speakText('Rice cultivation tips: Plant during monsoon June to July, maintain 2 to 5 centimeter water level in fields, use certified seeds 25 to 30 kilograms per hectare. Expected yield: 4 to 6 tons per hectare.')">Rice Cultivation Tips</button>
+            
+            <button onclick="speakText('Drip irrigation benefits: 30 to 50 percent water savings, reduced weed growth, better nutrient delivery. Ideal for vegetables, fruits, and cash crops.')">Irrigation Benefits</button>
+            
+            <button onclick="speakText('Organic pest control: Use neem oil spray, companion planting with marigold, beneficial insects like ladybugs. Regular monitoring is key.')">Pest Control</button>
+        </div>
+
+        <div class="test-section">
+            <h3>Voice Settings Test</h3>
+            <label>Speech Rate: <input type="range" id="rateSlider" min="0.5" max="2" step="0.1" value="0.9" onchange="updateRate()"></label>
+            <span id="rateValue">0.9</span><br><br>
+            
+            <label>Speech Pitch: <input type="range" id="pitchSlider" min="0" max="2" step="0.1" value="1" onchange="updatePitch()"></label>
+            <span id="pitchValue">1.0</span><br><br>
+            
+            <label>Speech Volume: <input type="range" id="volumeSlider" min="0" max="1" step="0.1" value="0.8" onchange="updateVolume()"></label>
+            <span id="volumeValue">0.8</span>
+        </div>
+
+        <div class="test-section">
+            <h3>Available Voices</h3>
+            <select id="voiceSelect" onchange="updateVoice()">
+                <option value="">Loading voices...</option>
+            </select>
+            <button onclick="testSelectedVoice()">Test Selected Voice</button>
+        </div>
+    </div>
+
+    <script>
+        let currentUtterance = null;
+        let speechRate = 0.9;
+        let speechPitch = 1.0;
+        let speechVolume = 0.8;
+        let selectedVoice = null;
+
+        function updateStatus(message, type = 'info') {
+            const status = document.getElementById('status');
+            status.textContent = message;
+            status.className = `status ${type}`;
+        }
+
+        function checkBrowserSupport() {
+            if ('speechSynthesis' in window) {
+                updateStatus('✅ Browser supports Speech Synthesis API', 'success');
+                loadVoices();
+            } else {
+                updateStatus('❌ Browser does not support Speech Synthesis API', 'error');
+            }
+        }
+
+        function loadVoices() {
+            const voices = speechSynthesis.getVoices();
+            const voiceSelect = document.getElementById('voiceSelect');
+            voiceSelect.innerHTML = '';
+            
+            if (voices.length === 0) {
+                voiceSelect.innerHTML = '<option value="">No voices available</option>';
+                return;
+            }
+
+            voices.forEach((voice, index) => {
+                const option = document.createElement('option');
+                option.value = index;
+                option.textContent = `${voice.name} (${voice.lang})`;
+                if (voice.default) {
+                    option.selected = true;
+                    selectedVoice = voice;
+                }
+                voiceSelect.appendChild(option);
+            });
+        }
+
+        function updateVoice() {
+            const voiceSelect = document.getElementById('voiceSelect');
+            const voices = speechSynthesis.getVoices();
+            selectedVoice = voices[voiceSelect.value];
+        }
+
+        function updateRate() {
+            const slider = document.getElementById('rateSlider');
+            speechRate = parseFloat(slider.value);
+            document.getElementById('rateValue').textContent = speechRate;
+        }
+
+        function updatePitch() {
+            const slider = document.getElementById('pitchSlider');
+            speechPitch = parseFloat(slider.value);
+            document.getElementById('pitchValue').textContent = speechPitch;
+        }
+
+        function updateVolume() {
+            const slider = document.getElementById('volumeSlider');
+            speechVolume = parseFloat(slider.value);
+            document.getElementById('volumeValue').textContent = speechVolume;
+        }
+
+        function speakText(text) {
+            if (!('speechSynthesis' in window)) {
+                updateStatus('Speech synthesis not supported', 'error');
+                return;
+            }
+
+            // Stop any current speech
+            speechSynthesis.cancel();
+
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.rate = speechRate;
+            utterance.pitch = speechPitch;
+            utterance.volume = speechVolume;
+            
+            if (selectedVoice) {
+                utterance.voice = selectedVoice;
+            }
+
+            utterance.onstart = () => {
+                updateStatus('🔊 Speaking...', 'info');
+                currentUtterance = utterance;
+            };
+
+            utterance.onend = () => {
+                updateStatus('✅ Speech completed', 'success');
+                currentUtterance = null;
+            };
+
+            utterance.onerror = (event) => {
+                updateStatus(`❌ Speech error: ${event.error}`, 'error');
+                currentUtterance = null;
+            };
+
+            speechSynthesis.speak(utterance);
+        }
+
+        function testSpeechSynthesis() {
+            speakText('Hello! This is AgriMitra AI, your smart farming assistant. I can help you with crops, irrigation, soil health, and market information.');
+        }
+
+        function testVoiceControls() {
+            if (speechSynthesis.speaking) {
+                if (speechSynthesis.paused) {
+                    speechSynthesis.resume();
+                    updateStatus('▶️ Speech resumed', 'info');
+                } else {
+                    speechSynthesis.pause();
+                    updateStatus('⏸️ Speech paused', 'info');
+                }
+            } else {
+                speakText('Testing voice controls. You can pause, resume, and stop speech during playback.');
+            }
+        }
+
+        function testSelectedVoice() {
+            speakText('This is a test of the selected voice for AgriMitra AI farming assistant.');
+        }
+
+        function stopAllSpeech() {
+            speechSynthesis.cancel();
+            updateStatus('🛑 All speech stopped', 'info');
+            currentUtterance = null;
+        }
+
+        // Initialize when page loads
+        window.addEventListener('load', () => {
+            checkBrowserSupport();
+            
+            // Load voices when they become available
+            if (speechSynthesis.onvoiceschanged !== undefined) {
+                speechSynthesis.onvoiceschanged = loadVoices;
+            }
+        });
+    </script>
+</body>
+</html>

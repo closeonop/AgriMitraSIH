@@ -101,7 +101,13 @@ const SoilHealthAnalysis = () => {
   }, [selectedField])
 
   const handleFieldSave = (savedField: Field) => {
-    refreshFields()
+    // Refresh fields list after saving
+    getAllFields().then(updatedFields => {
+      if (updatedFields) {
+        // Since fields is managed by FieldContext, we need to update through the context
+        setSelectedField(updatedFields.find(f => f.id === selectedField?.id) || updatedFields[0])
+      }
+    })
     setShowFieldEditor(false)
     setEditingField(null)
     if (!selectedField) {
@@ -782,7 +788,7 @@ Report Date: ${new Date().toLocaleDateString()}
                       <p className="text-green-100">Based on comprehensive analysis</p>
                     </div>
                     <div className="text-right">
-                      <div className="text-4xl font-bold">{fieldAnalysis?.healthScore || 85}</div>
+                      <div className="text-4xl font-bold">{fieldAnalysis?.soilHealth?.overall || 85}</div>
                       <div className="text-green-100">out of 100</div>
                     </div>
                   </div>

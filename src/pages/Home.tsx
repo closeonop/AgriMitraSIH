@@ -13,7 +13,7 @@ import {
 import {
   TrendingUp as TrendingUpIcon,
   WaterDrop as WaterDropIcon,
-  Eco as EcoIcon,
+  Park as EcoIcon,
   SmartToy as BotIcon,
   Agriculture as AgricultureIcon,
   Lightbulb as LightbulbIcon
@@ -186,7 +186,7 @@ const Home: React.FC = () => {
       </Box>
 
       {/* Features Section */}
-      <Box sx={{ py: 8, bgcolor: 'background.default' }}>
+      <Box sx={{ py: 8, bgcolor: 'background.default', display: { xs: 'none', md: 'block' } }}>
         <Container maxWidth="lg">
           <Box sx={{ textAlign: 'center', mb: 6 }}>
             <Typography

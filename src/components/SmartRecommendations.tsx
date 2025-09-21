@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import * as React from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { LocationSelector } from './LocationSelector';
 import { getLocationBasedRecommendations, getAvailableCategories, getAvailableEcosystems, getDistrictFromLocation, LocationRecommendation } from '../data/locationRecommendations';

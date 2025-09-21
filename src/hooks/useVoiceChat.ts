@@ -1,5 +1,52 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 
+// Type declarations for Web Speech API
+declare global {
+  interface Window {
+    webkitSpeechRecognition: any
+    SpeechRecognition: any
+  }
+}
+
+interface SpeechRecognitionEvent extends Event {
+  resultIndex: number
+  results: SpeechRecognitionResultList
+}
+
+interface SpeechRecognitionErrorEvent extends Event {
+  error: string
+  message: string
+}
+
+interface SpeechRecognitionResult {
+  isFinal: boolean
+  [index: number]: SpeechRecognitionAlternative
+}
+
+interface SpeechRecognitionAlternative {
+  transcript: string
+  confidence: number
+}
+
+interface SpeechRecognitionResultList {
+  length: number
+  [index: number]: SpeechRecognitionResult
+}
+
+interface SpeechRecognition extends EventTarget {
+  continuous: boolean
+  interimResults: boolean
+  lang: string
+  maxAlternatives: number
+  onstart: ((this: SpeechRecognition, ev: Event) => any) | null
+  onresult: ((this: SpeechRecognition, ev: SpeechRecognitionEvent) => any) | null
+  onend: ((this: SpeechRecognition, ev: Event) => any) | null
+  onerror: ((this: SpeechRecognition, ev: SpeechRecognitionErrorEvent) => any) | null
+  start(): void
+  stop(): void
+  abort(): void
+}
+
 export interface VoiceSettings {
   language: string
   speechRate: number
@@ -48,6 +95,17 @@ export const useVoiceChat = (onTranscript?: (text: string) => void) => {
   const microphoneRef = useRef<MediaStreamAudioSourceNode | null>(null)
   const animationFrameRef = useRef<number | null>(null)
 
+  // Voice level monitoring functions
+  const stopVoiceLevelMonitoring = useCallback(() => {
+    if (animationFrameRef.current) {
+      cancelAnimationFrame(animationFrameRef.current)
+    }
+    if (audioContextRef.current) {
+      audioContextRef.current.close()
+    }
+    setVoiceState(prev => ({ ...prev, voiceLevel: 0 }))
+  }, [])
+
   // Initialize speech recognition
   useEffect(() => {
     if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
@@ -55,58 +113,57 @@ export const useVoiceChat = (onTranscript?: (text: string) => void) => {
       recognitionRef.current = new SpeechRecognition()
       
       const recognition = recognitionRef.current
-      recognition.continuous = voiceSettings.continuousListening
-      recognition.interimResults = true
-      recognition.lang = voiceSettings.language
-      recognition.maxAlternatives = 3
+      if (recognition) {
+        recognition.continuous = voiceSettings.continuousListening
+        recognition.interimResults = true
+        recognition.lang = voiceSettings.language
+        recognition.maxAlternatives = 3
 
-      recognition.onstart = () => {
-        setVoiceState(prev => ({ ...prev, isListening: true, error: null }))
-      }
+        recognition.onstart = () => {
+          setVoiceState(prev => ({ ...prev, isListening: true, error: null }))
+        }
 
-      recognition.onresult = (event: SpeechRecognitionEvent) => {
-        let finalTranscript = ''
-        let interimTranscript = ''
+        recognition.onresult = (event: SpeechRecognitionEvent) => {
+          let finalTranscript = ''
+          let interimTranscript = ''
 
-        for (let i = event.resultIndex; i < event.results.length; i++) {
-          const transcript = event.results[i][0].transcript
-          const confidence = event.results[i][0].confidence
+          for (let i = event.resultIndex; i < event.results.length; i++) {
+            const transcript = event.results[i][0].transcript
+            const confidence = event.results[i][0].confidence
 
-          if (event.results[i].isFinal) {
-            finalTranscript += transcript
-            setVoiceState(prev => ({ 
-              ...prev, 
-              transcript: finalTranscript,
-              confidence: confidence || 0
-            }))
-            
-            if (onTranscript && finalTranscript.trim()) {
-              onTranscript(finalTranscript.trim())
+            if (event.results[i].isFinal) {
+              finalTranscript += transcript
+              setVoiceState(prev => ({ 
+                ...prev, 
+                transcript: finalTranscript,
+                confidence: confidence || 0
+              }))
+              
+              if (onTranscript && finalTranscript.trim()) {
+                onTranscript(finalTranscript.trim())
+              }
+            } else {
+              interimTranscript += transcript
+              setVoiceState(prev => ({ 
+                ...prev, 
+                transcript: interimTranscript,
+                confidence: confidence || 0
+              }))
             }
-          } else {
-            interimTranscript += transcript
-            setVoiceState(prev => ({ 
-              ...prev, 
-              transcript: interimTranscript,
-              confidence: confidence || 0
-            }))
           }
         }
-      }
 
-      recognition.onend = () => {
-        setVoiceState(prev => ({ ...prev, isListening: false }))
-        if (voiceSettings.continuousListening && !voiceState.error) {
-          setTimeout(() => startListening(), 1000)
+        recognition.onend = () => {
+          setVoiceState(prev => ({ ...prev, isListening: false }))
         }
-      }
 
-      recognition.onerror = (event: SpeechRecognitionErrorEvent) => {
-        setVoiceState(prev => ({ 
-          ...prev, 
-          isListening: false, 
-          error: `Speech recognition error: ${event.error}` 
-        }))
+        recognition.onerror = (event: SpeechRecognitionErrorEvent) => {
+          setVoiceState(prev => ({ 
+            ...prev, 
+            isListening: false, 
+            error: `Speech recognition error: ${event.error}` 
+          }))
+        }
       }
     }
 
@@ -124,7 +181,7 @@ export const useVoiceChat = (onTranscript?: (text: string) => void) => {
       }
       stopVoiceLevelMonitoring()
     }
-  }, [voiceSettings.language, voiceSettings.continuousListening])
+  }, [voiceSettings.language, voiceSettings.continuousListening, onTranscript, stopVoiceLevelMonitoring])
 
   // Voice level monitoring
   const startVoiceLevelMonitoring = useCallback(async () => {
@@ -154,16 +211,6 @@ export const useVoiceChat = (onTranscript?: (text: string) => void) => {
       console.error('Error accessing microphone:', error)
       setVoiceState(prev => ({ ...prev, error: 'Microphone access denied' }))
     }
-  }, [])
-
-  const stopVoiceLevelMonitoring = useCallback(() => {
-    if (animationFrameRef.current) {
-      cancelAnimationFrame(animationFrameRef.current)
-    }
-    if (audioContextRef.current) {
-      audioContextRef.current.close()
-    }
-    setVoiceState(prev => ({ ...prev, voiceLevel: 0 }))
   }, [])
 
   const startListening = useCallback(() => {

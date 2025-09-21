@@ -14,7 +14,7 @@ const FieldEditor: React.FC<FieldEditorProps> = ({ field, onSave, onCancel, isOp
     name: field?.name || '',
     area: field?.area || 0,
     soilType: field?.soilType || '',
-    irrigationType: field?.irrigationType || 'drip',
+    irrigationType: field?.irrigationType || 'manual',
     crops: field?.crops || [],
     address: field?.location?.address || '',
     district: field?.location?.district || '',
@@ -41,10 +41,11 @@ const FieldEditor: React.FC<FieldEditorProps> = ({ field, onSave, onCancel, isOp
   ]
 
   const irrigationTypes = [
+    { value: 'manual', label: 'Manual Irrigation' },
     { value: 'drip', label: 'Drip Irrigation' },
     { value: 'sprinkler', label: 'Sprinkler' },
     { value: 'flood', label: 'Flood Irrigation' },
-    { value: 'furrow', label: 'Furrow Irrigation' }
+    { value: 'none', label: 'No Irrigation' }
   ]
 
   const commonCrops = [
@@ -95,7 +96,7 @@ const FieldEditor: React.FC<FieldEditorProps> = ({ field, onSave, onCancel, isOp
           state: formData.state
         },
         soilType: formData.soilType,
-        irrigationType: formData.irrigationType as 'drip' | 'sprinkler' | 'flood' | 'furrow',
+        irrigationType: formData.irrigationType as 'manual' | 'drip' | 'sprinkler' | 'flood' | 'none',
         crops: formData.crops,
         establishedDate: field?.establishedDate || new Date().toISOString().split('T')[0],
         lastSoilTest: field?.lastSoilTest || new Date().toISOString().split('T')[0],

@@ -293,6 +293,7 @@ const SoilHealthDetails: React.FC<SoilHealthDetailsProps> = ({ data, location })
   const [showTestModal, setShowTestModal] = useState<boolean>(false);
   const [showReminderModal, setShowReminderModal] = useState<boolean>(false);
   const [showCompareModal, setShowCompareModal] = useState<boolean>(false);
+  const [showAdvancedAnalysis, setShowAdvancedAnalysis] = useState(false);
 
   // Calculate overall health score based on soil parameters
   const calculateHealthScore = (soilData: SoilData): number => {
@@ -300,9 +301,9 @@ const SoilHealthDetails: React.FC<SoilHealthDetailsProps> = ({ data, location })
     let factors = 0;
 
     // pH score (optimal range: 6.0-7.5)
-    if (soilData.ph >= 6.0 && soilData.ph <= 7.5) {
+    if (soilData.soilProperties.ph >= 6.0 && soilData.soilProperties.ph <= 7.5) {
       score += 25;
-    } else if (soilData.ph >= 5.5 && soilData.ph < 6.0 || soilData.ph > 7.5 && soilData.ph <= 8.0) {
+    } else if (soilData.soilProperties.ph >= 5.5 && soilData.soilProperties.ph < 6.0 || soilData.soilProperties.ph > 7.5 && soilData.soilProperties.ph <= 8.0) {
       score += 15;
     } else {
       score += 5;
@@ -310,7 +311,7 @@ const SoilHealthDetails: React.FC<SoilHealthDetailsProps> = ({ data, location })
     factors++;
 
     // Nitrogen score (optimal: 40-60 kg/ha)
-    const nitrogen = parseFloat(data.nitrogen?.toString() || '0');
+    const nitrogen = parseFloat(soilData.nutrients.nitrogen?.toString() || '0');
     if (nitrogen >= 40 && nitrogen <= 60) {
       score += 25;
     } else if (nitrogen >= 30 && nitrogen < 40 || nitrogen > 60 && nitrogen <= 80) {
@@ -321,7 +322,7 @@ const SoilHealthDetails: React.FC<SoilHealthDetailsProps> = ({ data, location })
     factors++;
 
     // Phosphorus score (optimal: 20-40 kg/ha)
-    const phosphorus = parseFloat(data.phosphorus?.toString() || '0');
+    const phosphorus = parseFloat(soilData.nutrients.phosphorus?.toString() || '0');
     if (phosphorus >= 20 && phosphorus <= 40) {
       score += 25;
     } else if (phosphorus >= 15 && phosphorus < 20 || phosphorus > 40 && phosphorus <= 50) {
@@ -332,7 +333,7 @@ const SoilHealthDetails: React.FC<SoilHealthDetailsProps> = ({ data, location })
     factors++;
 
     // Organic matter score (optimal: 2.5-4.0%)
-    const organicMatter = parseFloat(data.organicMatter?.toString() || '0');
+    const organicMatter = parseFloat(soilData.soilProperties.organicMatter?.toString() || '0');
     if (organicMatter >= 2.5 && organicMatter <= 4.0) {
       score += 25;
     } else if (organicMatter >= 2.0 && organicMatter < 2.5 || organicMatter > 4.0 && organicMatter <= 5.0) {
@@ -358,13 +359,13 @@ Analysis Date: ${new Date().toLocaleDateString()}
 Overall Health Score: ${healthScore}/100
 
 SOIL PROPERTIES:
-- pH Level: ${data.ph}
-- Nitrogen: ${data.nitrogen} kg/ha
-- Phosphorus: ${data.phosphorus} kg/ha
-- Potassium: ${data.potassium} kg/ha
-- Organic Matter: ${data.organicMatter}%
-- Moisture: ${data.moisture}%
-- Temperature: ${data.temperature}°C
+- pH Level: ${data.soilProperties.ph}
+- Nitrogen: ${data.nutrients.nitrogen} kg/ha
+- Phosphorus: ${data.nutrients.phosphorus} kg/ha
+- Potassium: ${data.nutrients.potassium} kg/ha
+- Organic Matter: ${data.soilProperties.organicMatter}%
+- Moisture: ${data.soilProperties.moisture}%
+- Temperature: ${data.soilProperties.temperature}°C
 
 RECOMMENDATIONS:
 ${data.recommendations?.map(rec => `- ${rec}`).join('\n') || 'No specific recommendations available.'}
@@ -483,7 +484,7 @@ Generated on: ${new Date().toLocaleString()}
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Advanced Analysis Section */}
-        {showAdvancedAnalysis && soilData?.advancedAnalysis && (
+        {showAdvancedAnalysis && data?.advancedAnalysis && (
           <div className="bg-gradient-to-r from-indigo-50 to-purple-50 p-6 rounded-xl border border-indigo-200 mb-6">
             <h3 className="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
               🔬 Advanced Soil Analysis
@@ -497,11 +498,11 @@ Generated on: ${new Date().toLocaleString()}
                   <div className="flex-1 bg-gray-200 rounded-full h-3">
                     <div 
                       className="bg-gradient-to-r from-green-400 to-green-600 h-3 rounded-full transition-all duration-500"
-                      style={{ width: `${soilData.advancedAnalysis.fertilityIndex}%` }}
+                      style={{ width: `${data.advancedAnalysis.fertilityIndex}%` }}
                     ></div>
                   </div>
                   <span className="text-sm font-medium text-gray-600">
-                    {soilData.advancedAnalysis.fertilityIndex.toFixed(1)}%
+                    {data.advancedAnalysis.fertilityIndex.toFixed(1)}%
                   </span>
                 </div>
               </div>
@@ -513,11 +514,11 @@ Generated on: ${new Date().toLocaleString()}
                   <div className="flex-1 bg-gray-200 rounded-full h-3">
                     <div 
                       className="bg-gradient-to-r from-blue-400 to-blue-600 h-3 rounded-full transition-all duration-500"
-                      style={{ width: `${soilData.advancedAnalysis.cropYieldPotential}%` }}
+                      style={{ width: `${data.advancedAnalysis.cropYieldPotential}%` }}
                     ></div>
                   </div>
                   <span className="text-sm font-medium text-gray-600">
-                    {soilData.advancedAnalysis.cropYieldPotential.toFixed(1)}%
+                    {data.advancedAnalysis.cropYieldPotential.toFixed(1)}%
                   </span>
                 </div>
               </div>
@@ -529,11 +530,11 @@ Generated on: ${new Date().toLocaleString()}
                   <div className="flex-1 bg-gray-200 rounded-full h-3">
                     <div 
                       className="bg-gradient-to-r from-cyan-400 to-cyan-600 h-3 rounded-full transition-all duration-500"
-                      style={{ width: `${soilData.advancedAnalysis.waterRetentionCapacity}%` }}
+                      style={{ width: `${data.advancedAnalysis?.waterRetentionCapacity || 0}%` }}
                     ></div>
                   </div>
                   <span className="text-sm font-medium text-gray-600">
-                    {soilData.advancedAnalysis.waterRetentionCapacity.toFixed(1)}%
+                    {data.advancedAnalysis?.waterRetentionCapacity?.toFixed(1) || '0'}%
                   </span>
                 </div>
               </div>
@@ -545,11 +546,11 @@ Generated on: ${new Date().toLocaleString()}
                   <div className="flex-1 bg-gray-200 rounded-full h-3">
                     <div 
                       className="bg-gradient-to-r from-orange-400 to-orange-600 h-3 rounded-full transition-all duration-500"
-                      style={{ width: `${soilData.advancedAnalysis.nutrientAvailabilityIndex}%` }}
+                      style={{ width: `${data.advancedAnalysis?.nutrientAvailabilityIndex || 0}%` }}
                     ></div>
                   </div>
                   <span className="text-sm font-medium text-gray-600">
-                    {soilData.advancedAnalysis.nutrientAvailabilityIndex.toFixed(1)}%
+                    {data.advancedAnalysis?.nutrientAvailabilityIndex?.toFixed(1) || '0'}%
                   </span>
                 </div>
               </div>
@@ -559,25 +560,25 @@ Generated on: ${new Date().toLocaleString()}
                 <h4 className="font-semibold text-gray-700 mb-2">Quality Grade</h4>
                 <div className="text-center">
                   <span className={`text-2xl font-bold px-3 py-1 rounded-full ${
-                    soilData.advancedAnalysis.soilQualityGrade === 'Excellent' ? 'bg-green-100 text-green-800' :
-                    soilData.advancedAnalysis.soilQualityGrade === 'Good' ? 'bg-blue-100 text-blue-800' :
-                    soilData.advancedAnalysis.soilQualityGrade === 'Fair' ? 'bg-yellow-100 text-yellow-800' :
+                    data.advancedAnalysis?.soilQualityGrade === 'Excellent' ? 'bg-green-100 text-green-800' :
+                    data.advancedAnalysis?.soilQualityGrade === 'Good' ? 'bg-blue-100 text-blue-800' :
+                    data.advancedAnalysis?.soilQualityGrade === 'Fair' ? 'bg-yellow-100 text-yellow-800' :
                     'bg-red-100 text-red-800'
                   }`}>
-                    {soilData.advancedAnalysis.soilQualityGrade}
+                    {data.advancedAnalysis?.soilQualityGrade || 'Unknown'}
                   </span>
                 </div>
               </div>
             </div>
 
             {/* Risk Assessment */}
-            {soilData.advancedAnalysis.riskAssessment && soilData.advancedAnalysis.riskAssessment.length > 0 && (
+            {data.advancedAnalysis?.riskAssessment && data.advancedAnalysis.riskAssessment.length > 0 && (
               <div className="bg-white p-4 rounded-lg border border-red-200">
                 <h4 className="font-semibold text-red-700 mb-3 flex items-center gap-2">
                   ⚠️ Risk Assessment
                 </h4>
                 <ul className="space-y-2">
-                  {soilData.advancedAnalysis.riskAssessment.map((risk: string, index: number) => (
+                  {data.advancedAnalysis.riskAssessment.map((risk: string, index: number) => (
                     <li key={index} className="flex items-start gap-2 text-sm text-red-600">
                       <span className="text-red-500 mt-1">•</span>
                       {risk}
@@ -597,22 +598,22 @@ Generated on: ${new Date().toLocaleString()}
           <div className="space-y-4">
             <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
                <span className="font-medium">pH Level</span>
-               <span className={`px-2 py-1 rounded text-sm ${getHealthScoreColor(data.ph, 6.0, 7.5)}`}>
-                 {data.ph}
+               <span className={`px-2 py-1 rounded text-sm ${getHealthScoreColor(data.soilProperties.ph, 6.0, 7.5)}`}>
+                 {data.soilProperties.ph}
                </span>
              </div>
             <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
               <span className="font-medium">Temperature</span>
-              <span className="text-gray-700">{data.temperature}°C</span>
+              <span className="text-gray-700">{data.soilProperties.temperature}°C</span>
             </div>
             <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
               <span className="font-medium">Moisture</span>
-              <span className="text-gray-700">{data.moisture}%</span>
+              <span className="text-gray-700">{data.soilProperties.moisture}%</span>
             </div>
             <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
                <span className="font-medium">Organic Matter</span>
-               <span className={`px-2 py-1 rounded text-sm ${getHealthScoreColor(parseFloat(data.organicMatter?.toString() || '0'), 2.5, 4.0)}`}>
-                 {data.organicMatter}%
+               <span className={`px-2 py-1 rounded text-sm ${getHealthScoreColor(parseFloat(data.soilProperties.organicMatter?.toString() || '0'), 2.5, 4.0)}`}>
+                 {data.soilProperties.organicMatter}%
                </span>
              </div>
           </div>
@@ -627,42 +628,42 @@ Generated on: ${new Date().toLocaleString()}
             <div className="p-3 bg-gray-50 rounded-lg">
               <div className="flex justify-between items-center mb-2">
                 <span className="font-medium">Nitrogen (N)</span>
-                <span className={`px-2 py-1 rounded text-sm ${getNutrientColor(data.nitrogen?.toString() || '0')}`}>
-                  {data.nitrogen} kg/ha
+                <span className={`px-2 py-1 rounded text-sm ${getNutrientColor(data.nutrients.nitrogen?.toString() || '0')}`}>
+                  {data.nutrients.nitrogen} kg/ha
                 </span>
               </div>
               <div className="w-full bg-gray-200 rounded-full h-2">
                 <div 
                   className="bg-blue-500 h-2 rounded-full transition-all duration-500"
-                  style={{ width: `${Math.min((parseFloat(data.nitrogen?.toString() || '0') / 80) * 100, 100)}%` }}
+                  style={{ width: `${Math.min((parseFloat(data.nutrients.nitrogen?.toString() || '0') / 80) * 100, 100)}%` }}
                 ></div>
               </div>
             </div>
             <div className="p-3 bg-gray-50 rounded-lg">
               <div className="flex justify-between items-center mb-2">
                 <span className="font-medium">Phosphorus (P)</span>
-                <span className={`px-2 py-1 rounded text-sm ${getNutrientColor(data.phosphorus?.toString() || '0')}`}>
-                  {data.phosphorus} kg/ha
+                <span className={`px-2 py-1 rounded text-sm ${getNutrientColor(data.nutrients.phosphorus?.toString() || '0')}`}>
+                  {data.nutrients.phosphorus} kg/ha
                 </span>
               </div>
               <div className="w-full bg-gray-200 rounded-full h-2">
                 <div 
                   className="bg-red-500 h-2 rounded-full transition-all duration-500"
-                  style={{ width: `${Math.min((parseFloat(data.phosphorus?.toString() || '0') / 50) * 100, 100)}%` }}
+                  style={{ width: `${Math.min((parseFloat(data.nutrients.phosphorus?.toString() || '0') / 50) * 100, 100)}%` }}
                 ></div>
               </div>
             </div>
             <div className="p-3 bg-gray-50 rounded-lg">
               <div className="flex justify-between items-center mb-2">
                 <span className="font-medium">Potassium (K)</span>
-                <span className={`px-2 py-1 rounded text-sm ${getNutrientColor(data.potassium?.toString() || '0')}`}>
-                  {data.potassium} kg/ha
+                <span className={`px-2 py-1 rounded text-sm ${getNutrientColor(data.nutrients.potassium?.toString() || '0')}`}>
+                  {data.nutrients.potassium} kg/ha
                 </span>
               </div>
               <div className="w-full bg-gray-200 rounded-full h-2">
                 <div 
                   className="bg-yellow-500 h-2 rounded-full transition-all duration-500"
-                  style={{ width: `${Math.min((parseFloat(data.potassium?.toString() || '0') / 400) * 100, 100)}%` }}
+                  style={{ width: `${Math.min((parseFloat(data.nutrients.potassium?.toString() || '0') / 400) * 100, 100)}%` }}
                 ></div>
               </div>
             </div>

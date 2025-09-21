@@ -1,10 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
-import { Send, Mic, MicOff, Volume2, VolumeX, Bot, User, Sparkles, MessageCircle, Leaf, Cloud, TrendingUp, HelpCircle, Lightbulb, Settings, Sun, Sprout, Droplets, Bug, MapPin } from 'lucide-react'
-import { useTranslation } from 'react-i18next'
-import { AdvancedAIResponseEngine } from '../utils/aiResponseEngine'
-import { useVoiceChat } from '../hooks/useVoiceChat'
-import VoiceVisualizer from '../components/VoiceVisualizer'
+import { Send, Mic, MicOff, Sun, Sprout, Droplets, Bug, TrendingUp, MapPin, Volume2, VolumeX, Pause, Play } from 'lucide-react'
 
 interface Message {
   id: string
@@ -15,38 +10,22 @@ interface Message {
 }
 
 const ChatBot: React.FC = () => {
-  const { t } = useTranslation()
   const [messages, setMessages] = useState<Message[]>([])
   const [input, setInput] = useState('')
   const [isLoading, setIsLoading] = useState(false)
-  const [isProcessing, setIsProcessing] = useState(false)
+  const [isListening, setIsListening] = useState(false)
+  const [isSpeaking, setIsSpeaking] = useState(false)
+  const [isVoiceEnabled, setIsVoiceEnabled] = useState(true)
+  const [currentSpeech, setCurrentSpeech] = useState<SpeechSynthesisUtterance | null>(null)
   const messagesEndRef = useRef<HTMLDivElement>(null)
-  const aiEngine = useRef(new AdvancedAIResponseEngine())
-  
-  // Voice chat integration
-  const voiceChat = useVoiceChat((transcript) => {
-    setInput(transcript)
-    handleSendMessage(transcript)
-  })
-
-  const {
-    voiceState: { isListening, isSpeaking, voiceLevel },
-    startListening,
-    stopListening,
-    speak,
-    stopSpeaking
-  } = voiceChat
-
-  // Check if voice features are supported
-  const isSupported = 'webkitSpeechRecognition' in window || 'SpeechRecognition' in window
 
   const quickQuestions = [
-    { icon: Sun, text: "What's the weather forecast for my crops?", category: "weather" },
-    { icon: Sprout, text: "Best crops to plant this season?", category: "crops" },
-    { icon: Droplets, text: "How much water do my plants need?", category: "irrigation" },
-    { icon: Bug, text: "How to identify and treat plant diseases?", category: "pest" },
-    { icon: TrendingUp, text: "Market prices for my crops", category: "market" },
-    { icon: MapPin, text: "Soil health in my area", category: "soil" }
+    { icon: Sun, text: "What's the best time to plant rice?", category: "crops" },
+    { icon: Sprout, text: "How to improve soil fertility naturally?", category: "soil" },
+    { icon: Droplets, text: "Benefits of drip irrigation system", category: "irrigation" },
+    { icon: Bug, text: "Organic pest control methods", category: "pest" },
+    { icon: TrendingUp, text: "Current market prices for vegetables", category: "market" },
+    { icon: MapPin, text: "Weather impact on crop growth", category: "weather" }
   ]
 
   const scrollToBottom = () => {
@@ -57,73 +36,104 @@ const ChatBot: React.FC = () => {
     scrollToBottom()
   }, [messages])
 
-  const handleSendMessage = async (messageText?: string) => {
-    const textToSend = messageText || input.trim()
-    if (!textToSend) return
+  const generateFarmingResponse = (question: string, category: string): string => {
+    const lowerQuestion = question.toLowerCase()
+    
+    if (category === 'weather') {
+      if (lowerQuestion.includes('rain') || lowerQuestion.includes('monsoon')) {
+        return "Based on current weather patterns, the monsoon season typically brings 60-80% of annual rainfall. For optimal crop planning, consider planting rice and sugarcane during monsoon months."
+      }
+      return "Weather plays a crucial role in farming. I can help you with rainfall patterns, temperature effects on crops, and seasonal planning."
+    }
+    
+    if (category === 'crops') {
+      if (lowerQuestion.includes('rice')) {
+        return "Rice cultivation tips: Plant during monsoon (June-July), maintain 2-5cm water level in fields, use certified seeds (25-30kg/hectare). Expected yield: 4-6 tons/hectare."
+      }
+      return "I can help with crop selection, planting techniques, growth stages, and harvesting. Which specific crop are you interested in?"
+    }
+    
+    if (category === 'irrigation') {
+      return "Drip irrigation benefits: 30-50% water savings, reduced weed growth, better nutrient delivery. Ideal for vegetables, fruits, and cash crops."
+    }
+    
+    if (category === 'pest') {
+      return "Organic pest control: Use neem oil spray, companion planting with marigold, beneficial insects like ladybugs. Regular monitoring is key."
+    }
+    
+    if (category === 'soil') {
+      return "Soil health tips: Test pH (ideal 6.0-7.5), add organic compost (5-10 tons/hectare), practice crop rotation. Healthy soil equals healthy crops."
+    }
+    
+    if (category === 'market') {
+      return "Market intelligence: Check daily mandi prices, plan harvest timing based on trends, consider value addition through processing and packaging."
+    }
+    
+    return "I'm here to help with all your farming needs - crops, irrigation, soil health, pest management, and market information. What would you like to know?"
+  }
 
-    const userMessage: Message = {
-      id: Date.now().toString(),
-      text: textToSend,
-      sender: 'user',
-      timestamp: new Date(),
-      category: getCategoryFromText(textToSend)
+  // Text-to-Speech functionality
+  const speakText = (text: string) => {
+    if (!isVoiceEnabled || !('speechSynthesis' in window)) return
+
+    // Stop any current speech
+    window.speechSynthesis.cancel()
+
+    const utterance = new SpeechSynthesisUtterance(text)
+    
+    // Configure speech settings
+    utterance.rate = 0.9
+    utterance.pitch = 1
+    utterance.volume = 0.8
+    
+    // Set voice to a more natural sounding one if available
+    const voices = window.speechSynthesis.getVoices()
+    const preferredVoice = voices.find(voice => 
+      voice.name.includes('Google') || 
+      voice.name.includes('Microsoft') ||
+      voice.lang.startsWith('en')
+    )
+    if (preferredVoice) {
+      utterance.voice = preferredVoice
     }
 
-    setMessages(prev => [...prev, userMessage])
-    setInput('')
-    setIsProcessing(true)
+    utterance.onstart = () => {
+      setIsSpeaking(true)
+      setCurrentSpeech(utterance)
+    }
 
-    try {
-      // Generate AI response using the enhanced engine
-      const aiResponse = await aiEngine.current.generateAdvancedResponse(textToSend)
-      
-      const botMessage: Message = {
-        id: (Date.now() + 1).toString(),
-        text: aiResponse.text,
-        sender: 'bot',
-        timestamp: new Date(),
-        category: aiResponse.category
-      }
+    utterance.onend = () => {
+      setIsSpeaking(false)
+      setCurrentSpeech(null)
+    }
 
-      setMessages(prev => [...prev, botMessage])
-      
-      // Speak the AI response if voice is enabled
-      if (isSupported && !isSpeaking) {
-        speak(aiResponse.text)
-      }
-    } catch (error) {
-      console.error('Error generating response:', error)
-      const errorMessage: Message = {
-        id: (Date.now() + 1).toString(),
-        text: "I'm sorry, I encountered an error. Please try again.",
-        sender: 'bot',
-        timestamp: new Date(),
-        category: 'general'
-      }
-      setMessages(prev => [...prev, errorMessage])
-    } finally {
-      setIsProcessing(false)
+    utterance.onerror = () => {
+      setIsSpeaking(false)
+      setCurrentSpeech(null)
+    }
+
+    window.speechSynthesis.speak(utterance)
+  }
+
+  const stopSpeaking = () => {
+    window.speechSynthesis.cancel()
+    setIsSpeaking(false)
+    setCurrentSpeech(null)
+  }
+
+  const pauseResumeSpeaking = () => {
+    if (window.speechSynthesis.paused) {
+      window.speechSynthesis.resume()
+    } else {
+      window.speechSynthesis.pause()
     }
   }
 
-  const generateAIResponse = (input: string): string => {
-    const lowerInput = input.toLowerCase()
-    
-    if (lowerInput.includes('weather')) {
-      return "Based on current weather data, expect sunny conditions with temperatures around 28°C. Perfect for most crops! Consider light irrigation in the evening."
-    } else if (lowerInput.includes('crop') || lowerInput.includes('plant')) {
-      return "For this season, I recommend planting tomatoes, peppers, and leafy greens. These crops thrive in current conditions and have good market demand."
-    } else if (lowerInput.includes('water') || lowerInput.includes('irrigation')) {
-      return "Your crops need approximately 2-3 inches of water per week. Check soil moisture 2 inches deep - if dry, it's time to water!"
-    } else if (lowerInput.includes('pest') || lowerInput.includes('disease')) {
-      return "Common signs include yellowing leaves, spots, or wilting. Use organic neem oil spray and ensure proper spacing for air circulation."
-    } else if (lowerInput.includes('market') || lowerInput.includes('price')) {
-      return "Current market prices show tomatoes at ₹25/kg, peppers at ₹40/kg. Organic produce commands 20-30% premium prices."
-    } else if (lowerInput.includes('soil')) {
-      return "Your soil appears to have good organic content. Consider adding compost and testing pH levels. Ideal range is 6.0-7.0 for most crops."
+  const toggleVoiceOutput = () => {
+    if (isSpeaking) {
+      stopSpeaking()
     }
-    
-    return "I'm here to help with all your farming questions! Ask me about weather, crops, irrigation, pest control, market prices, or soil health."
+    setIsVoiceEnabled(!isVoiceEnabled)
   }
 
   const getCategoryFromText = (text: string): string => {
@@ -137,377 +147,232 @@ const ChatBot: React.FC = () => {
     return 'general'
   }
 
+  const handleSendMessage = async (textToSend?: string) => {
+    const messageText = textToSend || input.trim()
+    if (!messageText) return
+
+    const userMessage: Message = {
+      id: Date.now().toString(),
+      text: messageText,
+      sender: 'user',
+      timestamp: new Date(),
+      category: getCategoryFromText(messageText)
+    }
+
+    setMessages(prev => [...prev, userMessage])
+    setInput('')
+    setIsLoading(true)
+
+    try {
+      await new Promise(resolve => setTimeout(resolve, 1000))
+      
+      const category = getCategoryFromText(messageText)
+      const botResponse = generateFarmingResponse(messageText, category)
+      
+      const botMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        text: botResponse,
+        sender: 'bot',
+        timestamp: new Date(),
+        category: category
+      }
+
+      setMessages(prev => [...prev, botMessage])
+      
+      // Speak the bot response if voice is enabled
+      if (isVoiceEnabled) {
+        setTimeout(() => speakText(botResponse), 500)
+      }
+    } catch (error) {
+      console.error('Error generating response:', error)
+      const errorMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        text: "I'm sorry, I encountered an error. Please try again.",
+        sender: 'bot',
+        timestamp: new Date(),
+        category: 'general'
+      }
+      setMessages(prev => [...prev, errorMessage])
+      
+      // Speak error message if voice is enabled
+      if (isVoiceEnabled) {
+        setTimeout(() => speakText("I'm sorry, I encountered an error. Please try again."), 500)
+      }
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
   const handleQuickQuestion = (question: string) => {
     handleSendMessage(question)
   }
 
   const toggleListening = () => {
-    if (isListening) {
-      stopListening()
-    } else {
-      startListening()
-    }
-  }
-
-  const toggleSpeaking = () => {
-    if (isSpeaking) {
-      stopSpeaking()
-    }
+    setIsListening(!isListening)
   }
 
   const getCategoryColor = (category?: string) => {
     switch (category) {
       case 'weather': return 'from-blue-500 to-blue-600'
-      case 'crops': return 'from-blue-400 to-blue-500'
-      case 'irrigation': return 'from-blue-600 to-blue-700'
-      case 'pest': return 'from-blue-500 to-indigo-500'
-      case 'market': return 'from-indigo-500 to-blue-600'
-      case 'soil': return 'from-blue-400 to-indigo-400'
-      default: return 'from-blue-500 to-blue-600'
+      case 'crops': return 'from-green-500 to-green-600'
+      case 'irrigation': return 'from-cyan-500 to-cyan-600'
+      case 'pest': return 'from-red-500 to-red-600'
+      case 'market': return 'from-purple-500 to-purple-600'
+      case 'soil': return 'from-yellow-500 to-yellow-600'
+      default: return 'from-gray-500 to-gray-600'
     }
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50">
-      {/* Header */}
-      <div className="bg-white/80 backdrop-blur-sm border-b border-green-200 sticky top-0 z-10">
-        <div className="max-w-6xl mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-3">
-              <div className="w-12 h-12 bg-gradient-to-r from-green-500 to-emerald-500 rounded-xl flex items-center justify-center shadow-lg">
-                <Leaf className="w-6 h-6 text-white" />
-              </div>
-              <div>
-                <h1 className="text-2xl font-bold text-gray-900">AgriMitra AI Assistant</h1>
-                <p className="text-green-600 text-sm">Your Smart Farming Companion</p>
+    <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50">
+      <div className="container mx-auto px-4 py-8 md:px-6 lg:px-8">
+        <div className="max-w-4xl mx-auto">
+          <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
+            <div className="bg-gradient-to-r from-green-600 to-blue-600 text-white p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h1 className="text-2xl font-bold">AgriMitra AI</h1>
+                  <p className="text-green-100 mt-1">Your Smart Farming Assistant</p>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <div className="w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
+                  <span className="text-sm">Online</span>
+                </div>
               </div>
             </div>
-            <div className="flex items-center space-x-2">
-              <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
-              <span className="text-sm text-green-600 font-medium">Online</span>
-            </div>
-          </div>
-        </div>
-      </div>
 
-      <div className="max-w-6xl mx-auto p-4 grid grid-cols-1 lg:grid-cols-4 gap-6">
-        {/* Quick Actions Sidebar */}
-        <div className="lg:col-span-1 space-y-4">
-          <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-6 border border-green-200 shadow-lg">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
-              <Sparkles className="w-5 h-5 text-green-500 mr-2" />
-              Quick Questions
-            </h3>
-            <div className="space-y-3">
-              {quickQuestions.map((question, index) => (
-                <motion.button
-                  key={index}
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  onClick={() => handleQuickQuestion(question.text)}
-                  className="w-full text-left p-3 rounded-xl bg-gradient-to-r from-green-50 to-emerald-50 hover:from-green-100 hover:to-emerald-100 border border-green-200 transition-all duration-200 group"
-                >
-                  <div className="flex items-center space-x-3">
-                    <question.icon className="w-5 h-5 text-green-600 group-hover:text-green-700" />
-                    <span className="text-sm text-gray-700 group-hover:text-gray-900">{question.text}</span>
+            <div className="h-96 overflow-y-auto p-6 space-y-4">
+              {messages.length === 0 && (
+                <div className="text-center text-gray-500 mt-8">
+                  <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <Sprout className="w-8 h-8 text-green-600" />
                   </div>
-                </motion.button>
-              ))}
-            </div>
-          </div>
-
-          {/* Stats Card */}
-          <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-6 border border-green-200 shadow-lg">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Today's Insights</h3>
-            <div className="space-y-3">
-              <div className="flex items-center justify-between">
-                <span className="text-sm text-gray-600">Temperature</span>
-                <span className="text-sm font-medium text-green-600">28°C</span>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-sm text-gray-600">Humidity</span>
-                <span className="text-sm font-medium text-blue-600">65%</span>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-sm text-gray-600">Soil Moisture</span>
-                <span className="text-sm font-medium text-emerald-600">Good</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Chat Interface */}
-        <div className="lg:col-span-3">
-          <div className="bg-white/70 backdrop-blur-sm rounded-2xl border border-green-200 shadow-lg h-[600px] flex flex-col">
-            {/* Chat Messages */}
-            <div className="flex-1 p-6 overflow-y-auto space-y-4">
-              <AnimatePresence mode="popLayout">
-                {messages.length === 0 && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="text-center py-12"
-                  >
-                    <div className="w-16 h-16 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full flex items-center justify-center mx-auto mb-4">
-                      <MessageCircle className="w-8 h-8 text-white" />
-                    </div>
-                    <h3 className="text-xl font-semibold text-gray-900 mb-2">Welcome to AgriMitra AI!</h3>
-                    <p className="text-gray-600 max-w-md mx-auto">
-                      I'm here to help you with farming advice, weather updates, crop recommendations, and more. 
-                      Ask me anything or use the quick questions on the left!
-                    </p>
-                  </motion.div>
-                )}
-
-                {messages.map((message, index) => (
-                  <motion.div
-                    key={message.id}
-                    initial={{ opacity: 0, y: 20, scale: 0.95 }}
-                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                    exit={{ opacity: 0, y: -20, scale: 0.95 }}
-                    transition={{ duration: 0.3, delay: index * 0.1 }}
-                    className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}
-                  >
-                    <div className={`max-w-md px-4 py-3 rounded-2xl ${
-                      message.sender === 'user'
-                        ? 'bg-gradient-to-r from-green-500 to-emerald-500 text-white ml-4' 
-                        : `bg-gradient-to-r ${getCategoryColor(message.category)} text-white mr-4`
-                    }`}>
-                      <p className="text-sm leading-relaxed">{message.text}</p>
-                      {message.category && message.sender === 'bot' && (
-                        <div className="mt-2 flex items-center space-x-2">
-                          <span className="text-xs bg-white/20 px-2 py-1 rounded-full">
-                            {message.category.charAt(0).toUpperCase() + message.category.slice(1)}
-                          </span>
-                        </div>
-                      )}
-                    </div>
-                  </motion.div>
-                ))}
-              </AnimatePresence>
-              
-              {/* Loading indicator */}
-              {isLoading && (
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="flex justify-start"
-                >
-                  <div className="bg-gray-100 rounded-2xl px-4 py-3 max-w-xs">
-                    <div className="flex items-center space-x-2">
-                      <motion.div
-                        animate={{ rotate: 360 }}
-                        transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-                      >
-                        <Sparkles className="w-4 h-4 text-green-500" />
-                      </motion.div>
-                      <span className="text-sm text-gray-600">AI is thinking...</span>
-                    </div>
-                  </div>
-                </motion.div>
+                  <p className="text-lg font-medium">Welcome to AgriMitra AI!</p>
+                  <p className="mt-2">Ask me anything about farming, crops, irrigation, or agriculture.</p>
+                </div>
               )}
-              
+
+              {messages.map((message) => (
+                <div key={message.id} className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
+                  <div className={`max-w-xs lg:max-w-md px-4 py-2 rounded-lg ${
+                    message.sender === 'user' 
+                      ? 'bg-green-600 text-white' 
+                      : `bg-gradient-to-r ${getCategoryColor(message.category)} text-white`
+                  }`}>
+                    <p className="text-sm">{message.text}</p>
+                    <p className="text-xs mt-1 opacity-75">
+                      {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                    </p>
+                  </div>
+                </div>
+              ))}
+
+              {isLoading && (
+                <div className="flex justify-start">
+                  <div className="bg-gray-200 rounded-lg px-4 py-2">
+                    <div className="flex space-x-1">
+                      <div className="w-2 h-2 bg-gray-500 rounded-full animate-bounce"></div>
+                      <div className="w-2 h-2 bg-gray-500 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
+                      <div className="w-2 h-2 bg-gray-500 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                    </div>
+                  </div>
+                </div>
+              )}
               <div ref={messagesEndRef} />
             </div>
 
-            {/* Input Area */}
-            <div className="p-6 border-t border-green-200 bg-green-50/50">
-              <div className="flex items-center space-x-3">
-                <div className="flex-1 relative">
-                  <input
-                    type="text"
-                    value={input}
-                    onChange={(e) => setInput(e.target.value)}
-                    onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
-                    placeholder={isListening ? "Listening..." : "Ask me about farming, weather, crops, or anything agricultural..."}
-                    className="w-full px-4 py-3 rounded-xl border border-green-200 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white/80 backdrop-blur-sm"
-                    disabled={isLoading || isListening}
-                  />
-                  {/* Voice level indicator */}
-                  {isListening && (
-                    <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
-                      <VoiceVisualizer 
-                        isListening={isListening}
-                        isSpeaking={false}
-                        voiceLevel={voiceLevel}
-                        className="w-16 h-6"
-                      />
-                    </div>
-                  )}
-                </div>
-                
-                {/* Voice Controls */}
-                <div className="flex items-center space-x-3">
-                  {/* Enhanced Voice Visualizer */}
-                  <AnimatePresence>
-                    {(isListening || isSpeaking) && (
-                      <motion.div
-                        initial={{ opacity: 0, scale: 0.8, x: -20 }}
-                        animate={{ opacity: 1, scale: 1, x: 0 }}
-                        exit={{ opacity: 0, scale: 0.8, x: -20 }}
-                        className="flex items-center space-x-3 px-4 py-3 bg-gradient-to-r from-blue-50 via-purple-50 to-pink-50 border-2 border-blue-200 rounded-full shadow-lg backdrop-blur-sm"
+            <div className="border-t bg-gray-50 p-4">
+              <div className="mb-4">
+                <h3 className="text-sm font-medium text-gray-700 mb-2">Quick Questions</h3>
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+                  {quickQuestions.map((question, index) => {
+                    const IconComponent = question.icon
+                    return (
+                      <button
+                        key={index}
+                        onClick={() => handleQuickQuestion(question.text)}
+                        className="flex items-center space-x-2 p-2 text-xs bg-white border border-gray-200 rounded-lg hover:bg-green-50 hover:border-green-300 transition-colors"
                       >
-                        {/* Animated Voice Waves */}
-                        <div className="flex items-center space-x-1">
-                          {[...Array(5)].map((_, i) => (
-                            <motion.div
-                              key={i}
-                              className={`w-1.5 rounded-full ${
-                                isListening 
-                                  ? 'bg-gradient-to-t from-red-500 to-pink-500' 
-                                  : 'bg-gradient-to-t from-purple-500 to-blue-500'
-                              }`}
-                              animate={{
-                                height: [6, 18, 10, 24, 8, 16],
-                                opacity: [0.3, 1, 0.5, 1, 0.4, 0.8]
-                              }}
-                              transition={{
-                                duration: 1.8,
-                                repeat: Infinity,
-                                delay: i * 0.15,
-                                ease: "easeInOut"
-                              }}
-                            />
-                          ))}
-                        </div>
-                        
-                        {/* Status Text with Icon */}
-                        <div className="flex items-center space-x-2">
-                          <motion.div
-                            animate={{ rotate: isListening ? [0, 10, -10, 0] : 0 }}
-                            transition={{ duration: 0.5, repeat: isListening ? Infinity : 0 }}
-                          >
-                            {isListening ? (
-                              <Mic className="w-4 h-4 text-red-500" />
-                            ) : (
-                              <Volume2 className="w-4 h-4 text-purple-500" />
-                            )}
-                          </motion.div>
-                          <span className={`text-sm font-semibold ${
-                            isListening ? 'text-red-600' : 'text-purple-600'
-                          }`}>
-                            {isListening ? 'Listening...' : 'Speaking...'}
-                          </span>
-                        </div>
-                        
-                        {/* Pulse Ring */}
-                        <motion.div
-                          className={`absolute inset-0 rounded-full border-2 ${
-                            isListening ? 'border-red-300' : 'border-purple-300'
-                          }`}
-                          animate={{ scale: [1, 1.1, 1] }}
-                          transition={{ duration: 2, repeat: Infinity }}
-                        />
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-
-                  {/* Enhanced Speaking Control */}
-                  {isSpeaking && (
-                    <motion.button
-                      initial={{ opacity: 0, scale: 0.8 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      exit={{ opacity: 0, scale: 0.8 }}
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      onClick={toggleSpeaking}
-                      className="relative p-3 rounded-full bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white shadow-lg transition-all duration-300"
-                      title="Stop speaking"
-                    >
-                      <VolumeX className="w-5 h-5" />
-                      <motion.div
-                        className="absolute inset-0 rounded-full border-2 border-orange-300"
-                        animate={{ scale: [1, 1.2, 1] }}
-                        transition={{ duration: 1, repeat: Infinity }}
-                      />
-                    </motion.button>
-                  )}
-                  
-                  {/* Enhanced Voice Input Toggle */}
-                  {isSupported && (
-                    <motion.button
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      onClick={toggleListening}
-                      className={`relative p-4 rounded-full transition-all duration-300 shadow-lg ${
-                        isListening 
-                          ? 'bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 text-white' 
-                          : 'bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white'
-                      }`}
-                      title={isListening ? "Stop listening" : "Start voice input"}
-                    >
-                      {isListening ? (
-                        <>
-                          <MicOff className="w-6 h-6" />
-                          <motion.div
-                            className="absolute inset-0 rounded-full border-2 border-red-300"
-                            animate={{ scale: [1, 1.3, 1] }}
-                            transition={{ duration: 0.8, repeat: Infinity }}
-                          />
-                          <motion.div
-                            className="absolute inset-0 rounded-full bg-red-400 opacity-20"
-                            animate={{ scale: [1, 1.5, 1] }}
-                            transition={{ duration: 1.2, repeat: Infinity }}
-                          />
-                        </>
-                      ) : (
-                        <>
-                          <Mic className="w-6 h-6" />
-                          <div className="absolute inset-0 rounded-full bg-gradient-to-r from-blue-400/20 to-purple-400/20" />
-                        </>
-                      )}
-                    </motion.button>
-                  )}
-                  
-                  {/* Enhanced Send Button */}
-                  <motion.button
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    onClick={() => handleSendMessage()}
-                    disabled={!input.trim() || isLoading}
-                    className="relative p-3 rounded-full bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 disabled:from-gray-300 disabled:to-gray-400 disabled:cursor-not-allowed text-white shadow-lg transition-all duration-300"
-                    title="Send message"
-                  >
-                    <Send className="w-5 h-5" />
-                    {!input.trim() && !isLoading && (
-                      <div className="absolute inset-0 rounded-full bg-gray-400/50" />
-                    )}
-                  </motion.button>
+                        <IconComponent className="w-4 h-4 text-green-600" />
+                        <span className="truncate">{question.text}</span>
+                      </button>
+                    )
+                  })}
                 </div>
               </div>
-              
-              {/* Voice status indicator */}
-              {isListening && (
-                <motion.div
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="mt-3 flex items-center justify-center space-x-3 text-sm text-green-600"
+
+              <div className="flex space-x-2">
+                <input
+                  type="text"
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                  onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
+                  placeholder="Ask about farming, crops, irrigation..."
+                  className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                  disabled={isLoading}
+                />
+                <button
+                  onClick={toggleListening}
+                  className={`px-4 py-2 rounded-lg transition-colors ${
+                    isListening 
+                      ? 'bg-red-600 hover:bg-red-700 text-white' 
+                      : 'bg-gray-200 hover:bg-gray-300 text-gray-700'
+                  }`}
                 >
-                  <VoiceVisualizer 
-                    isListening={isListening}
-                    isSpeaking={false}
-                    voiceLevel={voiceLevel}
-                    className="w-20 h-8"
-                  />
-                  <span className="font-medium">Listening... Speak now</span>
-                </motion.div>
-              )}
-              
-              {isSpeaking && (
-                <motion.div
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="mt-3 flex items-center justify-center space-x-3 text-sm text-blue-600"
+                  {isListening ? <MicOff className="w-5 h-5" /> : <Mic className="w-5 h-5" />}
+                </button>
+                <button
+                  onClick={toggleVoiceOutput}
+                  className={`px-4 py-2 rounded-lg transition-colors ${
+                    isVoiceEnabled 
+                      ? 'bg-blue-600 hover:bg-blue-700 text-white' 
+                      : 'bg-gray-200 hover:bg-gray-300 text-gray-700'
+                  }`}
+                  title={isVoiceEnabled ? 'Disable voice output' : 'Enable voice output'}
                 >
-                  <VoiceVisualizer 
-                    isListening={false}
-                    isSpeaking={isSpeaking}
-                    voiceLevel={0.7}
-                    className="w-20 h-8"
-                  />
-                  <span className="font-medium">Speaking...</span>
-                </motion.div>
-              )}
+                  {isVoiceEnabled ? <Volume2 className="w-5 h-5" /> : <VolumeX className="w-5 h-5" />}
+                </button>
+                {isSpeaking && (
+                  <button
+                    onClick={pauseResumeSpeaking}
+                    className="px-4 py-2 bg-orange-600 hover:bg-orange-700 text-white rounded-lg transition-colors"
+                    title="Pause/Resume speech"
+                  >
+                    {window.speechSynthesis?.paused ? <Play className="w-5 h-5" /> : <Pause className="w-5 h-5" />}
+                  </button>
+                )}
+                {isSpeaking && (
+                  <button
+                    onClick={stopSpeaking}
+                    className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors"
+                    title="Stop speech"
+                  >
+                    <VolumeX className="w-5 h-5" />
+                  </button>
+                )}
+                <button
+                  onClick={() => handleSendMessage()}
+                  disabled={!input.trim() || isLoading}
+                  className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                >
+                  <Send className="w-5 h-5" />
+                </button>
+              </div>
+
+              <div className="mt-3 flex justify-center items-center space-x-4 text-xs">
+                <div className="flex items-center space-x-1">
+                  <div className={`w-2 h-2 rounded-full ${isListening ? 'bg-red-500 animate-pulse' : 'bg-gray-300'}`}></div>
+                  <span className={isListening ? 'text-red-600' : 'text-gray-500'}>Voice Input</span>
+                </div>
+                <div className="flex items-center space-x-1">
+                  <div className={`w-2 h-2 rounded-full ${isSpeaking ? 'bg-blue-500 animate-pulse' : 'bg-gray-300'}`}></div>
+                  <span className={isSpeaking ? 'text-blue-600' : 'text-gray-500'}>AI Speaking</span>
+                </div>
+                <div className="flex items-center space-x-1">
+                  <div className={`w-2 h-2 rounded-full ${isVoiceEnabled ? 'bg-green-500' : 'bg-gray-300'}`}></div>
+                  <span className={isVoiceEnabled ? 'text-green-600' : 'text-gray-500'}>Voice Output</span>
+                </div>
+              </div>
             </div>
           </div>
         </div>

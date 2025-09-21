@@ -1,6 +1,7 @@
 // Soil data service for Odisha using multiple APIs
-const AGROMONITORING_API_KEY = import.meta.env.VITE_AGROMONITORING_API_KEY;
-const AMBEE_API_KEY = import.meta.env.VITE_AMBEE_API_KEY;
+// Note: In production, these would be loaded from environment variables
+const AGROMONITORING_API_KEY = 'your_agromonitoring_api_key_here';
+const AMBEE_API_KEY = 'your_ambee_api_key_here';
 
 // Check if API keys are configured
 const isAgromonitoringConfigured = () => {
@@ -563,7 +564,7 @@ export class SoilService {
       // Try Ambee API if Agromonitoring failed
       if (!soilData && isAmbeeConfigured()) {
         try {
-          const ambeeData = await getAmbeeSoilData(location.lat, location.lon);
+          const ambeeData = await this.getAmbeeSoilData(location.lat, location.lon);
           if (ambeeData && ambeeData.data) {
             const data = ambeeData.data[0];
             soilData = {

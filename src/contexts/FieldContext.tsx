@@ -58,7 +58,7 @@ export const FieldProvider: React.FC<FieldProviderProps> = ({ children }) => {
   )
 }
 
-export const useField = (): FieldContextType => {
+export const useField = () => {
   const context = useContext(FieldContext)
   if (!context) {
     throw new Error('useField must be used within a FieldProvider')

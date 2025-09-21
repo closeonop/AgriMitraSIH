@@ -321,7 +321,7 @@ const CropMonitoring = () => {
                 {t('cropMonitoring.subtitle')}
                 {selectedField && (
                   <span className="block text-sm text-green-600 mt-1">
-                    {t('cropMonitoring.currentField', { name: selectedField.name, size: selectedField.size })}
+                    {t('cropMonitoring.currentField', { name: selectedField.name, area: selectedField.area })}
                   </span>
                 )}
 
@@ -580,7 +580,7 @@ const CropMonitoring = () => {
                 {selectedField ? 'Field Area' : 'Total Area'}
               </div>
               <div className="text-2xl font-bold text-green-600">
-                {selectedField ? `${selectedField.size} ha` : `${totalArea.toFixed(1)} ha`}
+                {selectedField ? `${selectedField.area} ha` : `${totalArea.toFixed(1)} ha`}
               </div>
             </div>
           </div>
