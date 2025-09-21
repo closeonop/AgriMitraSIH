@@ -1,23 +1,4 @@
-import React, { useState, useEffect, useMemo, useCallback } from 'react'
-import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card'
-import { Badge } from '../components/ui/badge'
-import { Button } from '../components/ui/button'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs'
-import { useTranslation } from 'react-i18next'
-import { 
-  Cloud, 
-  Sun, 
-  CloudRain, 
-  Wind, 
-  Droplets, 
-  Thermometer,
-  Eye,
-  Gauge,
-  MapPin,
-  AlertTriangle,
-  RefreshCw,
-  Calendar
-} from 'lucide-react'
+import { useState, useMemo, useCallback } from 'react';
 import { locationWeatherData } from '../utils/mockData'
 import { WeatherService } from '../services/weatherService'
 import OdishaWeatherSoil from '../components/OdishaWeatherSoil'
@@ -43,14 +24,12 @@ interface WeatherAlert {
 }
 
 const WeatherForecast = () => {
-  const { t } = useTranslation()
   const [selectedDay, setSelectedDay] = useState(0)
   const [currentLocation, setCurrentLocation] = useState('Bhubaneswar, Odisha')
   const [selectedLocation, setSelectedLocation] = useState<string>('')
   const [activeTab, setActiveTab] = useState<'forecast' | 'odisha'>('forecast')
   const [realTimeWeather, setRealTimeWeather] = useState<any>(null)
   const [isLoadingWeather, setIsLoadingWeather] = useState<boolean>(false)
-  const [weatherError, setWeatherError] = useState<string>('')
 
   // Default Odisha-specific weather alerts
   const defaultWeatherAlerts: WeatherAlert[] = [
@@ -78,11 +57,10 @@ const WeatherForecast = () => {
   ]
 
   // Handle location selection with real-time weather fetching - Memoized to prevent infinite re-renders
-  const handleLocationSelect = useCallback(async (location: string, soilType: string) => {
+  const handleLocationSelect = useCallback(async (location: string) => {
     setSelectedLocation(location)
     setCurrentLocation(`${location}, Odisha`)
     setIsLoadingWeather(true)
-    setWeatherError('')
     
     try {
       const weatherService = new WeatherService()
@@ -90,7 +68,6 @@ const WeatherForecast = () => {
       setRealTimeWeather(weatherData)
     } catch (error) {
       console.error('Failed to fetch weather data:', error)
-      setWeatherError('Failed to load weather data. Using default data.')
       setRealTimeWeather(null)
     } finally {
       setIsLoadingWeather(false)
@@ -223,14 +200,14 @@ const WeatherForecast = () => {
             condition: locationData.current.condition || 'partly cloudy',
             humidity: locationData.current.humidity || 70,
             windSpeed: locationData.current.windSpeed || 10,
-            precipitation: locationData.current.precipitation || 0,
+            precipitation: locationData.current.rainfall || 0,
             icon: locationData.current.condition === 'sunny' ? '☀️' : 
                   locationData.current.condition === 'partly-cloudy' ? '⛅' :
                   locationData.current.condition === 'cloudy' ? '☁️' :
                   locationData.current.condition === 'rainy' ? '🌧️' : '⛅'
           },
           ...(locationData.forecast || []).slice(1).map((day, index) => ({
-            day: day.day || `Day ${index + 2}`,
+            day: day.date || `Day ${index + 2}`,
             date: new Date(Date.now() + (index + 1) * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
             temperature: { 
               min: day.low || 20, 
@@ -263,7 +240,7 @@ const WeatherForecast = () => {
         type: 'warning' as const,
         title: alert.title,
         message: alert.description,
-        timestamp: alert.validUntil
+        timestamp: alert.endTime
       }))
     }
     return defaultWeatherAlerts
@@ -591,4 +568,4 @@ const WeatherForecast = () => {
   )
 }
 
-export default WeatherForecast
+export default WeatherForecast // Removed unused state

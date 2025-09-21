@@ -1,5 +1,4 @@
-import React, { createContext, useContext, useRef, useState } from "react";
-import { motion } from "framer-motion";
+import React, { createContext, useContext, useRef, useState } from 'react';
 import { cn } from "../../utils/cn";
 
 const MouseEnterContext = createContext<

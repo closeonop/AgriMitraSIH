@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect } from 'react';
 import { Send, Mic, MicOff, Sun, Sprout, Droplets, Bug, TrendingUp, MapPin, Volume2, VolumeX, Pause, Play } from 'lucide-react'
 
 interface Message {
@@ -16,7 +16,6 @@ const ChatBot: React.FC = () => {
   const [isListening, setIsListening] = useState(false)
   const [isSpeaking, setIsSpeaking] = useState(false)
   const [isVoiceEnabled, setIsVoiceEnabled] = useState(true)
-  const [currentSpeech, setCurrentSpeech] = useState<SpeechSynthesisUtterance | null>(null)
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
   const quickQuestions = [
@@ -99,17 +98,14 @@ const ChatBot: React.FC = () => {
 
     utterance.onstart = () => {
       setIsSpeaking(true)
-      setCurrentSpeech(utterance)
     }
 
     utterance.onend = () => {
       setIsSpeaking(false)
-      setCurrentSpeech(null)
     }
 
     utterance.onerror = () => {
       setIsSpeaking(false)
-      setCurrentSpeech(null)
     }
 
     window.speechSynthesis.speak(utterance)
@@ -118,7 +114,6 @@ const ChatBot: React.FC = () => {
   const stopSpeaking = () => {
     window.speechSynthesis.cancel()
     setIsSpeaking(false)
-    setCurrentSpeech(null)
   }
 
   const pauseResumeSpeaking = () => {

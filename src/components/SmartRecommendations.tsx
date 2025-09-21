@@ -1,142 +1,13 @@
-import * as React from 'react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { LocationSelector } from './LocationSelector';
 import { getLocationBasedRecommendations, getAvailableCategories, getAvailableEcosystems, getDistrictFromLocation, LocationRecommendation } from '../data/locationRecommendations';
 
-// Odisha-specific agricultural recommendations
-const recommendationsData = [
-  {
-    id: '1',
-    title: 'Kharif Rice Water Management - Odisha',
-    description: 'Optimal water management for rice cultivation during Odisha monsoon season.',
-    priority: 'high',
-    category: 'water',
-    season: 'kharif',
-    ecosystem: 'irrigated',
-    actionItems: [
-      'Maintain 2-5 cm water level during vegetative growth stage',
-      'Apply intermittent irrigation during tillering (15-20 days after transplanting)',
-      'Ensure continuous flooding during reproductive phase (panicle initiation to grain filling)',
-      'Drain fields 10-15 days before harvest for easy harvesting'
-    ]
-  },
-  {
-    id: '2',
-    title: 'Brown Planthopper Management',
-    description: 'Critical pest management for rice crops against brown planthopper in Odisha.',
-    priority: 'high',
-    category: 'pest',
-    season: 'kharif',
-    ecosystem: 'all',
-    actionItems: [
-      'Monitor for brown planthopper nymphs and adults weekly during vegetative stage',
-      'Use resistant varieties like Utkal Prabha, Khandagiri, or Pooja',
-      'Apply Flonicamide or Pymetrozine when population exceeds economic threshold',
-      'Maintain proper plant spacing to reduce humidity and pest buildup',
-      'Use light traps for early detection and monitoring'
-    ]
-  },
-  {
-    id: '3',
-    title: 'Rice Blast Disease Control',
-    description: 'Prevent and manage blast disease in Odisha rice fields.',
-    priority: 'high',
-    category: 'pest',
-    season: 'kharif',
-    ecosystem: 'upland',
-    actionItems: [
-      'Use blast-resistant varieties like Improved Lalat, Naveen, or Khandagiri',
-      'Apply balanced fertilization - avoid excessive nitrogen',
-      'Spray Tricyclazole or Carbendazim at early blast symptoms',
-      'Ensure proper field drainage to reduce humidity',
-      'Remove infected plant debris after harvest'
-    ]
-  },
-  {
-    id: '4',
-    title: 'Rice Fallow Pulse Cultivation',
-    description: 'Maximize land use efficiency with pulse crops after rice harvest in Odisha.',
-    priority: 'medium',
-    category: 'crop',
-    season: 'rabi',
-    ecosystem: 'lowland',
-    actionItems: [
-      'Sow short-duration pulses like lentil, chickpea, or field pea in December',
-      'Use residual moisture from rice fields for germination',
-      'Apply phosphorus-rich fertilizers (20-25 kg P2O5/ha)',
-      'Practice zero-tillage or minimum tillage to conserve moisture',
-      'Harvest by March-April before summer heat'
-    ]
-  },
-  {
-    id: '5',
-    title: 'Cyclone and Flood Preparedness',
-    description: 'Protect crops from cyclones and floods common in coastal Odisha.',
-    priority: 'high',
-    category: 'weather',
-    season: 'kharif',
-    ecosystem: 'coastal',
-    actionItems: [
-      'Choose short-duration rice varieties (90-110 days) to avoid cyclone season',
-      'Create drainage channels around fields for quick water removal',
-      'Store seeds and fertilizers in elevated, waterproof storage',
-      'Harvest mature crops immediately when cyclone warning is issued',
-      'Use submergence-tolerant varieties like Swarna-Sub1 in flood-prone areas'
-    ]
-  },
-  {
-    id: '6',
-    title: 'Soil Acidity Management',
-    description: 'Address soil acidity issues common in Odisha lateritic soils.',
-    priority: 'medium',
-    category: 'soil',
-    season: 'all',
-    ecosystem: 'upland',
-    actionItems: [
-      'Apply lime at 1-2 tons per hectare to raise soil pH to 6.0-6.5',
-      'Use organic matter like compost or farmyard manure (5-10 tons/ha)',
-      'Grow acid-tolerant crops like finger millet or niger in severely acidic soils',
-      'Apply phosphorus fertilizers to improve nutrient availability',
-      'Test soil pH annually and adjust lime application accordingly'
-    ]
-  },
-  {
-    id: '7',
-    title: 'Integrated Nutrient Management',
-    description: 'Balanced fertilization approach for sustainable rice production in Odisha.',
-    priority: 'medium',
-    category: 'soil',
-    season: 'kharif',
-    ecosystem: 'all',
-    actionItems: [
-      'Apply NPK in ratio 80:40:40 kg/ha for medium-duration rice varieties',
-      'Use 25% nitrogen through organic sources (FYM, compost, green manure)',
-      'Apply zinc sulfate (25 kg/ha) in zinc-deficient soils',
-      'Use neem-coated urea to reduce nitrogen losses',
-      'Apply potassium in split doses during tillering and panicle initiation'
-    ]
-  },
-  {
-    id: '8',
-    title: 'Direct Seeded Rice (DSR) Technology',
-    description: 'Water-saving rice cultivation technique suitable for Odisha conditions.',
-    priority: 'medium',
-    category: 'crop',
-    season: 'kharif',
-    ecosystem: 'irrigated',
-    actionItems: [
-      'Use short-duration, lodging-resistant varieties like MTU-1010 or Sahbhagi Dhan',
-      'Prepare fine seedbed with proper leveling for uniform germination',
-      'Apply pre-emergence herbicide (Pendimethalin) within 3 days of sowing',
-      'Maintain alternate wetting and drying for water conservation',
-      'Monitor for weeds closely and apply post-emergence herbicides as needed'
-    ]
-  }
-];
+
 
 export const SmartRecommendations: React.FC = () => {
   const { t } = useTranslation();
+  
   const [selectedLocation, setSelectedLocation] = useState<string | null>(null);
   const [selectedDistrict, setSelectedDistrict] = useState<string | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
@@ -174,7 +45,7 @@ export const SmartRecommendations: React.FC = () => {
     const currentSeason = getCurrentSeason();
     const seasonToUse = selectedSeason || currentSeason;
     
-    return getLocationBasedRecommendations(selectedDistrict, selectedLocation || '', seasonToUse);
+    return getLocationBasedRecommendations(selectedDistrict, seasonToUse);
   };
 
   // Get available filter options based on current location
@@ -191,15 +62,6 @@ export const SmartRecommendations: React.FC = () => {
       categories: getAvailableCategories(selectedDistrict, seasonToUse),
       ecosystems: getAvailableEcosystems(selectedDistrict, seasonToUse)
     };
-  };
-
-  const getPriorityColor = (priority: string) => {
-    switch (priority) {
-      case 'high': return 'bg-red-100 text-red-800';
-      case 'medium': return 'bg-yellow-100 text-yellow-800';
-      case 'low': return 'bg-blue-100 text-blue-800';
-      default: return 'bg-gray-100 text-gray-800';
-    }
   };
 
   const getCategoryIcon = (category: string) => {
@@ -447,7 +309,7 @@ export const SmartRecommendations: React.FC = () => {
               </div>
             ) : (
               <div className="space-y-4 sm:space-y-6">
-                {sortedRecommendations.map((recommendation, index) => (
+                {sortedRecommendations.map((recommendation) => (
                   <div key={recommendation.id} className="border border-gray-200 rounded-lg p-4 sm:p-6 hover:shadow-md transition-shadow">
                     <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 mb-4">
                       <div className="flex items-center flex-1">

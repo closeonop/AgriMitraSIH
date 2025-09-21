@@ -1,4 +1,4 @@
-import React from 'react'
+
 import {
   Card,
   CardContent,
@@ -10,19 +10,17 @@ import {
   ListItem,
   ListItemIcon,
   ListItemText,
-  Alert,
   Grid
 } from '@mui/material'
 import {
-  Eco as EcoIcon,
+  EmojiNature as EcoIcon,
   WaterDrop as WaterDropIcon,
   Science as ScienceIcon,
   CheckCircle as CheckCircleIcon,
-  Warning as WarningIcon,
   Info as InfoIcon
 } from '@mui/icons-material'
 import { useTranslation } from 'react-i18next'
-import { soilHealthData } from '../../utils/mockData'
+import { generalSoilHealthData } from '../../utils/mockData'
 
 const SoilHealth: React.FC = () => {
   const { t } = useTranslation()
@@ -55,7 +53,7 @@ const SoilHealth: React.FC = () => {
   const nutrients = [
     {
       name: t('soil.nitrogen'),
-      value: soilHealthData.nitrogen,
+      value: generalSoilHealthData.nitrogen,
       min: 40,
       max: 60,
       unit: 'ppm',
@@ -63,7 +61,7 @@ const SoilHealth: React.FC = () => {
     },
     {
       name: t('soil.phosphorus'),
-      value: soilHealthData.phosphorus,
+      value: generalSoilHealthData.phosphorus,
       min: 25,
       max: 40,
       unit: 'ppm',
@@ -71,7 +69,7 @@ const SoilHealth: React.FC = () => {
     },
     {
       name: t('soil.potassium'),
-      value: soilHealthData.potassium,
+      value: generalSoilHealthData.potassium,
       min: 50,
       max: 80,
       unit: 'ppm',
@@ -79,7 +77,7 @@ const SoilHealth: React.FC = () => {
     },
     {
       name: t('soil.moisture'),
-      value: soilHealthData.moisture,
+      value: generalSoilHealthData.moisture,
       min: 60,
       max: 80,
       unit: '%',
@@ -96,8 +94,8 @@ const SoilHealth: React.FC = () => {
             {t('dashboard.soilHealth')}
           </Typography>
           <Chip
-            label={getHealthText(soilHealthData.healthScore)}
-            color={getHealthColor(soilHealthData.healthScore) as any}
+            label={getHealthText(generalSoilHealthData.healthScore)}
+            color={getHealthColor(generalSoilHealthData.healthScore) as any}
             icon={<CheckCircleIcon />}
           />
         </Box>
@@ -108,14 +106,14 @@ const SoilHealth: React.FC = () => {
             <Typography variant="body1" fontWeight={600}>
               Overall Health Score
             </Typography>
-            <Typography variant="h5" fontWeight={700} color={`${getHealthColor(soilHealthData.healthScore)}.main`}>
-              {soilHealthData.healthScore}%
+            <Typography variant="h5" fontWeight={700} color={`${getHealthColor(generalSoilHealthData.healthScore)}.main`}>
+              {generalSoilHealthData.healthScore}%
             </Typography>
           </Box>
           <LinearProgress
             variant="determinate"
-            value={soilHealthData.healthScore}
-            color={getHealthColor(soilHealthData.healthScore) as any}
+            value={generalSoilHealthData.healthScore}
+            color={getHealthColor(generalSoilHealthData.healthScore) as any}
             sx={{ height: 10, borderRadius: 5 }}
           />
         </Box>
@@ -127,13 +125,13 @@ const SoilHealth: React.FC = () => {
               {t('soil.ph')}
             </Typography>
             <Typography variant="h6" fontWeight={700}>
-              {soilHealthData.ph}
+              {generalSoilHealthData.ph}
             </Typography>
           </Box>
           <LinearProgress
             variant="determinate"
-            value={(soilHealthData.ph / 14) * 100}
-            color={soilHealthData.ph >= 6 && soilHealthData.ph <= 7.5 ? 'success' : 'warning'}
+            value={(generalSoilHealthData.ph / 14) * 100}
+            color={generalSoilHealthData.ph >= 6 && generalSoilHealthData.ph <= 7.5 ? 'success' : 'warning'}
             sx={{ height: 8, borderRadius: 4 }}
           />
           <Typography variant="caption" color="text.secondary" sx={{ mt: 0.5, display: 'block' }}>
@@ -187,31 +185,31 @@ const SoilHealth: React.FC = () => {
           </Typography>
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
             <Typography variant="h6" fontWeight={700}>
-              {soilHealthData.organicMatter}%
+              {generalSoilHealthData.organicMatter}%
             </Typography>
             <Chip
-              label={soilHealthData.organicMatter >= 3 ? 'Good' : 'Needs Improvement'}
-              color={soilHealthData.organicMatter >= 3 ? 'success' : 'warning'}
+              label={generalSoilHealthData.organicMatter >= 3 ? 'Good' : 'Needs Improvement'}
+              color={generalSoilHealthData.organicMatter >= 3 ? 'success' : 'warning'}
               size="small"
             />
           </Box>
           <LinearProgress
             variant="determinate"
-            value={(soilHealthData.organicMatter / 5) * 100}
-            color={soilHealthData.organicMatter >= 3 ? 'success' : 'warning'}
+            value={(generalSoilHealthData.organicMatter / 5) * 100}
+            color={generalSoilHealthData.organicMatter >= 3 ? 'success' : 'warning'}
             sx={{ height: 8, borderRadius: 4 }}
           />
         </Box>
 
         {/* Recommendations */}
-        {soilHealthData.recommendations.length > 0 && (
+        {generalSoilHealthData.recommendations.length > 0 && (
           <Box>
             <Typography variant="h6" sx={{ fontWeight: 600, mb: 2, display: 'flex', alignItems: 'center', gap: 1 }}>
               <InfoIcon color="info" />
               Recommendations
             </Typography>
             <List dense>
-              {soilHealthData.recommendations.map((recommendation, index) => (
+              {generalSoilHealthData.recommendations.map((recommendation, index) => (
                 <ListItem key={index} sx={{ px: 0 }}>
                   <ListItemIcon sx={{ minWidth: 32 }}>
                     <CheckCircleIcon color="success" fontSize="small" />

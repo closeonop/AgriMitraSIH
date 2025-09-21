@@ -1,3 +1,4 @@
+
 import React from 'react'
 import {
   AppBar,
@@ -15,11 +16,9 @@ import {
 import {
   Notifications as NotificationsIcon,
   AccountCircle as AccountCircleIcon,
-  Menu as MenuIcon,
-  Language as LanguageIcon
+  Menu as MenuIcon
 } from '@mui/icons-material'
 import { useTranslation } from 'react-i18next'
-import { useLanguage } from '../../hooks/useLanguage'
 import LanguageSelector from './LanguageSelector'
 
 interface HeaderProps {
@@ -28,7 +27,6 @@ interface HeaderProps {
 
 const Header: React.FC<HeaderProps> = ({ onMenuClick }) => {
   const { t } = useTranslation()
-  const { currentLanguage } = useLanguage()
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down('md'))
   

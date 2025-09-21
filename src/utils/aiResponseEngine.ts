@@ -143,8 +143,8 @@ export class AdvancedAIResponseEngine {
     const confidence = this.calculateConfidence(keywords, category, intent);
 
     // Generate follow-up questions and action items
-    const followUpQuestions = this.generateFollowUpQuestions(category, keywords);
-    const actionItems = this.generateActionItems(category, keywords);
+    const followUpQuestions = this.generateFollowUpQuestions(category);
+    const actionItems = this.generateActionItems(category);
 
     return {
       text: response,
@@ -249,19 +249,19 @@ export class AdvancedAIResponseEngine {
         response = this.generateCropManagementResponse(keywords);
         break;
       case 'water_management':
-        response = this.generateWaterManagementResponse(keywords);
+        response = this.generateWaterManagementResponse();
         break;
       case 'soil_health':
-        response = this.generateSoilHealthResponse(keywords);
+        response = this.generateSoilHealthResponse();
         break;
       case 'pest_disease':
-        response = this.generatePestDiseaseResponse(keywords);
+        response = this.generatePestDiseaseResponse();
         break;
       case 'weather_climate':
-        response = this.generateWeatherResponse(keywords);
+        response = this.generateWeatherResponse();
         break;
       case 'market_economics':
-        response = this.generateMarketResponse(keywords);
+        response = this.generateMarketResponse();
         break;
       default:
         response = this.generateGeneralResponse(intent, keywords);
@@ -283,23 +283,23 @@ export class AdvancedAIResponseEngine {
     return "For optimal crop management, focus on selecting the right variety for your soil and climate, maintaining proper spacing, regular monitoring for pests and diseases, and following a balanced fertilization schedule.";
   }
 
-  private generateWaterManagementResponse(keywords: string[]): string {
+  private generateWaterManagementResponse(): string {
     return "Efficient water management is crucial for sustainable farming. Consider drip irrigation for water conservation, monitor soil moisture levels regularly, and water during early morning or evening to reduce evaporation. Mulching can help retain soil moisture.";
   }
 
-  private generateSoilHealthResponse(keywords: string[]): string {
+  private generateSoilHealthResponse(): string {
     return "Healthy soil is the foundation of productive farming. Test your soil pH regularly (ideal range 6.0-7.5), add organic matter through composting, practice crop rotation, and avoid over-tillage. Consider cover crops to improve soil structure and fertility.";
   }
 
-  private generatePestDiseaseResponse(keywords: string[]): string {
+  private generatePestDiseaseResponse(): string {
     return "Integrated Pest Management (IPM) is the best approach. Regular field monitoring, use of beneficial insects, crop rotation, and targeted application of organic pesticides when necessary. Early detection is key to preventing major outbreaks.";
   }
 
-  private generateWeatherResponse(keywords: string[]): string {
+  private generateWeatherResponse(): string {
     return "Weather significantly impacts crop growth and yield. Monitor temperature, rainfall, and humidity patterns. Use weather forecasts for planning irrigation, fertilization, and harvesting. Consider climate-resilient varieties for your region.";
   }
 
-  private generateMarketResponse(keywords: string[]): string {
+  private generateMarketResponse(): string {
     return "Market timing is crucial for profitability. Monitor price trends, consider value-added processing, explore direct-to-consumer sales, and maintain good post-harvest handling to reduce losses and improve quality.";
   }
 
@@ -351,7 +351,7 @@ export class AdvancedAIResponseEngine {
 
   private personalizeResponse(response: string, context: ConversationContext): string {
     // Add personalization based on user preferences and history
-    const { language, farmingType, experience } = context.userPreferences;
+    const { experience } = context.userPreferences;
     
     if (experience === 'beginner') {
       response += " As you're starting out, I recommend taking small steps and consulting with local agricultural experts.";
@@ -377,7 +377,7 @@ export class AdvancedAIResponseEngine {
     return Math.min(confidence, 0.95); // Cap at 95%
   }
 
-  private generateFollowUpQuestions(category: string, keywords: string[]): string[] {
+  private generateFollowUpQuestions(category: string): string[] {
     const questions: { [key: string]: string[] } = {
       'crop_management': [
         "What's your current crop rotation schedule?",
@@ -408,7 +408,7 @@ export class AdvancedAIResponseEngine {
     ];
   }
 
-  private generateActionItems(category: string, keywords: string[]): string[] {
+  private generateActionItems(category: string): string[] {
     const actions: { [key: string]: string[] } = {
       'crop_management': [
         "Conduct soil test before next planting season",

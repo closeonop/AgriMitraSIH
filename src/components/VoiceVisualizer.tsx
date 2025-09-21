@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { Mic, MicOff, Volume2, VolumeX } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { Mic, MicOff, Volume2 } from 'lucide-react';
 
 interface VoiceVisualizerProps {
   isListening: boolean;

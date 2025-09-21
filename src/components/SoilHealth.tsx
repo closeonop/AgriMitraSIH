@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { LocationSelector } from './LocationSelector';
 import { getSoilDataByDistrict, getSoilDataByCoordinates, SoilData } from '../services/soilService';
@@ -9,8 +9,6 @@ export const SoilHealth: React.FC = () => {
   const [soilData, setSoilData] = useState<SoilData | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
-  const [showAdvancedAnalysis, setShowAdvancedAnalysis] = useState(false);
-  const [useCurrentLocation, setUseCurrentLocation] = useState<boolean>(false);
   const [coordinates, setCoordinates] = useState<{lat: number, lon: number} | null>(null);
   const [locationInputMode, setLocationInputMode] = useState<'dropdown' | 'coordinates' | 'current'>('dropdown');
   const [manualLat, setManualLat] = useState<string>('');
@@ -289,10 +287,6 @@ interface SoilHealthDetailsProps {
 
 const SoilHealthDetails: React.FC<SoilHealthDetailsProps> = ({ data, location }) => {
   const { t } = useTranslation();
-  const [showReportModal, setShowReportModal] = useState<boolean>(false);
-  const [showTestModal, setShowTestModal] = useState<boolean>(false);
-  const [showReminderModal, setShowReminderModal] = useState<boolean>(false);
-  const [showCompareModal, setShowCompareModal] = useState<boolean>(false);
   const [showAdvancedAnalysis, setShowAdvancedAnalysis] = useState(false);
 
   // Calculate overall health score based on soil parameters

@@ -1,9 +1,8 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { 
   Mic, 
   MicOff, 
-  Volume2, 
   VolumeX, 
   Settings, 
   Headphones,
@@ -31,14 +30,13 @@ export const VoiceControls: React.FC<VoiceControlsProps> = ({
   onStartListening,
   onStopListening,
   onStopSpeaking,
-  onVoiceCommand,
   className = ''
 }) => {
   const { t, i18n } = useTranslation();
   const [showSettings, setShowSettings] = useState(false);
   const [voiceLevel, setVoiceLevel] = useState(0);
-  const [lastCommand, setLastCommand] = useState('');
-  const [commandHistory, setCommandHistory] = useState<string[]>([]);
+  const [lastCommand] = useState('');
+  const [commandHistory] = useState<string[]>([]);
   const audioContextRef = useRef<AudioContext | null>(null);
   const analyserRef = useRef<AnalyserNode | null>(null);
   const microphoneRef = useRef<MediaStreamAudioSourceNode | null>(null);
@@ -94,14 +92,6 @@ export const VoiceControls: React.FC<VoiceControlsProps> = ({
       microphoneRef.current = null;
     }
     setVoiceLevel(0);
-  };
-
-  const handleVoiceCommand = (command: string) => {
-    setLastCommand(command);
-    setCommandHistory(prev => [command, ...prev.slice(0, 4)]);
-    if (onVoiceCommand) {
-      onVoiceCommand(command);
-    }
   };
 
   const getVoiceCommands = () => {

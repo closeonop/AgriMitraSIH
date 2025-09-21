@@ -345,7 +345,6 @@ export const getDistrictFromLocation = (location: string): string | null => {
 // Get location-based recommendations
 export const getLocationBasedRecommendations = (
   district: string, 
-  town: string, 
   currentSeason: string
 ): LocationRecommendation[] => {
   if (!district) return [];
@@ -364,14 +363,14 @@ export const getLocationBasedRecommendations = (
 
 // Get available categories for a district and season
 export const getAvailableCategories = (district: string, season: string): string[] => {
-  const recommendations = getLocationBasedRecommendations(district, '', season);
+  const recommendations = getLocationBasedRecommendations(district, season);
   const categories = Array.from(new Set(recommendations.map(rec => rec.category)));
   return categories.sort();
 };
 
 // Get available ecosystems for a district and season
 export const getAvailableEcosystems = (district: string, season: string): string[] => {
-  const recommendations = getLocationBasedRecommendations(district, '', season);
+  const recommendations = getLocationBasedRecommendations(district, season);
   const ecosystems = Array.from(new Set(recommendations.map(rec => rec.ecosystem)));
   return ecosystems.filter(eco => eco !== 'all').sort();
 };

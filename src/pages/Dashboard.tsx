@@ -1,8 +1,6 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card'
-import { Badge } from '../components/ui/badge'
 import { Button } from '../components/ui/button'
-import { Progress } from '../components/ui/progress'
 import { 
   TrendingUp, 
   TrendingDown, 
@@ -11,13 +9,11 @@ import {
   CloudRain, 
   Droplets,
   Wind,
-  Thermometer,
   Leaf,
   BarChart3,
   MapPin,
   RefreshCw
 } from 'lucide-react'
-import { locationWeatherData, odishaTownsData } from '../utils/mockData'
 import { WeatherService } from '../services/weatherService'
 import { useTranslation } from 'react-i18next'
 

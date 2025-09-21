@@ -153,7 +153,7 @@ export class VoiceFeatureTester {
       }
 
       // Test basic synthesis
-      const utterance = new SpeechSynthesisUtterance('Test');
+      new SpeechSynthesisUtterance('Test');
       
       this.results.push({
         feature: 'Speech Synthesis Initialization',

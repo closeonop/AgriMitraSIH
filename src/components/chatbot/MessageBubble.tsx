@@ -1,10 +1,9 @@
-import React from 'react'
+
 import {
   Box,
   Paper,
   Typography,
-  Avatar,
-  Chip
+  Avatar
 } from '@mui/material'
 import {
   SmartToy as BotIcon,

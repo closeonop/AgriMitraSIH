@@ -1,4 +1,4 @@
-import { Field, FieldSoilData, FieldCropData, FieldAnalysis } from '../types/field'
+import { Field, FieldSoilData, FieldAnalysis } from '../types/field'
 
 // Mock field data for demonstration
 const mockFields: Field[] = [

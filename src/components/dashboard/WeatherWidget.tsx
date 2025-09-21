@@ -1,10 +1,9 @@
-import React from 'react'
+
 import {
   Card,
   CardContent,
   Typography,
   Box,
-  Chip,
   List,
   ListItem,
   ListItemIcon,
@@ -21,15 +20,14 @@ import {
   Cloud as CloudIcon,
   WbSunny as SunIcon,
   Refresh as RefreshIcon,
-  Warning as WarningIcon,
-  Info as InfoIcon
+  Warning as WarningIcon
 } from '@mui/icons-material'
 import { useTranslation } from 'react-i18next'
 import { useWeather } from '../../hooks/useWeather'
 
 const WeatherWidget: React.FC = () => {
   const { t } = useTranslation()
-  const { weather, loading, refreshWeather, getWeatherIcon } = useWeather()
+  const { weather, loading, refreshWeather } = useWeather()
 
   const getWeatherIconComponent = (condition: string) => {
     const iconMap: Record<string, React.ReactNode> = {
@@ -75,7 +73,7 @@ const WeatherWidget: React.FC = () => {
           </Typography>
           <Tooltip title="Refresh Weather">
             <IconButton 
-              onClick={refreshWeather} 
+              onClick={() => refreshWeather()} 
               disabled={loading} 
               size="small"
               className="hover:scale-110 hover:rotate-180 transition-all duration-300 hover:bg-blue-50"

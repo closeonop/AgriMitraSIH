@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Play, CheckCircle, XCircle, AlertCircle, Download, RefreshCw } from 'lucide-react';
 import { VoiceFeatureTester, VoiceTestResult } from '../utils/testVoiceFeatures';
 

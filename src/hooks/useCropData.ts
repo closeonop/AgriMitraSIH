@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react'
 import { sampleCrops, yieldPredictions, recommendations } from '../utils/mockData'
-import { Crop, YieldPrediction } from '../types'
+import { Crop, YieldPrediction } from '../types/crop'
 
 export const useCropData = () => {
   const [crops, setCrops] = useState<Crop[]>(sampleCrops)
-  const [predictions, setPredictions] = useState<YieldPrediction[]>(yieldPredictions)
+  const [predictions] = useState<YieldPrediction[]>(yieldPredictions)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 

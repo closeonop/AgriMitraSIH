@@ -1,12 +1,10 @@
-import React, { useState, useEffect } from 'react'
-import { useTranslation } from 'react-i18next'
+import { useState, useEffect } from 'react';
 import { Field, FieldSoilData, FieldAnalysis } from '../types/field'
 import { 
   getAllFields, 
   getFieldSoilData, 
   getFieldAnalysis,
-  updateFieldSoilData,
-  createFieldSoilData
+  updateFieldSoilData
 } from '../services/fieldService'
 import { useField } from '../contexts/FieldContext'
 import FieldEditor from '../components/FieldEditor'
@@ -43,7 +41,6 @@ interface NutrientRecommendation {
 }
 
 const SoilHealthAnalysis = () => {
-  const { t } = useTranslation()
   const { fields, selectedField, setSelectedField, loading } = useField()
   const [analysisDate, setAnalysisDate] = useState(new Date().toISOString().split('T')[0])
   const [fieldSoilData, setFieldSoilData] = useState<FieldSoilData | null>(null)

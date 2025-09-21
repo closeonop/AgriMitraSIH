@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next'
 
 interface CropPrice {
@@ -32,7 +32,6 @@ interface MarketNews {
 const MarketIntelligence = () => {
   const { t } = useTranslation()
   const [selectedTimeframe, setSelectedTimeframe] = useState('7d')
-  const [selectedMarket, setSelectedMarket] = useState('all')
 
   // Punjab crop prices (current market rates)
   const cropPrices: CropPrice[] = [
@@ -484,4 +483,4 @@ const MarketIntelligence = () => {
   )
 }
 
-export default MarketIntelligence
+export default MarketIntelligence // Removed unused state

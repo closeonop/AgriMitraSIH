@@ -1,89 +1,140 @@
-import { Crop, YieldPrediction, WeatherData, WeatherForecast, WeatherAlert, CurrentWeather, SoilData, OdishaTownData } from '../types'
+import { SoilData } from '../types'
+import { Crop, YieldPrediction } from '../types/crop'
+import { WeatherData, WeatherAlert, CurrentWeather, WeatherForecast } from '../types/weather'
+import type { OdishaTownData } from '../types/weather'
 
 // Location-based weather data for Odisha districts
 export const locationWeatherData: Record<string, WeatherData> = {
   'Bhubaneswar': {
     current: {
       temperature: 30,
+      humidity: 65,
+      rainfall: 0,
+      windSpeed: 8,
+      pressure: 1012,
+      uvIndex: 6,
       condition: 'partly-cloudy',
-      humidity: 75,
-      windSpeed: 12,
-      precipitation: 0
+      icon: 'partly-cloudy',
+      timestamp: '2024-03-15T10:30:00Z'
     },
     forecast: [
-      { day: 'Today', high: 30, low: 22, condition: 'partly-cloudy' },
-      { day: 'Tomorrow', high: 32, low: 24, condition: 'sunny' },
-      { day: 'Wed', high: 31, low: 23, condition: 'cloudy' },
-      { day: 'Thu', high: 29, low: 21, condition: 'rainy' },
-      { day: 'Fri', high: 28, low: 20, condition: 'rainy' },
-      { day: 'Sat', high: 30, low: 22, condition: 'partly-cloudy' },
-      { day: 'Sun', high: 31, low: 23, condition: 'sunny' }
+      { date: '2024-03-15', high: 30, low: 22, condition: 'partly-cloudy', icon: 'partly-cloudy', rainfall: 2, windSpeed: 7, humidity: 55 },
+      { date: '2024-03-16', high: 32, low: 24, condition: 'sunny', icon: 'sunny', rainfall: 0, windSpeed: 5, humidity: 40 },
+      { date: '2024-03-17', high: 31, low: 23, condition: 'cloudy', icon: 'cloudy', rainfall: 8, windSpeed: 9, humidity: 70 },
+      { date: '2024-03-18', high: 29, low: 21, condition: 'rainy', icon: 'rainy', rainfall: 18, windSpeed: 14, humidity: 85 },
+      { date: '2024-03-19', high: 28, low: 20, condition: 'rainy', icon: 'rainy', rainfall: 20, windSpeed: 16, humidity: 90 },
+      { date: '2024-03-20', high: 30, low: 22, condition: 'partly-cloudy', icon: 'partly-cloudy', rainfall: 3, windSpeed: 8, humidity: 60 },
+      { date: '2024-03-21', high: 31, low: 23, condition: 'sunny', icon: 'sunny', rainfall: 0, windSpeed: 6, humidity: 45 }
     ],
     alerts: [
-      { title: 'Monsoon Alert', description: 'Heavy rainfall expected in Bhubaneswar district. Farmers advised to protect crops and ensure proper drainage.', validUntil: 'Jul 20, 2024' }
+      { 
+        id: 2,
+        type: 'warning', 
+        title: 'Monsoon Alert', 
+        description: 'Heavy rainfall expected in Bhubaneswar district. Farmers advised to protect crops and ensure proper drainage.', 
+        severity: 'high',
+        startTime: '2024-07-19T00:00:00Z',
+        endTime: '2024-07-20T23:59:59Z'
+      }
     ]
   },
   'Cuttack': {
     current: {
       temperature: 29,
-      condition: 'cloudy',
       humidity: 80,
+      rainfall: 5,
       windSpeed: 10,
-      precipitation: 5
+      pressure: 1010,
+      uvIndex: 4,
+      condition: 'cloudy',
+      icon: 'cloudy',
+      timestamp: '2024-03-15T10:30:00Z'
     },
     forecast: [
-      { day: 'Today', high: 29, low: 21, condition: 'cloudy' },
-      { day: 'Tomorrow', high: 30, low: 22, condition: 'partly-cloudy' },
-      { day: 'Wed', high: 28, low: 20, condition: 'rainy' },
-      { day: 'Thu', high: 31, low: 22, condition: 'partly-cloudy' },
-      { day: 'Fri', high: 32, low: 23, condition: 'sunny' },
-      { day: 'Sat', high: 30, low: 21, condition: 'cloudy' },
-      { day: 'Sun', high: 29, low: 20, condition: 'rainy' }
+      { date: '2024-03-15', high: 29, low: 21, condition: 'cloudy', icon: 'cloudy', rainfall: 5, windSpeed: 10, humidity: 75 },
+      { date: '2024-03-16', high: 30, low: 22, condition: 'partly-cloudy', icon: 'partly-cloudy', rainfall: 2, windSpeed: 8, humidity: 60 },
+      { date: '2024-03-17', high: 28, low: 20, condition: 'rainy', icon: 'rainy', rainfall: 12, windSpeed: 15, humidity: 85 },
+      { date: '2024-03-18', high: 31, low: 22, condition: 'partly-cloudy', icon: 'partly-cloudy', rainfall: 1, windSpeed: 7, humidity: 55 },
+      { date: '2024-03-19', high: 32, low: 23, condition: 'sunny', icon: 'sunny', rainfall: 0, windSpeed: 5, humidity: 40 },
+      { date: '2024-03-20', high: 30, low: 21, condition: 'cloudy', icon: 'cloudy', rainfall: 6, windSpeed: 9, humidity: 70 },
+      { date: '2024-03-21', high: 29, low: 20, condition: 'rainy', icon: 'rainy', rainfall: 14, windSpeed: 13, humidity: 80 }
     ],
     alerts: [
-      { title: 'Rainfall Alert', description: 'Moderate rainfall expected in Cuttack district on Wednesday and Sunday. Plan agricultural activities accordingly.', validUntil: 'Jul 18, 2024' }
+      { 
+        id: 3,
+        type: 'info', 
+        title: 'Rainfall Alert', 
+        description: 'Moderate rainfall expected in Cuttack district on Wednesday and Sunday. Plan agricultural activities accordingly.', 
+        severity: 'medium',
+        startTime: '2024-07-17T00:00:00Z',
+        endTime: '2024-07-18T23:59:59Z'
+      }
     ]
   },
   'Puri': {
     current: {
       temperature: 28,
-      condition: 'partly-cloudy',
       humidity: 85,
+      rainfall: 0,
       windSpeed: 15,
-      precipitation: 0
+      pressure: 1008,
+      uvIndex: 7,
+      condition: 'partly-cloudy',
+      icon: 'partly-cloudy',
+      timestamp: '2024-03-15T10:30:00Z'
     },
     forecast: [
-      { day: 'Today', high: 28, low: 24, condition: 'partly-cloudy' },
-      { day: 'Tomorrow', high: 29, low: 25, condition: 'sunny' },
-      { day: 'Wed', high: 27, low: 23, condition: 'rainy' },
-      { day: 'Thu', high: 26, low: 22, condition: 'rainy' },
-      { day: 'Fri', high: 28, low: 24, condition: 'cloudy' },
-      { day: 'Sat', high: 30, low: 25, condition: 'sunny' },
-      { day: 'Sun', high: 29, low: 24, condition: 'partly-cloudy' }
+      { date: '2024-03-15', high: 28, low: 24, condition: 'partly-cloudy', icon: 'partly-cloudy', rainfall: 1, windSpeed: 15, humidity: 85 },
+      { date: '2024-03-16', high: 29, low: 25, condition: 'sunny', icon: 'sunny', rainfall: 0, windSpeed: 12, humidity: 70 },
+      { date: '2024-03-17', high: 27, low: 23, condition: 'rainy', icon: 'rainy', rainfall: 10, windSpeed: 18, humidity: 90 },
+      { date: '2024-03-18', high: 26, low: 22, condition: 'rainy', icon: 'rainy', rainfall: 16, windSpeed: 20, humidity: 95 },
+      { date: '2024-03-19', high: 28, low: 24, condition: 'cloudy', icon: 'cloudy', rainfall: 4, windSpeed: 14, humidity: 80 },
+      { date: '2024-03-20', high: 30, low: 25, condition: 'sunny', icon: 'sunny', rainfall: 0, windSpeed: 10, humidity: 65 },
+      { date: '2024-03-21', high: 29, low: 24, condition: 'partly-cloudy', icon: 'partly-cloudy', rainfall: 2, windSpeed: 13, humidity: 75 }
     ],
     alerts: [
-      { title: 'Coastal Weather Alert', description: 'Strong coastal winds expected in Puri district. Secure crops and fishing equipment. Monitor cyclone updates.', validUntil: 'Jul 22, 2024' }
+      { 
+        id: 1,
+        type: 'warning', 
+        title: 'Coastal Weather Alert', 
+        description: 'Strong coastal winds expected in Puri district. Secure crops and fishing equipment. Monitor cyclone updates.', 
+        severity: 'high',
+        startTime: '2024-07-21T00:00:00Z',
+        endTime: '2024-07-22T23:59:59Z'
+      }
     ]
   },
   'Berhampur': {
     current: {
       temperature: 31,
-      condition: 'sunny',
       humidity: 70,
+      rainfall: 0,
       windSpeed: 8,
-      precipitation: 0
+      pressure: 1014,
+      uvIndex: 8,
+      condition: 'sunny',
+      icon: 'sunny',
+      timestamp: '2024-03-15T10:30:00Z'
     },
     forecast: [
-      { day: 'Today', high: 31, low: 23, condition: 'sunny' },
-      { day: 'Tomorrow', high: 32, low: 24, condition: 'partly-cloudy' },
-      { day: 'Wed', high: 30, low: 22, condition: 'cloudy' },
-      { day: 'Thu', high: 28, low: 21, condition: 'rainy' },
-      { day: 'Fri', high: 29, low: 22, condition: 'partly-cloudy' },
-      { day: 'Sat', high: 31, low: 23, condition: 'sunny' },
-      { day: 'Sun', high: 30, low: 22, condition: 'cloudy' }
+      { date: '2024-03-15', high: 31, low: 23, condition: 'sunny', icon: 'sunny', rainfall: 0, windSpeed: 6, humidity: 45 },
+      { date: '2024-03-16', high: 32, low: 24, condition: 'partly-cloudy', icon: 'partly-cloudy', rainfall: 2, windSpeed: 7, humidity: 50 },
+      { date: '2024-03-17', high: 30, low: 22, condition: 'cloudy', icon: 'cloudy', rainfall: 5, windSpeed: 8, humidity: 65 },
+      { date: '2024-03-18', high: 28, low: 21, condition: 'rainy', icon: 'rainy', rainfall: 15, windSpeed: 12, humidity: 80 },
+      { date: '2024-03-19', high: 29, low: 22, condition: 'partly-cloudy', icon: 'partly-cloudy', rainfall: 3, windSpeed: 7, humidity: 55 },
+      { date: '2024-03-20', high: 31, low: 23, condition: 'sunny', icon: 'sunny', rainfall: 0, windSpeed: 5, humidity: 40 },
+      { date: '2024-03-21', high: 30, low: 22, condition: 'cloudy', icon: 'cloudy', rainfall: 8, windSpeed: 9, humidity: 70 }
     ],
     alerts: [
-      { title: 'Heat Advisory', description: 'High temperatures expected in Berhampur district. Ensure adequate irrigation and protect crops from heat stress.', validUntil: 'Jul 19, 2024' }
+      { 
+        id: 4,
+        type: 'warning', 
+        title: 'Heat Advisory', 
+        description: 'High temperatures expected in Berhampur district. Ensure adequate irrigation and protect crops from heat stress.', 
+        severity: 'medium',
+        startTime: '2024-07-18T00:00:00Z',
+        endTime: '2024-07-19T23:59:59Z'
+      }
     ]
   }
 }
@@ -231,13 +282,13 @@ export const yieldPredictions: YieldPrediction[] = [
 export const currentWeather: CurrentWeather = {
   temperature: 28,
   humidity: 65,
-  rainfall: 12,
   windSpeed: 8,
-  pressure: 1013,
   uvIndex: 6,
   condition: 'Partly Cloudy',
   icon: 'partly-cloudy',
-  timestamp: '2024-03-15T10:30:00Z'
+  timestamp: '2024-03-15T10:30:00Z',
+  rainfall: 12,
+  pressure: 1013
 }
 
 export const weatherForecast: WeatherForecast[] = [
@@ -433,6 +484,7 @@ export const odishaTownsData: OdishaTownData[] = [
       timestamp: new Date().toISOString()
     },
     soilQuality: {
+      type: 'Red Laterite',
       ph: 6.2,
       nitrogen: 240,
       phosphorus: 28,
@@ -470,13 +522,14 @@ export const odishaTownsData: OdishaTownData[] = [
       timestamp: new Date().toISOString()
     },
     soilQuality: {
+      type: 'Alluvial',
       ph: 6.8,
-      nitrogen: 380,
+      nitrogen: 250,
       phosphorus: 45,
-      potassium: 420,
-      organicMatter: 3.2,
-      moisture: 28,
-      salinity: 0.2,
+      potassium: 320,
+      organicMatter: 3.5,
+      moisture: 30,
+      salinity: 0.3,
       quality: 'excellent',
       suitableCrops: ['Rice', 'Jute', 'Sugarcane', 'Vegetables', 'Coconut'],
       recommendations: ['Excellent soil condition', 'Maintain drainage', 'Continue current practices']
@@ -507,6 +560,7 @@ export const odishaTownsData: OdishaTownData[] = [
       timestamp: new Date().toISOString()
     },
     soilQuality: {
+      type: 'Sandy Loam',
       ph: 7.1,
       nitrogen: 180,
       phosphorus: 22,
@@ -544,6 +598,7 @@ export const odishaTownsData: OdishaTownData[] = [
       timestamp: new Date().toISOString()
     },
     soilQuality: {
+      type: 'Red Laterite',
       ph: 6.5,
       nitrogen: 220,
       phosphorus: 35,
@@ -581,6 +636,7 @@ export const odishaTownsData: OdishaTownData[] = [
       timestamp: new Date().toISOString()
     },
     soilQuality: {
+      type: 'Clay Loam',
       ph: 6.0,
       nitrogen: 200,
       phosphorus: 30,
@@ -618,6 +674,7 @@ export const odishaTownsData: OdishaTownData[] = [
       timestamp: new Date().toISOString()
     },
     soilQuality: {
+      type: 'Black Cotton',
       ph: 6.8,
       nitrogen: 280,
       phosphorus: 40,

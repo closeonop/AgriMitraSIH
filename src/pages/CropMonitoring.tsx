@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next'
 import { useField } from '../contexts/FieldContext'
 
@@ -38,6 +38,7 @@ const CropMonitoring = () => {
   const { selectedField } = useField()
   const [selectedCrop, setSelectedCrop] = useState('wheat-001')
   const [showAddCropModal, setShowAddCropModal] = useState(false)
+
   const [showEditModal, setShowEditModal] = useState(false)
   const [showDeleteModal, setShowDeleteModal] = useState(false)
   const [editingCrop, setEditingCrop] = useState<CropData | null>(null)
@@ -996,4 +997,4 @@ const CropMonitoring = () => {
   )
 }
 
-export default CropMonitoring
+export default CropMonitoring // Removed unused state

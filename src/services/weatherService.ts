@@ -283,7 +283,7 @@ export class WeatherService {
     return descriptions[condition] || condition;
   }
 
-  private getWeatherIcon(condition: string, weatherCode?: string): string {
+  private getWeatherIcon(condition: string): string {
     // More comprehensive mapping based on OpenWeatherMap conditions
     const icons: Record<string, string> = {
       // Clear conditions

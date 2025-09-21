@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -170,7 +169,7 @@ const LocationSelector: React.FC<LocationSelectorProps> = ({ onLocationSelect })
       const locationString = selectedTown ? `${selectedLocation}, ${selectedTown}` : selectedLocation;
       onLocationSelect(locationString, soil, selectedTown);
     }
-  }, [selectedLocation, selectedTown, t]); // Removed onLocationSelect from dependencies to prevent infinite re-renders
+  }, [selectedLocation, selectedTown, t, onLocationSelect]);
 
   const handleLocationSelect = (district: string) => {
     setSelectedLocation(district);

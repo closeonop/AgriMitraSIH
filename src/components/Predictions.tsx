@@ -1,10 +1,7 @@
-import * as React from 'react';
-import { useState, useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
+import { useState } from 'react';
 import { LocationSelector } from './LocationSelector';
 import weatherService from '../services/weatherService';
 import soilService from '../services/soilService';
-import { odishaTownsData } from '../utils/mockData';
 
 // Workflow steps enum
 enum WorkflowStep {
@@ -45,7 +42,6 @@ interface PredictionResult {
 }
 
 export const Predictions: React.FC = () => {
-  const { t } = useTranslation();
   const [currentStep, setCurrentStep] = useState<WorkflowStep>(WorkflowStep.INPUT);
   const [formData, setFormData] = useState<FarmerInputData>({
     location: '',
@@ -59,7 +55,7 @@ export const Predictions: React.FC = () => {
     expectedHarvestDate: ''
   });
   const [predictionResult, setPredictionResult] = useState<PredictionResult | null>(null);
-  const [isProcessing, setIsProcessing] = useState(false);
+
 
   // Crop options for Odisha
   const cropOptions = [
@@ -86,7 +82,6 @@ export const Predictions: React.FC = () => {
 
   // Process prediction workflow
   const processPrediction = async () => {
-    setIsProcessing(true);
     setCurrentStep(WorkflowStep.PROCESSING);
 
     try {
@@ -103,7 +98,7 @@ export const Predictions: React.FC = () => {
       const yieldPrediction = generateYieldPrediction(formData, weatherData, soilData);
       
       // Generate advisory recommendations
-      const advisory = generateAdvisory(formData, weatherData, soilData);
+      const advisory = generateAdvisory(formData);
 
       setPredictionResult({
         yieldPrediction,
@@ -119,7 +114,7 @@ export const Predictions: React.FC = () => {
       setPredictionResult(generateMockPrediction(formData));
       setCurrentStep(WorkflowStep.RESULTS);
     } finally {
-      setIsProcessing(false);
+      // Processing complete - no additional cleanup needed
     }
   };
 
@@ -168,7 +163,7 @@ export const Predictions: React.FC = () => {
   };
 
   // Generate advisory recommendations
-  const generateAdvisory = (inputs: FarmerInputData, weather: any, soil: any) => {
+  const generateAdvisory = (inputs: FarmerInputData) => {
     const cropSpecificAdvisory: Record<string, any> = {
       rice: {
         fertilizer: [
@@ -224,7 +219,7 @@ export const Predictions: React.FC = () => {
   };
 
   // Generate mock prediction for fallback
-  const generateMockPrediction = (inputs: FarmerInputData): PredictionResult => {
+  const generateMockPrediction = (_formData: FarmerInputData): PredictionResult => {
     return {
       yieldPrediction: {
         estimated: 45,

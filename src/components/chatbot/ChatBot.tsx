@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect } from 'react';
 import {
   Card,
   CardContent,
@@ -7,9 +7,6 @@ import {
   TextField,
   IconButton,
   Chip,
-  List,
-  ListItem,
-  ListItemButton,
   Divider,
   Avatar,
   Paper,
@@ -19,12 +16,11 @@ import {
 import {
   Send as SendIcon,
   SmartToy as BotIcon,
-  Person as PersonIcon,
   Lightbulb as LightbulbIcon
 } from '@mui/icons-material'
 import { useTranslation } from 'react-i18next'
 import MessageBubble from './MessageBubble'
-import { chatSuggestions, chatbotResponses } from '../../utils/mockData'
+import { chatSuggestions } from '../../utils/mockData'
 
 interface Message {
   id: number

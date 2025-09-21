@@ -1,11 +1,9 @@
 import { useState, useEffect } from 'react'
-import { useTranslation } from 'react-i18next'
 
 // Components
 import Header from './components/Header'
 import Hero from './components/Hero'
 import ChatBotPreview from './components/ChatBotPreview'
-import VoiceAssistant from './components/VoiceAssistant'
 import Features from './components/Features'
 import StorySection from './components/StorySection'
 import ContactForm from './components/ContactForm'

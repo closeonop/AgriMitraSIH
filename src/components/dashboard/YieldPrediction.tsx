@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react';
 import {
   Card,
   CardContent,
@@ -49,13 +49,42 @@ ChartJS.register(
   Filler
 )
 
+// Helper functions
+const getConfidenceColor = (confidence: number): 'success' | 'warning' | 'error' => {
+  if (confidence >= 80) return 'success'
+  if (confidence >= 60) return 'warning'
+  return 'error'
+}
+
+const getFactorColor = (value: number): 'success' | 'warning' | 'error' => {
+  if (value >= 80) return 'success'
+  if (value >= 60) return 'warning'
+  return 'error'
+}
+
 const YieldPrediction: React.FC = () => {
   const { t } = useTranslation()
   const { crops, getPredictionByCropId } = useCropData()
-  const [selectedCrop, setSelectedCrop] = useState<number>(crops[0]?.id || 1)
+  const [selectedCrop, setSelectedCrop] = useState<number>(crops.length > 0 ? crops[0].id : 1)
 
   const prediction = getPredictionByCropId(selectedCrop)
   const selectedCropData = crops.find(crop => crop.id === selectedCrop)
+
+  // Return early if no crops or prediction data
+  if (!crops.length || !prediction || !selectedCropData) {
+    return (
+      <Card>
+        <CardContent>
+          <Typography variant="h6" component="h2">
+            {t('dashboard.yieldPrediction')}
+          </Typography>
+          <Alert severity="info">
+            No crop data available for yield prediction.
+          </Alert>
+        </CardContent>
+      </Card>
+    )
+  }
 
   const historicalData = {
     labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
@@ -102,18 +131,6 @@ const YieldPrediction: React.FC = () => {
     }
   }
 
-  const getConfidenceColor = (confidence: number) => {
-    if (confidence >= 80) return 'success'
-    if (confidence >= 60) return 'warning'
-    return 'error'
-  }
-
-  const getFactorColor = (value: number) => {
-    if (value >= 80) return 'success'
-    if (value >= 60) return 'warning'
-    return 'error'
-  }
-
   return (
     <Card>
       <CardContent>
@@ -131,7 +148,7 @@ const YieldPrediction: React.FC = () => {
             >
               {crops.map((crop) => (
                 <MenuItem key={crop.id} value={crop.id}>
-                  {crop.name} - {crop.variety}
+                  {crop.name} - {crop.variety || 'Unknown variety'}
                 </MenuItem>
               ))}
             </Select>
@@ -154,7 +171,7 @@ const YieldPrediction: React.FC = () => {
               </Box>
               
               <Typography variant="body1" color="text.secondary" sx={{ mb: 2 }}>
-                Expected yield for {selectedCropData.name} ({selectedCropData.variety}) in {selectedCropData.area} hectares
+                Expected yield for {selectedCropData.name} ({selectedCropData.variety || 'Unknown variety'}) in {selectedCropData.area || 0} hectares
               </Typography>
 
               <Alert severity="info" sx={{ mb: 2 }}>
@@ -179,13 +196,13 @@ const YieldPrediction: React.FC = () => {
                   <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
                     <Typography variant="body2">Weather</Typography>
                     <Typography variant="body2" fontWeight={600}>
-                      {prediction.factors.weather}%
+                      {prediction.factors?.weather || 0}%
                     </Typography>
                   </Box>
                   <LinearProgress 
                     variant="determinate" 
-                    value={prediction.factors.weather} 
-                    color={getFactorColor(prediction.factors.weather) as any}
+                    value={prediction.factors?.weather || 0} 
+                    color={getFactorColor(prediction.factors?.weather || 0) as any}
                     sx={{ height: 8, borderRadius: 4 }}
                   />
                 </Box>
@@ -193,13 +210,13 @@ const YieldPrediction: React.FC = () => {
                   <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
                     <Typography variant="body2">Soil Health</Typography>
                     <Typography variant="body2" fontWeight={600}>
-                      {prediction.factors.soil}%
+                      {prediction.factors?.soil || 0}%
                     </Typography>
                   </Box>
                   <LinearProgress 
                     variant="determinate" 
-                    value={prediction.factors.soil} 
-                    color={getFactorColor(prediction.factors.soil) as any}
+                    value={prediction.factors?.soil || 0} 
+                    color={getFactorColor(prediction.factors?.soil || 0) as any}
                     sx={{ height: 8, borderRadius: 4 }}
                   />
                 </Box>
@@ -207,13 +224,13 @@ const YieldPrediction: React.FC = () => {
                   <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
                     <Typography variant="body2">Irrigation</Typography>
                     <Typography variant="body2" fontWeight={600}>
-                      {prediction.factors.irrigation}%
+                      {prediction.factors?.irrigation || 0}%
                     </Typography>
                   </Box>
                   <LinearProgress 
                     variant="determinate" 
-                    value={prediction.factors.irrigation} 
-                    color={getFactorColor(prediction.factors.irrigation) as any}
+                    value={prediction.factors?.irrigation || 0} 
+                    color={getFactorColor(prediction.factors?.irrigation || 0) as any}
                     sx={{ height: 8, borderRadius: 4 }}
                   />
                 </Box>
@@ -221,13 +238,13 @@ const YieldPrediction: React.FC = () => {
                   <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
                     <Typography variant="body2">Pest Control</Typography>
                     <Typography variant="body2" fontWeight={600}>
-                      {prediction.factors.pestControl}%
+                      {prediction.factors?.pestControl || 0}%
                     </Typography>
                   </Box>
                   <LinearProgress 
                     variant="determinate" 
-                    value={prediction.factors.pestControl} 
-                    color={getFactorColor(prediction.factors.pestControl) as any}
+                    value={prediction.factors?.pestControl || 0} 
+                    color={getFactorColor(prediction.factors?.pestControl || 0) as any}
                     sx={{ height: 8, borderRadius: 4 }}
                   />
                 </Box>
@@ -244,7 +261,7 @@ const YieldPrediction: React.FC = () => {
                   {t('predictions.risks')}
                 </Typography>
                 <List dense>
-                  {prediction.risks.map((risk, index) => (
+                  {(prediction.risks || []).map((risk: string, index: number) => (
                     <ListItem key={index} sx={{ px: 0 }}>
                       <ListItemIcon sx={{ minWidth: 32 }}>
                         <WarningIcon color="warning" fontSize="small" />
@@ -264,7 +281,7 @@ const YieldPrediction: React.FC = () => {
                   Recommendations
                 </Typography>
                 <List dense>
-                  {prediction.recommendations.map((recommendation, index) => (
+                  {(prediction.recommendations || []).map((recommendation: string, index: number) => (
                     <ListItem key={index} sx={{ px: 0 }}>
                       <ListItemIcon sx={{ minWidth: 32 }}>
                         <CheckCircleIcon color="success" fontSize="small" />
@@ -285,4 +302,4 @@ const YieldPrediction: React.FC = () => {
   )
 }
 
-export default YieldPrediction
+export default YieldPrediction // Removed unused state

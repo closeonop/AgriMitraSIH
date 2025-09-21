@@ -2,7 +2,6 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useLanguage } from '../hooks/useLanguage'
 import { 
-  Home, 
   BarChart3, 
   TrendingUp, 
   MessageSquare, 
@@ -16,7 +15,6 @@ import {
   Eye,
   TrendingDown,
   Sparkles,
-  X,
   MessageCircle
 } from 'lucide-react'
 
@@ -41,7 +39,7 @@ const Header = ({ isScrolled, onMobileMenuToggle, onNavigate, currentPage }: {
     if (featuresMenuOpen) setFeaturesMenuOpen(false)
   }
 
-  const { currentLanguage, changeLanguage: changeLanguageHook, availableLanguages } = useLanguage()
+  const { availableLanguages } = useLanguage()
 
   const currentLang = availableLanguages.find(lang => lang.code === i18n.language)
 

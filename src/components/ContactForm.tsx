@@ -1,8 +1,6 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Button } from './ui/moving-border';
 import { FloatingLabelInput, FloatingLabelTextarea } from './ui/floating-label-input';
-import { PlaceholdersAndVanishInput } from './ui/placeholders-and-vanish-input';
 import { BackgroundBeams } from './ui/background-beams';
 import { motion } from 'framer-motion';
 
@@ -165,24 +163,15 @@ const ContactForm = () => {
                   transition={{ duration: 0.5, delay: 0.6 }}
                   className="relative z-40"
                 >
-                  <PlaceholdersAndVanishInput
-                    placeholders={[
-                      t('contact.form.subjectPlaceholder1', 'General Inquiry'),
-                      t('contact.form.subjectPlaceholder2', 'Technical Support'),
-                      t('contact.form.subjectPlaceholder3', 'Partnership Opportunity'),
-                      t('contact.form.subjectPlaceholder4', 'Feedback'),
-                    ]}
-                    onChange={(e) => {
-                      const syntheticEvent = {
-                        target: { 
-                          name: 'subject', 
-                          value: e.target.value 
-                        }
-                      } as React.ChangeEvent<HTMLInputElement>;
-                      handleChange(syntheticEvent);
-                    }}
-                    onSubmit={() => {}}
-                    className="w-full h-14 px-4 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-300"
+                  <FloatingLabelInput
+                    id="subject"
+                    name="subject"
+                    label={t('contact.form.subject', 'Subject')}
+                    type="text"
+                    value={formData.subject}
+                    onChange={handleChange}
+                    placeholder={t('contact.form.subjectPlaceholder1', 'General Inquiry')}
+                    className="w-full h-14 px-4 pt-6 pb-2 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-300"
                   />
                 </motion.div>
 

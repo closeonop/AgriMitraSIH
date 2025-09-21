@@ -200,43 +200,6 @@ export class SoilService {
     return crops.length > 0 ? crops : ['Consult agricultural expert for crop selection'];
   }
 
-  // Enhanced soil analysis calculations
-  private performAdvancedAnalysis(soilData: any): {
-    fertilityIndex: number;
-    cropYieldPotential: number;
-    waterRetentionCapacity: number;
-    nutrientAvailabilityIndex: number;
-    soilQualityGrade: string;
-    riskAssessment: string[];
-  } {
-    // Calculate fertility index (0-100)
-    const fertilityIndex = this.calculateFertilityIndex(soilData);
-    
-    // Calculate crop yield potential (0-100)
-    const cropYieldPotential = this.calculateCropYieldPotential(soilData);
-    
-    // Calculate water retention capacity (0-100)
-    const waterRetentionCapacity = this.calculateWaterRetentionCapacity(soilData);
-    
-    // Calculate nutrient availability index (0-100)
-    const nutrientAvailabilityIndex = this.calculateNutrientAvailabilityIndex(soilData);
-    
-    // Determine soil quality grade
-    const soilQualityGrade = this.determineSoilQualityGrade(fertilityIndex, cropYieldPotential, waterRetentionCapacity);
-    
-    // Assess risks
-    const riskAssessment = this.assessSoilRisks(soilData);
-    
-    return {
-      fertilityIndex,
-      cropYieldPotential,
-      waterRetentionCapacity,
-      nutrientAvailabilityIndex,
-      soilQualityGrade,
-      riskAssessment
-    };
-  }
-
   // Perform comprehensive advanced analysis
   private performComprehensiveAnalysis(soilData: any) {
     return {

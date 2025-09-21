@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button } from './ui/moving-border'
 import { WobbleCard } from './ui/wobble-card'
@@ -7,9 +7,7 @@ import { Spotlight } from './ui/spotlight'
 import { FloatingDock } from './ui/floating-dock'
 import { 
   Mic, 
-  MicOff, 
   Volume2, 
-  VolumeX, 
   Settings, 
   Headphones,
   Zap,
@@ -23,7 +21,6 @@ const VoiceAssistant = () => {
   const [isListening, setIsListening] = useState(false)
   const [isSpeaking, setIsSpeaking] = useState(false)
   const [lastCommand, setLastCommand] = useState('')
-  const [voiceLevel, setVoiceLevel] = useState(0)
 
   const startListening = () => {
     if ('webkitSpeechRecognition' in window) {

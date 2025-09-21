@@ -40,11 +40,11 @@ export const useLanguage = () => {
   }
 
   const availableLanguages = [
-    { code: 'en', name: 'English', nativeName: 'English' },
-    { code: 'pa', name: 'Punjabi', nativeName: 'ਪੰਜਾਬੀ' },
-    { code: 'hi', name: 'Hindi', nativeName: 'हिन्दी' },
-    { code: 'or', name: 'Odia', nativeName: 'ଓଡ଼ିଆ' },
-    { code: 'bn', name: 'Bengali', nativeName: 'বাংলা' }
+    { code: 'en', name: 'English', nativeName: 'English', flag: '🇺🇸' },
+    { code: 'pa', name: 'Punjabi', nativeName: 'ਪੰਜਾਬੀ', flag: '🇮🇳' },
+    { code: 'hi', name: 'Hindi', nativeName: 'हिन्दी', flag: '🇮🇳' },
+    { code: 'or', name: 'Odia', nativeName: 'ଓଡ଼ିଆ', flag: '🇮🇳' },
+    { code: 'bn', name: 'Bengali', nativeName: 'বাংলা', flag: '🇧🇩' }
   ]
 
   return {
@@ -53,4 +53,4 @@ export const useLanguage = () => {
     availableLanguages,
     isRTL: currentLanguage === 'ar' || currentLanguage === 'ur'
   }
-}
+} // Removed unused state

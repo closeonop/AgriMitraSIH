@@ -58,6 +58,7 @@ export interface OdishaTownData {
 }
 
 export interface SoilQualityData {
+  type: string
   ph: number
   nitrogen: number
   phosphorus: number

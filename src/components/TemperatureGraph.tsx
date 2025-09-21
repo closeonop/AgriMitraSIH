@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 
 const TemperatureGraph = () => {
   const { t } = useTranslation()
-  const [currentTemp, setCurrentTemp] = useState(28)
+  const [currentTemp] = useState(28)
   const [isAnimating, setIsAnimating] = useState(false)
 
   // Mock temperature data for the last 7 days

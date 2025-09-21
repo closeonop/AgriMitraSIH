@@ -1,22 +1,20 @@
-import React, { useState } from 'react'
+import { useState } from 'react';
 import {
   IconButton,
   Menu,
   MenuItem,
   ListItemIcon,
   ListItemText,
-  Typography,
-  Box
+  Box,
+  Typography
 } from '@mui/material'
 import {
   Language as LanguageIcon,
   Check as CheckIcon
 } from '@mui/icons-material'
-import { useTranslation } from 'react-i18next'
 import { useLanguage } from '../../hooks/useLanguage'
 
 const LanguageSelector: React.FC = () => {
-  const { t } = useTranslation()
   const { currentLanguage, changeLanguage, availableLanguages } = useLanguage()
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const open = Boolean(anchorEl)

@@ -1,6 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import { useState } from 'react'
-import { CloudSun, BarChart3, Sprout, Lightbulb, Sparkles, ArrowRight, Rocket, MessageSquare, Zap, Star } from 'lucide-react'
+import { CloudSun, BarChart3, Sprout, Lightbulb, Sparkles, Rocket, MessageSquare, Zap, Star } from 'lucide-react'
 import { HoverEffect } from './ui/card-hover-effect'
 
 interface FeaturesProps {
@@ -9,8 +8,6 @@ interface FeaturesProps {
 
 const Features = ({ onNavigate }: FeaturesProps) => {
   const { t } = useTranslation()
-  const [hoveredCard, setHoveredCard] = useState<number | null>(null)
-  const [clickedCard, setClickedCard] = useState<number | null>(null)
 
   const features = [
     {

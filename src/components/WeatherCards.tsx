@@ -8,7 +8,7 @@ const WeatherCards = () => {
   const [selectedLocation, setSelectedLocation] = useState<string>('')
   const [soilType, setSoilType] = useState<string>('')
   const { weather, loading } = useWeather(selectedLocation)
-  
+
   const handleLocationSelect = (location: string, soil: string) => {
     setSelectedLocation(location)
     setSoilType(soil)
@@ -64,7 +64,7 @@ const WeatherCards = () => {
     }
   }
 
-  const getStatusText = (status) => {
+  const getStatusText = (status: string) => {
     return t(`weatherCards.status.${status}`)
   }
 
@@ -148,7 +148,7 @@ const WeatherCards = () => {
                   </h4>
                   <div className="bg-white rounded-lg shadow-sm border border-blue-100 overflow-x-auto">
                     <div className="flex min-w-max">
-                      {weather.forecast.map((day, index) => (
+                      {weather.forecast.map((day: any, index: number) => (
                         <div key={index} className={`p-3 text-center ${index !== weather.forecast.length - 1 ? 'border-r border-gray-100' : ''}`} style={{minWidth: '100px'}}>
                           <p className="text-sm font-medium text-gray-700">{day.day}</p>
                           <div className="text-2xl my-2">
@@ -183,7 +183,7 @@ const WeatherCards = () => {
 
       <h3 className="text-2xl font-bold text-gray-800 mb-6">Weather Indicators</h3>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        {weatherCards.map((card, index) => (
+        {weatherCards.map((card: any, index: number) => (
           <div 
             key={index}
             className={`relative overflow-hidden rounded-xl p-6 shadow-lg bg-gradient-to-br ${card.bgColor} border border-white/20 transition-transform hover:-translate-y-1 hover:shadow-xl`}
@@ -215,7 +215,7 @@ const WeatherCards = () => {
             Weather Alerts
           </h3>
           <div className="space-y-4">
-            {weather.alerts.map((alert, index) => (
+            {weather.alerts.map((alert: any, index: number) => (
               <div key={index} className="bg-red-50 border border-red-200 rounded-lg p-4 shadow-sm">
                 <div className="flex items-start">
                   <div className="bg-red-100 p-2 rounded-full mr-3 flex-shrink-0">

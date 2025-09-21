@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react';
 import { Field } from '../types/field'
 import { createField, updateField } from '../services/fieldService'
 
