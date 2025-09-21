@@ -1,0 +1,391 @@
+{
+  "nav": {
+    "home": "Home",
+    "dashboard": "Dashboard",
+    "predictions": "Predictions",
+    "recommendations": "Recommendations",
+    "soil-health": "Soil Health",
+    "chatbot": "AI Assistant",
+    "settings": "Settings",
+    "contact": "Contact Us",
+    "tryAssistant": "Try AI Assistant"
+  },
+  "location": {
+    "title": "Your Location in Odisha",
+    "select_prompt": "Select your district",
+    "soil_type": "Soil Type",
+    "unknown_soil": "Unknown soil type",
+    "selected": "Selected Location"
+  },
+  "common": {
+    "loading": "Loading"
+  },
+  "hero": {
+    "badge": "AI-Powered Agriculture Platform",
+    "title": {
+      "line1": "Transform Your Farm with",
+      "line2": "AgriMitra AI"
+    },
+    "subtitle": "Intelligent crop management and precision agriculture for sustainable farming success",
+    "description": "Experience the future of farming with our comprehensive AI platform featuring real-time crop monitoring, weather-based recommendations, soil health analysis, and personalized farming strategies tailored to your specific needs.",
+    "cta": {
+      "primary": "Start Farming Smart",
+      "secondary": "Chat with AI Assistant"
+    },
+    "stats": {
+      "farmers": "Active Farmers",
+      "crops": "Supported Crops",
+      "accuracy": "Prediction Accuracy",
+      "support": "AI Support"
+    }
+  },
+  "voice": {
+    "badge": "Voice Assistant",
+    "title": "AI Voice Assistant",
+    "description": "Speak naturally with our AI assistant in Hindi, Punjabi, or English. Get instant answers to your farming questions through voice interaction.",
+    "listening": "Listening...",
+    "speaking": "Speaking...",
+    "clickToSpeak": "Click to speak",
+    "lastCommand": "Last command:",
+    "sampleCommands": "Try saying:",
+    "commands": {
+      "yield": "What's my crop yield?",
+      "weather": "How's the weather?",
+      "irrigation": "When to water?",
+      "fertilizer": "Fertilizer advice"
+    }
+  },
+  "features": {
+    "badge": "Features",
+    "title": "Powerful Features",
+    "subtitle": "Everything you need for modern, intelligent farming",
+    "learnMore": "Learn More",
+    "exploreAll": "Explore All Features",
+    "getHelp": "Get Help",
+    "weather": {
+      "title": "Weather Forecasting",
+      "description": "Real-time weather data and 7-day forecasts to plan your farming activities"
+    },
+    "yield": {
+      "title": "Yield Prediction",
+      "description": "AI-powered crop yield forecasting with 95% accuracy using machine learning"
+    },
+    "soil": {
+      "title": "Soil Health Analysis",
+      "description": "Comprehensive soil health monitoring and nutrient recommendations"
+    },
+    "smart": {
+      "title": "Smart Recommendations",
+      "description": "Personalized farming advice based on your specific conditions and crops"
+    }
+  },
+  "temperature": {
+    "badge": "Weather Data",
+    "title": "Temperature & Weather",
+    "description": "Real-time weather monitoring and temperature analysis for optimal farming decisions",
+    "currentTemp": "Current Temperature",
+    "live": "Live Data",
+    "today": "Today's Temperature",
+    "min": "Min",
+    "max": "Max"
+  },
+  "weatherCards": {
+    "badge": "Real-time Weather",
+    "title": "Weather Conditions",
+    "description": "Monitor current weather conditions affecting your crops",
+    "temperature": {
+      "title": "Temperature",
+      "description": "Current temperature with daily range"
+    },
+    "humidity": {
+      "title": "Humidity",
+      "description": "Air moisture levels affecting crop health"
+    },
+    "wind": {
+      "title": "Wind Speed",
+      "description": "Wind conditions for spraying and irrigation"
+    },
+    "sunlight": {
+      "title": "Sunlight Hours",
+      "description": "Daily sunlight exposure for photosynthesis"
+    },
+    "status": {
+      "excellent": "Excellent",
+      "good": "Good",
+      "normal": "Normal",
+      "warning": "Warning",
+      "danger": "Danger"
+    },
+    "updateInfo": "Updated every 30 minutes",
+    "current": "Current Weather"
+  },
+  "story": {
+    "badge": "Success Story",
+    "section1": {
+      "title": "Transforming Agriculture with AI",
+      "description": "Join thousands of farmers who have revolutionized their farming practices using our AI-powered platform. Increase yields, reduce costs, and make data-driven decisions."
+    },
+    "section2": {
+      "title": "Proven Results & Innovation",
+      "description": "Our advanced machine learning algorithms analyze weather patterns, soil conditions, and crop data to provide accurate predictions and actionable recommendations."
+    },
+    "stats": {
+      "farmers": "Active Farmers",
+      "crops": "Crop Types",
+      "acres": "Acres Monitored",
+      "accuracy": "Prediction Accuracy",
+      "yield": "Yield Increase",
+      "cost": "Cost Reduction"
+    },
+    "learnMore": "Learn More",
+    "cta": {
+      "title": "Ready to Transform Your Farming?",
+      "description": "Join the agricultural revolution and start making smarter, data-driven decisions today.",
+      "getStarted": "Get Started Now",
+      "contact": "Contact Us"
+    }
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "subtitle": "Your farming overview and quick insights",
+    "stats": {
+      "totalCrops": "Total Crops",
+      "healthyCrops": "Healthy Crops",
+      "expectedYield": "Expected Yield",
+      "farmArea": "Farm Area"
+    },
+    "temperature": {
+      "title": "Temperature Overview",
+      "current": "Current Temperature"
+    },
+    "activities": {
+      "title": "Recent Activities",
+      "irrigation": "Irrigation scheduled",
+      "fertilizer": "Fertilizer applied",
+      "weather": "Weather alert received",
+      "yield": "Yield prediction updated"
+    },
+    "quickActions": {
+      "title": "Quick Actions",
+      "predictions": "View Predictions",
+      "recommendations": "Get Recommendations",
+      "chatbot": "Ask AI Assistant"
+    },
+    "forecast": {
+      "title": "Weather Forecast"
+    }
+  },
+  "predictions": {
+    "title": "Yield Predictions",
+    "subtitle": "AI-powered crop yield forecasting with high accuracy",
+    "aiTitle": "AI-Powered Yield Forecasting",
+    "aiDescription": "Our advanced machine learning models analyze multiple factors including weather patterns, soil conditions, historical data, and crop characteristics to provide accurate yield predictions.",
+    "liveUpdate": "Live Updates",
+    "expectedYield": "Expected Yield",
+    "confidence": "Confidence Level",
+    "viewDetails": "View Details",
+    "status": {
+      "excellent": "Excellent",
+      "good": "Good",
+      "warning": "Warning"
+    },
+    "historical": {
+      "title": "Historical Analysis",
+      "description": "View past predictions and actual yields to track accuracy"
+    }
+  },
+  "recommendations": {
+    "title": "Smart Recommendations",
+    "subtitle": "Personalized farming advice based on your specific conditions",
+    "aiTitle": "AI-Generated Recommendations",
+    "aiDescription": "Our AI analyzes your farm data, weather conditions, and crop requirements to provide personalized recommendations for irrigation, fertilization, pest control, and harvesting.",
+    "updated": "Updated 2 hours ago",
+    "irrigation": {
+      "title": "Irrigation Schedule",
+      "description": "Water your wheat field every 3-4 days. Current soil moisture is at 65% which is optimal for growth."
+    },
+    "fertilizer": {
+      "title": "Fertilizer Application",
+      "description": "Apply NPK 20-20-20 fertilizer at 2kg per acre next week when soil temperature reaches 15°C."
+    },
+    "pest": {
+      "title": "Pest Control",
+      "description": "Monitor for aphids in the next 2 weeks. Apply neem oil spray as a preventive measure."
+    },
+    "harvest": {
+      "title": "Harvest Timing",
+      "description": "Optimal harvest window is 10-15 days from now when grain moisture content reaches 14-16%."
+    },
+    "priority": {
+      "high": "High Priority",
+      "medium": "Medium Priority",
+      "low": "Low Priority"
+    },
+    "apply": "Apply Now",
+    "learnMore": "Learn More",
+    "timeline": {
+      "title": "Implementation Timeline",
+      "today": "Apply fertilizer to wheat field",
+      "tomorrow": "Schedule irrigation for rice paddies",
+      "nextWeek": "Monitor soil pH levels"
+    },
+    "schedule": "Schedule"
+  },
+  "chatbot": {
+    "title": "AgriMitra AI Assistant",
+    "subtitle": "Your Smart Farming Companion",
+    "greeting": "Hello! I'm AgriMitra, your AI farming assistant. How can I help you improve your agricultural practices today?",
+    "inputPlaceholder": "Ask me about farming, crops, weather, or any agricultural question...",
+    "send": "Send",
+    "speak": "Speak",
+    "online": "Online & Ready to Help",
+    "voiceEnabled": "Voice Enabled",
+    "quickQuestions": {
+      "yield": "How can I increase my crop yield?",
+      "irrigation": "What's the best irrigation method?",
+      "weather": "How does weather affect my crops?",
+      "fertilizer": "When should I apply fertilizer?"
+    },
+    "responses": {
+      "yield": "To increase crop yield, focus on soil health, proper fertilization, optimal planting density, and regular monitoring for pests and diseases.",
+      "irrigation": "Drip irrigation is highly efficient for water conservation. Water early morning or evening to reduce evaporation.",
+      "weather": "Weather significantly impacts crop growth. Monitor temperature, rainfall, and humidity. Use weather forecasts for planning irrigation and harvesting.",
+      "fertilizer": "Apply fertilizer based on soil test results. Generally, apply nitrogen during active growth periods and phosphorus during root development."
+    },
+    "tips": {
+      "title": "💡 Pro Tips",
+      "items": [
+        "Use voice commands for hands-free interaction",
+        "Ask specific questions for better responses",
+        "I can speak responses in your preferred language",
+        "Try asking about crop rotation strategies"
+      ]
+    },
+    "voiceCommands": {
+      "title": "🎤 Voice Commands",
+      "examples": [
+        "How to increase crop yield?",
+        "Tell me about irrigation",
+        "What fertilizer should I use?",
+        "Weather impact on farming"
+      ]
+    },
+    "languages": {
+      "title": "🌐 Language Support",
+      "description": "I can understand and speak in multiple languages including English, Hindi, and Punjabi."
+    }
+  },
+  "settings": {
+    "title": "Settings",
+    "subtitle": "Manage your preferences and account settings",
+    "general": "General",
+    "language": "Language",
+    "comingSoon": "More settings coming soon!",
+    "saveChanges": "Save Changes"
+  },
+  "punjab": {
+    "title": "Punjab Weather & Soil Analysis",
+    "subtitle": "Comprehensive weather and soil quality analysis for Punjab towns",
+    "selectTown": "Select a town to view detailed analysis",
+    "weatherDetails": "Weather Details",
+    "soilQuality": "Soil Quality Analysis",
+    "rainfallAnalysis": "Rainfall Analysis",
+    "cropRecommendations": "Crop Recommendations",
+    "temperature": "Temperature",
+    "humidity": "Humidity",
+    "windSpeed": "Wind Speed",
+    "pressure": "Pressure",
+    "soilType": "Soil Type",
+    "phLevel": "pH Level",
+    "organicMatter": "Organic Matter",
+    "nitrogen": "Nitrogen",
+    "phosphorus": "Phosphorus",
+    "potassium": "Potassium",
+    "moisture": "Moisture",
+    "salinity": "Salinity",
+    "expectedRainfall": "Expected Rainfall",
+    "lastRainfall": "Last Rainfall",
+    "soilMoisture": "Soil Moisture",
+    "irrigationNeeded": "Irrigation Needed",
+    "recommendedCrops": "Recommended Crops",
+    "bestSeason": "Best Season",
+    "yieldPotential": "Yield Potential",
+    "riskFactors": "Risk Factors",
+    "towns": {
+      "amritsar": "Amritsar",
+      "ludhiana": "Ludhiana", 
+      "jalandhar": "Jalandhar",
+      "patiala": "Patiala",
+      "bathinda": "Bathinda",
+      "mohali": "Mohali",
+      "firozpur": "Firozpur",
+      "hoshiarpur": "Hoshiarpur"
+    }
+  },
+  "footer": {
+    "description": "Empowering farmers with AI-driven insights for sustainable and profitable agriculture. Join the future of farming today.",
+    "sections": {
+      "product": "Product",
+      "company": "Company",
+      "support": "Support",
+      "legal": "Legal"
+    },
+    "links": {
+      "dashboard": "Dashboard",
+      "predictions": "Predictions",
+      "recommendations": "Recommendations",
+      "chatbot": "AI Assistant",
+      "about": "About Us",
+      "contact": "Contact",
+      "careers": "Careers",
+      "blog": "Blog",
+      "help": "Help Center",
+      "documentation": "Documentation",
+      "api": "API",
+      "status": "Status",
+      "privacy": "Privacy Policy",
+      "terms": "Terms of Service",
+      "cookies": "Cookie Policy",
+      "gdpr": "GDPR"
+    },
+    "newsletter": {
+      "title": "Stay Updated",
+      "description": "Get the latest farming insights and AI updates delivered to your inbox.",
+      "placeholder": "Enter your email",
+      "subscribe": "Subscribe"
+    },
+    "copyright": "All rights reserved.",
+    "madeWith": "Made with",
+    "inIndia": "in India"
+  },
+  "contact": {
+    "title": "Contact Us",
+    "subtitle": "Have questions or feedback? We'd love to hear from you!",
+    "form": {
+      "name": "Your Name",
+      "namePlaceholder": "Enter your full name",
+      "email": "Email Address",
+      "emailPlaceholder": "Enter your email",
+      "phone": "Phone Number",
+      "phonePlaceholder": "Enter your phone number",
+      "subject": "Subject",
+      "subjectPlaceholder": "Select a subject",
+      "subjects": {
+        "general": "General Inquiry",
+        "support": "Technical Support",
+        "feedback": "Feedback",
+        "partnership": "Partnership"
+      },
+      "message": "Your Message",
+      "messagePlaceholder": "Enter your message here...",
+      "required": "* Required fields",
+      "submit": "Send Message",
+      "submitting": "Sending..."
+    },
+    "success": {
+      "title": "Message Sent!",
+      "message": "Thank you for reaching out. We'll get back to you soon!",
+      "button": "Send Another Message"
+    }
+  }
+}

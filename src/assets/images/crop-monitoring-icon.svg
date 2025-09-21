@@ -1,0 +1,108 @@
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="plantGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#90EE90;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#228B22;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="monitorGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#4169E1;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1E90FF;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background Circle -->
+  <circle cx="50" cy="50" r="45" fill="#F0F8FF" stroke="#228B22" stroke-width="2"/>
+  
+  <!-- Soil Base -->
+  <ellipse cx="50" cy="85" rx="35" ry="8" fill="#8B4513"/>
+  
+  <!-- Plant Stages -->
+  <!-- Stage 1: Seedling -->
+  <g transform="translate(20, 70)">
+    <line x1="0" y1="0" x2="0" y2="10" stroke="#228B22" stroke-width="2"/>
+    <ellipse cx="0" cy="5" rx="3" ry="2" fill="url(#plantGradient)"/>
+  </g>
+  
+  <!-- Stage 2: Young Plant -->
+  <g transform="translate(35, 65)">
+    <line x1="0" y1="0" x2="0" y2="15" stroke="#228B22" stroke-width="2"/>
+    <ellipse cx="-2" cy="8" rx="4" ry="3" fill="url(#plantGradient)"/>
+    <ellipse cx="2" cy="5" rx="3" ry="2" fill="url(#plantGradient)"/>
+  </g>
+  
+  <!-- Stage 3: Mature Plant -->
+  <g transform="translate(50, 55)">
+    <line x1="0" y1="0" x2="0" y2="25" stroke="#228B22" stroke-width="3"/>
+    <ellipse cx="-4" cy="15" rx="5" ry="4" fill="url(#plantGradient)"/>
+    <ellipse cx="4" cy="12" rx="4" ry="3" fill="url(#plantGradient)"/>
+    <ellipse cx="0" cy="8" rx="6" ry="5" fill="url(#plantGradient)"/>
+    <!-- Fruit/Grain -->
+    <circle cx="0" cy="5" r="3" fill="#FFD700"/>
+  </g>
+  
+  <!-- Stage 4: Full Growth -->
+  <g transform="translate(65, 50)">
+    <line x1="0" y1="0" x2="0" y2="30" stroke="#228B22" stroke-width="3"/>
+    <ellipse cx="-5" cy="20" rx="6" ry="5" fill="url(#plantGradient)"/>
+    <ellipse cx="5" cy="17" rx="5" ry="4" fill="url(#plantGradient)"/>
+    <ellipse cx="0" cy="12" rx="7" ry="6" fill="url(#plantGradient)"/>
+    <ellipse cx="-3" cy="7" rx="4" ry="3" fill="url(#plantGradient)"/>
+    <ellipse cx="3" cy="7" rx="4" ry="3" fill="url(#plantGradient)"/>
+    <!-- Multiple Fruits -->
+    <circle cx="-2" cy="4" r="2.5" fill="#FFD700"/>
+    <circle cx="2" cy="4" r="2.5" fill="#FFD700"/>
+  </g>
+  
+  <!-- Stage 5: Harvest Ready -->
+  <g transform="translate(80, 45)">
+    <line x1="0" y1="0" x2="0" y2="35" stroke="#228B22" stroke-width="4"/>
+    <ellipse cx="-6" cy="25" rx="7" ry="6" fill="url(#plantGradient)"/>
+    <ellipse cx="6" cy="22" rx="6" ry="5" fill="url(#plantGradient)"/>
+    <ellipse cx="0" cy="17" rx="8" ry="7" fill="url(#plantGradient)"/>
+    <ellipse cx="-4" cy="10" rx="5" ry="4" fill="url(#plantGradient)"/>
+    <ellipse cx="4" cy="10" rx="5" ry="4" fill="url(#plantGradient)"/>
+    <!-- Abundant Harvest -->
+    <circle cx="-3" cy="5" r="3" fill="#FFD700"/>
+    <circle cx="3" cy="5" r="3" fill="#FFD700"/>
+    <circle cx="0" cy="2" r="2.5" fill="#FFD700"/>
+  </g>
+  
+  <!-- Monitoring Device -->
+  <g transform="translate(30, 25)">
+    <rect x="0" y="0" width="15" height="10" rx="2" fill="url(#monitorGradient)"/>
+    <circle cx="7.5" cy="5" r="2" fill="#87CEEB"/>
+    <line x1="7.5" y1="10" x2="7.5" y2="15" stroke="#2F4F4F" stroke-width="1"/>
+  </g>
+  
+  <!-- Data Signals -->
+  <g stroke="#4169E1" stroke-width="1" fill="none" opacity="0.7">
+    <path d="M 37 30 Q 45 25 50 35"/>
+    <path d="M 37 32 Q 50 27 65 40"/>
+    <path d="M 37 34 Q 55 29 80 50"/>
+  </g>
+  
+  <!-- Growth Arrow -->
+  <g stroke="#32CD32" stroke-width="2" fill="#32CD32">
+    <line x1="15" y1="40" x2="85" y2="20"/>
+    <polygon points="85,20 80,18 80,22"/>
+  </g>
+  
+  <!-- Monitoring Icons -->
+  <g fill="#4169E1">
+    <!-- Temperature -->
+    <circle cx="15" cy="15" r="2"/>
+    <rect x="14" y="17" width="2" height="6"/>
+    
+    <!-- Humidity -->
+    <path d="M 25 15 Q 27 12 29 15 Q 27 18 25 15" fill="#42A5F5"/>
+    
+    <!-- Light -->
+    <circle cx="35" cy="15" r="2" fill="#FFD700"/>
+    <g stroke="#FFD700" stroke-width="1">
+      <line x1="35" y1="10" x2="35" y2="8"/>
+      <line x1="35" y1="22" x2="35" y2="20"/>
+      <line x1="30" y1="15" x2="28" y2="15"/>
+      <line x1="42" y1="15" x2="40" y2="15"/>
+    </g>
+  </g>
+</svg>
