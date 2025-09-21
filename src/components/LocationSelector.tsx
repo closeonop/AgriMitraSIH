@@ -165,7 +165,9 @@ const LocationSelector: React.FC<LocationSelectorProps> = ({ onLocationSelect })
     if (selectedLocation) {
       const soil = soilTypeData[selectedLocation] || t('location.unknown_soil');
       setSoilType(soil);
-      onLocationSelect(selectedLocation, soil, selectedTown);
+      // Pass combined location string if town is selected, otherwise just district
+      const locationString = selectedTown ? `${selectedLocation}, ${selectedTown}` : selectedLocation;
+      onLocationSelect(locationString, soil, selectedTown);
     }
   }, [selectedLocation, selectedTown, t]); // Removed onLocationSelect from dependencies to prevent infinite re-renders
 

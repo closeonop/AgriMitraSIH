@@ -156,48 +156,71 @@ export class AdvancedAIResponseEngine {
   }
 
   private analyzeIntent(message: string): string {
-    const intents = {
-      question: ['how', 'what', 'when', 'where', 'why', 'which', 'कैसे', 'क्या', 'कब', 'कहाँ', 'क्यों', 'ਕਿਵੇਂ', 'ਕੀ', 'ਕਦੋਂ'],
-      problem: ['problem', 'issue', 'disease', 'pest', 'dying', 'समस्या', 'बीमारी', 'कीट', 'ਸਮੱਸਿਆ', 'ਬਿਮਾਰੀ'],
-      advice: ['suggest', 'recommend', 'advice', 'help', 'सुझाव', 'सलाह', 'मदद', 'ਸੁਝਾਅ', 'ਸਲਾਹ', 'ਮਦਦ'],
-      information: ['tell', 'explain', 'about', 'information', 'बताओ', 'जानकारी', 'ਦੱਸੋ', 'ਜਾਣਕਾਰੀ']
-    };
-
-    for (const [intent, words] of Object.entries(intents)) {
-      if (words.some(word => message.includes(word))) {
-        return intent;
-      }
+    const lowerMessage = message.toLowerCase()
+    
+    // Greeting patterns
+    if (/^(hi|hello|hey|good morning|good afternoon|good evening|namaste)/i.test(message)) {
+      return 'greeting'
     }
-    return 'general';
+    
+    // Question patterns
+    if (/^(what|how|when|where|why|which|can you|could you|would you|do you)/i.test(message)) {
+      return 'question'
+    }
+    
+    // Help patterns
+    if (lowerMessage.includes('help') || lowerMessage.includes('assist') || lowerMessage.includes('support')) {
+      return 'help'
+    }
+    
+    // Command patterns
+    if (/^(tell me|show me|explain|describe|give me)/i.test(message)) {
+      return 'command'
+    }
+    
+    // Problem/issue patterns
+    if (lowerMessage.includes('problem') || lowerMessage.includes('issue') || lowerMessage.includes('trouble')) {
+      return 'problem'
+    }
+    
+    // Advice seeking patterns
+    if (lowerMessage.includes('should i') || lowerMessage.includes('recommend') || lowerMessage.includes('suggest')) {
+      return 'advice'
+    }
+    
+    return 'general'
   }
 
   private extractKeywords(message: string): string[] {
-    const keywords = [];
-    const keywordMap = {
-      // Crops
-      'wheat': ['wheat', 'गेहूं', 'ਕਣਕ'],
-      'rice': ['rice', 'चावल', 'ਚਾਵਲ'],
-      'cotton': ['cotton', 'कपास', 'ਕਪਾਹ'],
-      'corn': ['corn', 'maize', 'मक्का', 'ਮੱਕੀ'],
-      
-      // Farming activities
-      'irrigation': ['water', 'irrigation', 'पानी', 'सिंचाई', 'ਪਾਣੀ', 'ਸਿੰਚਾਈ'],
-      'fertilizer': ['fertilizer', 'nutrients', 'खाद', 'उर्वरक', 'ਖਾਦ'],
-      'pest': ['pest', 'insect', 'bug', 'कीट', 'ਕੀੜੇ'],
-      'disease': ['disease', 'infection', 'बीमारी', 'ਬਿਮਾਰੀ'],
-      'soil': ['soil', 'earth', 'मिट्टी', 'ਮਿੱਟੀ'],
-      'weather': ['weather', 'climate', 'rain', 'मौसम', 'बारिश', 'ਮੌਸਮ'],
-      'yield': ['yield', 'production', 'harvest', 'उत्पादन', 'फसल', 'ਪੈਦਾਵਾਰ'],
-      'market': ['market', 'price', 'sell', 'बाजार', 'कीमत', 'ਮਾਰਕੀਟ']
-    };
-
-    for (const [key, variations] of Object.entries(keywordMap)) {
-      if (variations.some(variation => message.includes(variation))) {
-        keywords.push(key);
-      }
-    }
-
-    return keywords;
+    const commonWords = new Set([
+      'the', 'a', 'an', 'and', 'or', 'but', 'in', 'on', 'at', 'to', 'for', 'of', 'with', 'by', 'is', 'are', 'was', 'were', 'be', 'been', 'have', 'has', 'had', 'do', 'does', 'did', 'will', 'would', 'could', 'should', 'may', 'might', 'can', 'i', 'you', 'he', 'she', 'it', 'we', 'they', 'me', 'him', 'her', 'us', 'them', 'my', 'your', 'his', 'her', 'its', 'our', 'their', 'this', 'that', 'these', 'those'
+    ])
+    
+    // Enhanced keyword extraction with agricultural terms
+    const agriculturalKeywords = new Set([
+      'crop', 'crops', 'farming', 'agriculture', 'cultivation', 'harvest', 'planting', 'sowing',
+      'soil', 'fertilizer', 'pesticide', 'irrigation', 'water', 'rain', 'weather', 'climate',
+      'pest', 'disease', 'insect', 'weed', 'organic', 'sustainable', 'yield', 'production',
+      'seed', 'seeds', 'plant', 'plants', 'growth', 'nutrition', 'mineral', 'nitrogen',
+      'phosphorus', 'potassium', 'ph', 'acidity', 'alkaline', 'drainage', 'moisture',
+      'temperature', 'humidity', 'season', 'monsoon', 'drought', 'flood', 'storm',
+      'market', 'price', 'profit', 'cost', 'economics', 'finance', 'loan', 'subsidy',
+      'technology', 'smart', 'digital', 'sensor', 'drone', 'gps', 'automation',
+      'rice', 'wheat', 'corn', 'maize', 'sugarcane', 'cotton', 'soybean', 'potato',
+      'tomato', 'onion', 'garlic', 'chili', 'pepper', 'cabbage', 'cauliflower',
+      'tractor', 'equipment', 'machinery', 'tools', 'greenhouse', 'nursery'
+    ])
+    
+    const words = message.toLowerCase()
+      .replace(/[^\w\s]/g, ' ')
+      .split(/\s+/)
+      .filter(word => word.length > 2 && !commonWords.has(word))
+    
+    // Prioritize agricultural keywords
+    const keywords = words.filter(word => agriculturalKeywords.has(word))
+    const otherKeywords = words.filter(word => !agriculturalKeywords.has(word))
+    
+    return [...keywords, ...otherKeywords].slice(0, 10) // Limit to top 10 keywords
   }
 
   private categorizeQuery(keywords: string[]): string {
@@ -281,7 +304,49 @@ export class AdvancedAIResponseEngine {
   }
 
   private generateGeneralResponse(intent: string, keywords: string[]): string {
-    return "I'm here to help with all your farming questions! Whether you need advice on crop management, irrigation, soil health, pest control, or market strategies, feel free to ask specific questions for more detailed guidance.";
+    // Handle greetings
+    if (intent === 'greeting') {
+      const greetings = [
+        "Hello! I'm AgriMitra, your AI farming assistant. How can I help you today?",
+        "Hi there! Ready to discuss farming, weather, or any agricultural questions?",
+        "Welcome! I'm here to help with all your farming and agricultural needs.",
+        "Greetings! What farming topic would you like to explore today?"
+      ]
+      return greetings[Math.floor(Math.random() * greetings.length)]
+    }
+
+    // Handle general farming questions
+    if (keywords.some(k => ['farming', 'agriculture', 'cultivation'].includes(k))) {
+      return "Agriculture is a vast field! I can help you with crop selection, soil management, irrigation, pest control, weather planning, and market insights. What specific area interests you?"
+    }
+
+    // Handle technology questions
+    if (keywords.some(k => ['technology', 'smart', 'digital', 'app', 'sensor'].includes(k))) {
+      return "Modern farming uses many technologies like IoT sensors, drones, GPS-guided tractors, and AI-powered analytics. These tools help optimize yields, reduce costs, and make farming more sustainable. What technology aspect interests you?"
+    }
+
+    // Handle sustainability questions
+    if (keywords.some(k => ['sustainable', 'organic', 'environment', 'green'].includes(k))) {
+      return "Sustainable farming practices include crop rotation, organic fertilizers, integrated pest management, water conservation, and soil health maintenance. These methods protect the environment while maintaining productivity. Would you like specific sustainable farming tips?"
+    }
+
+    // Handle business/economics questions
+    if (keywords.some(k => ['business', 'profit', 'economics', 'finance', 'loan'].includes(k))) {
+      return "Farm economics involves managing costs, maximizing yields, understanding market prices, and accessing credit. Key factors include input costs, labor, equipment, and market timing. What financial aspect of farming would you like to discuss?"
+    }
+
+    // Handle education questions
+    if (keywords.some(k => ['learn', 'education', 'training', 'course', 'study'].includes(k))) {
+      return "Agricultural education covers crop science, soil management, animal husbandry, farm management, and agricultural technology. Many universities and online platforms offer courses. Are you looking for specific learning resources?"
+    }
+
+    // Handle general help
+    if (intent === 'help' || keywords.some(k => ['help', 'assist', 'support'].includes(k))) {
+      return "I can help you with: 🌾 Crop management, 🌧️ Weather planning, 💧 Irrigation advice, 🐛 Pest control, 🌱 Soil health, 📈 Market insights, 🚜 Farm technology, and much more! What would you like to know?"
+    }
+
+    // Default response with suggestions
+    return "I'm here to help with farming, weather, crops, and general agricultural questions. You can ask me about crop selection, soil health, irrigation, pest management, weather forecasting, market prices, or any farming-related topic. What would you like to know?"
   }
 
   private personalizeResponse(response: string, context: ConversationContext): string {

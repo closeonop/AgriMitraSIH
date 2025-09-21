@@ -4,9 +4,12 @@ import { Field, FieldSoilData, FieldAnalysis } from '../types/field'
 import { 
   getAllFields, 
   getFieldSoilData, 
-  getFieldAnalysis 
+  getFieldAnalysis,
+  updateFieldSoilData,
+  createFieldSoilData
 } from '../services/fieldService'
 import { useField } from '../contexts/FieldContext'
+import FieldEditor from '../components/FieldEditor'
 
 interface SoilData {
   ph: number
@@ -22,7 +25,11 @@ interface SoilData {
 interface NutrientRecommendation {
   nutrient: string
   current: number
-  optimal: string
+  optimal: {
+    min: number
+    max: number
+    display: string
+  }
   recommendation: string
   priority: 'high' | 'medium' | 'low'
   status: 'low' | 'optimal' | 'high'
@@ -44,6 +51,8 @@ const SoilHealthAnalysis = () => {
   const [dataLoading, setDataLoading] = useState(false)
   const [isAnalyzing, setIsAnalyzing] = useState(false)
   const [showInputForm, setShowInputForm] = useState(false)
+  const [showFieldEditor, setShowFieldEditor] = useState(false)
+  const [editingField, setEditingField] = useState<Field | null>(null)
   const [userSoilData, setUserSoilData] = useState<SoilData>({
     ph: 7.0,
     nitrogen: 200,
@@ -91,8 +100,53 @@ const SoilHealthAnalysis = () => {
     loadFieldData()
   }, [selectedField])
 
-  const handleFieldSelect = (field: Field) => {
-    setSelectedField(field)
+  const handleFieldSave = (savedField: Field) => {
+    refreshFields()
+    setShowFieldEditor(false)
+    setEditingField(null)
+    if (!selectedField) {
+      handleFieldSelect(savedField)
+    }
+  }
+
+  const handleFieldCancel = () => {
+    setShowFieldEditor(false)
+    setEditingField(null)
+  }
+
+  const openFieldEditor = (field?: Field) => {
+    setEditingField(field || null)
+    setShowFieldEditor(true)
+  }
+   const handleFieldSelect = (field: Field) => {
+     setSelectedField(field)
+   }
+
+   const handleSoilDataUpdate = async (newData: Partial<SoilData>) => {
+    setUserSoilData(prev => ({ ...prev, ...newData }))
+    
+    if (selectedField) {
+      try {
+        await updateFieldSoilData(selectedField.id, {
+          ph: newData.ph ?? userSoilData.ph,
+          nitrogen: newData.nitrogen ?? userSoilData.nitrogen,
+          phosphorus: newData.phosphorus ?? userSoilData.phosphorus,
+          potassium: newData.potassium ?? userSoilData.potassium,
+          organicMatter: newData.organicMatter ?? userSoilData.organicMatter,
+          moisture: newData.moisture ?? userSoilData.moisture,
+          temperature: newData.temperature ?? userSoilData.temperature,
+          conductivity: newData.conductivity ?? userSoilData.conductivity
+        })
+        
+        // Refresh field soil data
+        const updatedSoilData = await getFieldSoilData(selectedField.id)
+        if (updatedSoilData) {
+          setFieldSoilData(updatedSoilData)
+        }
+      } catch (error) {
+        console.error('Error updating soil data:', error)
+      }
+    }
   }
 
   // Convert field soil data to component format (either from field data or user input)
@@ -228,72 +282,107 @@ const SoilHealthAnalysis = () => {
     // Calculate nitrogen status and recommendations
     const nitrogenStatus = soilData.nitrogen < 150 ? 'low' : soilData.nitrogen > 300 ? 'high' : 'optimal'
     recommendations.push({
-      nutrient: t('soilHealth.nitrogen'),
+      nutrient: 'Nitrogen (N)',
       current: soilData.nitrogen,
-      optimal: nitrogenStatus === 'optimal' ? t('soilHealth.optimal') : '150-300 ppm',
-      recommendation: nitrogenStatus === 'low' ? t('soilHealth.applyNitrogenFertilizer') : 
-                    nitrogenStatus === 'high' ? t('soilHealth.reduceNitrogenApplication') : t('soilHealth.maintainCurrentLevels'),
+      optimal: {
+        min: 150,
+        max: 300,
+        display: '150-300 ppm'
+      },
+      recommendation: nitrogenStatus === 'low' ? 'Apply nitrogen-rich fertilizer like Urea (46-0-0) at 100-150 kg/ha' : 
+                    nitrogenStatus === 'high' ? 'Reduce nitrogen application and monitor soil levels' : 'Maintain current nitrogen management practices',
       priority: nitrogenStatus === 'optimal' ? 'low' : 'high',
       status: nitrogenStatus,
       icon: '🌱',
       fertilizer: nitrogenStatus === 'low' ? {
-        name: t('soilHealth.ureaFertilizer'),
-        amount: t('soilHealth.ureaAmount'),
-        timing: t('soilHealth.ureaTiming'),
-        application: t('soilHealth.ureaApplication')
+        name: 'Urea (46-0-0)',
+        amount: '100-150 kg/ha',
+        timing: 'Split application: 50% at sowing, 25% at tillering, 25% at panicle initiation',
+        application: 'Broadcast and incorporate into soil, avoid direct contact with seeds'
       } : nitrogenStatus === 'high' ? {
-        name: t('soilHealth.reduceCurrentFertilizer'),
-        amount: t('soilHealth.skipNextApplication'),
-        timing: t('soilHealth.monitorSoilLevels'),
-        application: t('soilHealth.allowNaturalDepletion')
+        name: 'Reduce current fertilizer',
+        amount: 'Skip next application',
+        timing: 'Monitor soil levels monthly',
+        application: 'Allow natural depletion through crop uptake'
       } : undefined
     })
     
     // Calculate phosphorus status and recommendations
     const phosphorusStatus = soilData.phosphorus < 20 ? 'low' : soilData.phosphorus > 50 ? 'high' : 'optimal'
     recommendations.push({
-      nutrient: t('soilHealth.phosphorus'),
+      nutrient: 'Phosphorus (P)',
       current: soilData.phosphorus,
-      optimal: phosphorusStatus === 'optimal' ? t('soilHealth.optimal') : '20-50 ppm',
-      recommendation: phosphorusStatus === 'low' ? t('soilHealth.applyPhosphorusFertilizer') : 
-                    phosphorusStatus === 'high' ? t('soilHealth.reducePhosphorusApplication') : t('soilHealth.maintainCurrentLevels'),
+      optimal: {
+        min: 20,
+        max: 50,
+        display: '20-50 ppm'
+      },
+      recommendation: phosphorusStatus === 'low' ? 'Apply phosphorus fertilizer like DAP (18-46-0) at 75-100 kg/ha' : 
+                    phosphorusStatus === 'high' ? 'Reduce phosphorus application and use low-P fertilizers' : 'Maintain current phosphorus levels',
       priority: phosphorusStatus === 'optimal' ? 'low' : 'medium',
       status: phosphorusStatus,
       icon: '🧪',
       fertilizer: phosphorusStatus === 'low' ? {
-        name: t('soilHealth.dapFertilizer'),
-        amount: t('soilHealth.dapAmount'),
-        timing: t('soilHealth.dapTiming'),
-        application: t('soilHealth.dapApplication')
+        name: 'DAP (18-46-0)',
+        amount: '75-100 kg/ha',
+        timing: 'Apply at sowing as basal dose',
+        application: 'Place 2-3 cm below and to the side of seeds'
       } : phosphorusStatus === 'high' ? {
-        name: t('soilHealth.reducePhosphorusInput'),
-        amount: t('soilHealth.useLowPFertilizers'),
-        timing: t('soilHealth.nextGrowingSeason'),
-        application: t('soilHealth.switchToNitrogenOnly')
+        name: 'Reduce phosphorus input',
+        amount: 'Use low-P fertilizers',
+        timing: 'Next growing season',
+        application: 'Switch to nitrogen-only fertilizers temporarily'
       } : undefined
     })
     
     // Calculate potassium status and recommendations
     const potassiumStatus = soilData.potassium < 100 ? 'low' : soilData.potassium > 200 ? 'high' : 'optimal'
     recommendations.push({
-      nutrient: t('soilHealth.potassium'),
+      nutrient: 'Potassium (K)',
       current: soilData.potassium,
-      optimal: potassiumStatus === 'optimal' ? t('soilHealth.optimal') : '100-200 ppm',
-      recommendation: potassiumStatus === 'low' ? t('soilHealth.applyPotassiumFertilizer') : 
-                    potassiumStatus === 'high' ? t('soilHealth.reducePotassiumApplication') : t('soilHealth.maintainCurrentLevels'),
+      optimal: {
+        min: 100,
+        max: 200,
+        display: '100-200 ppm'
+      },
+      recommendation: potassiumStatus === 'low' ? 'Apply potassium fertilizer like MOP (0-0-60) at 50-75 kg/ha' : 
+                    potassiumStatus === 'high' ? 'Reduce potassium application and monitor levels' : 'Maintain current potassium management',
       priority: potassiumStatus === 'optimal' ? 'low' : 'medium',
       status: potassiumStatus,
       icon: '⚡',
       fertilizer: potassiumStatus === 'low' ? {
-        name: t('soilHealth.mopFertilizer'),
-        amount: t('soilHealth.mopAmount'),
-        timing: t('soilHealth.mopTiming'),
-        application: t('soilHealth.mopApplication')
+        name: 'MOP (0-0-60)',
+        amount: '50-75 kg/ha',
+        timing: 'Apply at sowing and top-dress at flowering',
+        application: 'Broadcast and incorporate, avoid chloride-sensitive crops'
       } : potassiumStatus === 'high' ? {
-        name: t('soilHealth.reducePotassiumInput'),
-        amount: t('soilHealth.skipKFertilizers'),
-        timing: t('soilHealth.currentSeason'),
-        application: t('soilHealth.useNPKWithLowerK')
+        name: 'Reduce potassium input',
+        amount: 'Skip K fertilizers',
+        timing: 'Current season',
+        application: 'Use NPK with lower K content'
+      } : undefined
+    })
+
+    // Add organic matter recommendation
+    const organicMatterStatus = soilData.organicMatter < 2.5 ? 'low' : soilData.organicMatter > 5.0 ? 'high' : 'optimal'
+    recommendations.push({
+      nutrient: 'Organic Matter',
+      current: soilData.organicMatter,
+      optimal: {
+        min: 2.5,
+        max: 5.0,
+        display: '2.5-5.0%'
+      },
+      recommendation: organicMatterStatus === 'low' ? 'Increase organic matter through compost, crop residues, and cover crops' : 
+                    organicMatterStatus === 'high' ? 'Maintain current organic matter levels' : 'Continue good organic matter management',
+      priority: organicMatterStatus === 'low' ? 'high' : 'low',
+      status: organicMatterStatus,
+      icon: '🍂',
+      fertilizer: organicMatterStatus === 'low' ? {
+        name: 'Compost/FYM',
+        amount: '5-10 tons/ha',
+        timing: '2-3 weeks before sowing',
+        application: 'Incorporate well into soil, ensure proper decomposition'
       } : undefined
     })
     
@@ -429,35 +518,37 @@ Report Date: ${new Date().toLocaleDateString()}
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 to-emerald-50 pt-20">
       <div className="container-custom py-8">
-        {/* Header */}
-        <div className="mb-8">
-          <div className="flex items-center justify-between mb-4">
-            <div>
-              <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">
-                {t('soilHealth.title')}
-              </h1>
-              <p className="text-lg text-gray-600">
-                {t('soilHealth.subtitle')}
-                {selectedField && (
-                  <span className="text-green-600"> {t('soilHealth.forField', { name: selectedField.name })}</span>
-                )}
-              </p>
-            </div>
-            <div className="text-right">
-              <div className="text-sm text-gray-500">{t('soilHealth.lastAnalysis')}</div>
-              <div className="text-sm font-medium text-gray-700">{analysisDate}</div>
-            </div>
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 gap-4">
+          <div>
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Soil Health Analysis</h1>
+            <p className="text-gray-600 mt-2">Monitor and analyze soil conditions for optimal crop growth</p>
+          </div>
+          <div className="flex gap-2 w-full sm:w-auto">
+            <button
+              onClick={() => openFieldEditor()}
+              className="flex-1 sm:flex-none px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+            >
+              + Add Field
+            </button>
+            {selectedField && (
+              <button
+                onClick={() => openFieldEditor(selectedField)}
+                className="flex-1 sm:flex-none px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+              >
+                Edit Field
+              </button>
+            )}
           </div>
         </div>
 
         {/* Field Selection */}
-        <div className="card-elegant p-6 mb-8">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-bold text-gray-900">{t('soilHealth.selectField')}</h2>
+        <div className="card-elegant p-4 sm:p-6 mb-8">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 gap-4">
+            <h2 className="text-xl font-bold text-gray-900">Select Field for Analysis</h2>
             <button 
               onClick={runNewAnalysis}
               disabled={isAnalyzing || !selectedField}
-              className={`btn-primary ${
+              className={`btn-primary w-full sm:w-auto ${
                 isAnalyzing || !selectedField 
                   ? 'bg-gray-300 text-gray-500 cursor-not-allowed' 
                   : 'hover:bg-green-700'
@@ -466,10 +557,10 @@ Report Date: ${new Date().toLocaleDateString()}
               {isAnalyzing ? (
                 <>
                   <span className="inline-block animate-spin mr-2">⚡</span>
-                  {t('soilHealth.analyzing')}
+                  Analyzing...
                 </>
               ) : (
-                <>📊 {t('soilHealth.newAnalysis')}</>
+                <>📊 New Analysis</>
               )}
             </button>
           </div>
@@ -477,43 +568,43 @@ Report Date: ${new Date().toLocaleDateString()}
           {loading || dataLoading ? (
             <div className="flex justify-center items-center py-8">
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-500"></div>
-              <span className="ml-2 text-gray-600">{t('soilHealth.loadingFields')}</span>
+              <span className="ml-2 text-gray-600">Loading fields...</span>
             </div>
           ) : (
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               {fields.map((field) => (
                 <button
                   key={field.id}
                   onClick={() => handleFieldSelect(field)}
-                  className={`p-4 rounded-lg border-2 transition-all duration-200 ${
+                  className={`p-4 rounded-lg border-2 transition-all duration-200 text-left ${
                     selectedField?.id === field.id
                       ? 'border-green-500 bg-green-50 text-green-700'
                       : 'border-gray-200 hover:border-gray-300 text-gray-700'
                   }`}
                 >
                   <div className="text-2xl mb-2">🌾</div>
-                  <div className="font-medium">{field.name}</div>
-                  <div className="text-sm text-gray-500">{t('soilHealth.hectares', { area: field.area })}</div>
-                  <div className="text-xs text-gray-400">{field.location.address}</div>
+                  <div className="font-medium text-sm sm:text-base">{field.name}</div>
+                  <div className="text-xs sm:text-sm text-gray-500">{field.area} hectares</div>
+                  <div className="text-xs text-gray-400 truncate">{field.location.address}</div>
                 </button>
               ))}
             </div>
           )}
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
           {/* Soil Overview */}
           <div className="lg:col-span-2">
             {selectedField || showInputForm ? (
-              <div className="card-elegant p-6 mb-8">
-                <div className="flex items-center justify-between mb-6">
-                  <h2 className="text-2xl font-bold text-gray-900">
+              <div className="card-elegant p-4 sm:p-6 mb-8">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 gap-4">
+                  <h2 className="text-xl sm:text-2xl font-bold text-gray-900">
                     {showInputForm ? 'Custom Soil Analysis' : `Soil Overview - ${selectedField?.name}`}
                   </h2>
-                  <div className="flex gap-2">
+                  <div className="flex gap-2 w-full sm:w-auto">
                     <button
                       onClick={() => setShowInputForm(!showInputForm)}
-                      className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                      className={`px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium transition-colors flex-1 sm:flex-none ${
                         showInputForm 
                           ? 'bg-blue-500 text-white hover:bg-blue-600' 
                           : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
@@ -527,7 +618,7 @@ Report Date: ${new Date().toLocaleDateString()}
                 {showInputForm && (
                   <div className="mb-6 p-4 bg-gray-50 rounded-lg">
                     <h3 className="text-lg font-semibold mb-4">Enter Soil Parameters</h3>
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">pH Level</label>
                         <input
@@ -537,7 +628,7 @@ Report Date: ${new Date().toLocaleDateString()}
                           max="14"
                           value={userSoilData.ph}
                           onChange={(e) => setUserSoilData({...userSoilData, ph: parseFloat(e.target.value) || 0})}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
                         />
                       </div>
                       <div>
@@ -547,7 +638,7 @@ Report Date: ${new Date().toLocaleDateString()}
                           min="0"
                           value={userSoilData.nitrogen}
                           onChange={(e) => setUserSoilData({...userSoilData, nitrogen: parseInt(e.target.value) || 0})}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
                         />
                       </div>
                       <div>
@@ -557,7 +648,7 @@ Report Date: ${new Date().toLocaleDateString()}
                           min="0"
                           value={userSoilData.phosphorus}
                           onChange={(e) => setUserSoilData({...userSoilData, phosphorus: parseInt(e.target.value) || 0})}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
                         />
                       </div>
                       <div>
@@ -567,7 +658,7 @@ Report Date: ${new Date().toLocaleDateString()}
                           min="0"
                           value={userSoilData.potassium}
                           onChange={(e) => setUserSoilData({...userSoilData, potassium: parseInt(e.target.value) || 0})}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
                         />
                       </div>
                       <div>
@@ -578,7 +669,7 @@ Report Date: ${new Date().toLocaleDateString()}
                           max="100"
                           value={userSoilData.moisture}
                           onChange={(e) => setUserSoilData({...userSoilData, moisture: parseInt(e.target.value) || 0})}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
                         />
                       </div>
                       <div>
@@ -587,7 +678,7 @@ Report Date: ${new Date().toLocaleDateString()}
                           type="number"
                           value={userSoilData.temperature}
                           onChange={(e) => setUserSoilData({...userSoilData, temperature: parseInt(e.target.value) || 0})}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
                         />
                       </div>
                       <div>
@@ -597,8 +688,8 @@ Report Date: ${new Date().toLocaleDateString()}
                           step="0.1"
                           min="0"
                           value={userSoilData.organicMatter}
-                          onChange={(e) => setUserSoilData({...userSoilData, organicMatter: parseFloat(e.target.value) || 0})}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          onChange={(e) => handleSoilDataUpdate({ organicMatter: parseFloat(e.target.value) || 0 })}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
                         />
                       </div>
                       <div>
@@ -608,43 +699,43 @@ Report Date: ${new Date().toLocaleDateString()}
                           step="0.1"
                           min="0"
                           value={userSoilData.conductivity}
-                          onChange={(e) => setUserSoilData({...userSoilData, conductivity: parseFloat(e.target.value) || 0})}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          onChange={(e) => handleSoilDataUpdate({ conductivity: parseFloat(e.target.value) || 0 })}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
                         />
                       </div>
                     </div>
                   </div>
                 )}
                 
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-                  <div className="text-center p-4 bg-blue-50 rounded-lg">
-                    <div className="text-3xl mb-2">🧪</div>
-                    <div className="text-sm text-gray-600">pH Level</div>
-                    <div className="text-2xl font-bold text-blue-600">{getDisplaySoilData()?.ph || 'N/A'}</div>
+                <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-6">
+                  <div className="text-center p-3 sm:p-4 bg-blue-50 rounded-lg">
+                    <div className="text-2xl sm:text-3xl mb-2">🧪</div>
+                    <div className="text-xs sm:text-sm text-gray-600">pH Level</div>
+                    <div className="text-lg sm:text-2xl font-bold text-blue-600">{getDisplaySoilData()?.ph || 'N/A'}</div>
                     <div className="text-xs text-gray-500">
                       {getDisplaySoilData()?.ph ? (getDisplaySoilData()!.ph < 6.5 ? 'Acidic' : getDisplaySoilData()!.ph > 7.5 ? 'Alkaline' : 'Neutral') : 'No data'}
                     </div>
                   </div>
-                  <div className="text-center p-4 bg-green-50 rounded-lg">
-                    <div className="text-3xl mb-2">💧</div>
-                    <div className="text-sm text-gray-600">Moisture</div>
-                    <div className="text-2xl font-bold text-green-600">{getDisplaySoilData()?.moisture || 'N/A'}%</div>
+                  <div className="text-center p-3 sm:p-4 bg-green-50 rounded-lg">
+                    <div className="text-2xl sm:text-3xl mb-2">💧</div>
+                    <div className="text-xs sm:text-sm text-gray-600">Moisture</div>
+                    <div className="text-lg sm:text-2xl font-bold text-green-600">{getDisplaySoilData()?.moisture || 'N/A'}%</div>
                     <div className="text-xs text-gray-500">
                       {getDisplaySoilData()?.moisture ? (getDisplaySoilData()!.moisture > 25 ? 'Optimal' : 'Low') : 'No data'}
                     </div>
                   </div>
-                  <div className="text-center p-4 bg-orange-50 rounded-lg">
-                    <div className="text-3xl mb-2">🌡️</div>
-                    <div className="text-sm text-gray-600">Temperature</div>
-                    <div className="text-2xl font-bold text-orange-600">{getDisplaySoilData()?.temperature || 'N/A'}°C</div>
+                  <div className="text-center p-3 sm:p-4 bg-orange-50 rounded-lg">
+                    <div className="text-2xl sm:text-3xl mb-2">🌡️</div>
+                    <div className="text-xs sm:text-sm text-gray-600">Temperature</div>
+                    <div className="text-lg sm:text-2xl font-bold text-orange-600">{getDisplaySoilData()?.temperature || 'N/A'}°C</div>
                     <div className="text-xs text-gray-500">
                       {getDisplaySoilData()?.temperature ? (getDisplaySoilData()!.temperature > 20 && getDisplaySoilData()!.temperature < 30 ? 'Good' : 'Moderate') : 'No data'}
                     </div>
                   </div>
-                  <div className="text-center p-4 bg-purple-50 rounded-lg">
-                    <div className="text-3xl mb-2">⚡</div>
-                    <div className="text-sm text-gray-600">Conductivity</div>
-                    <div className="text-2xl font-bold text-purple-600">{getDisplaySoilData()?.conductivity || 'N/A'}</div>
+                  <div className="text-center p-3 sm:p-4 bg-purple-50 rounded-lg">
+                    <div className="text-2xl sm:text-3xl mb-2">⚡</div>
+                    <div className="text-xs sm:text-sm text-gray-600">Conductivity</div>
+                    <div className="text-lg sm:text-2xl font-bold text-purple-600">{getDisplaySoilData()?.conductivity || 'N/A'}</div>
                     <div className="text-xs text-gray-500">dS/m</div>
                   </div>
                 </div>
@@ -707,24 +798,24 @@ Report Date: ${new Date().toLocaleDateString()}
               </div>
             )}
             {/* Nutrient Analysis */}
-            {selectedField && (
-              <div className="card-elegant p-6">
-                <h2 className="text-2xl font-bold text-gray-900 mb-6">Nutrient Analysis</h2>
+             {(selectedField || showInputForm) && (
+              <div className="card-elegant p-4 sm:p-6">
+                <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4 sm:mb-6">Nutrient Analysis</h2>
                 
-                <div className="space-y-6">
+                <div className="space-y-4 sm:space-y-6">
                   {getNutrientRecommendations().map((nutrient, index) => (
-                  <div key={index} className="border border-gray-200 rounded-lg p-6">
-                    <div className="flex items-center justify-between mb-4">
+                  <div key={index} className="border border-gray-200 rounded-lg p-4 sm:p-6">
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 gap-3">
                       <div className="flex items-center space-x-3">
-                        <div className="text-2xl">{nutrient.icon}</div>
+                        <div className="text-xl sm:text-2xl">{nutrient.icon}</div>
                         <div>
-                          <h3 className="font-bold text-gray-900">{nutrient.nutrient}</h3>
-                          <p className="text-sm text-gray-600">
+                          <h3 className="font-bold text-gray-900 text-sm sm:text-base">{nutrient.nutrient}</h3>
+                          <p className="text-xs sm:text-sm text-gray-600">
                             Current: {nutrient.current} | Optimal: {nutrient.optimal.min}-{nutrient.optimal.max}
                           </p>
                         </div>
                       </div>
-                      <div className={`px-3 py-1 rounded-full border text-sm font-medium ${getStatusColor(nutrient.status)}`}>
+                      <div className={`px-2 sm:px-3 py-1 rounded-full border text-xs sm:text-sm font-medium self-start ${getStatusColor(nutrient.status)}`}>
                         {getStatusIcon(nutrient.status)} {nutrient.status?.toUpperCase() || 'UNKNOWN'}
                       </div>
                     </div>
@@ -733,14 +824,15 @@ Report Date: ${new Date().toLocaleDateString()}
                     <div className="mb-4">
                       <div className="flex justify-between text-xs text-gray-500 mb-1">
                         <span>Low</span>
-                        <span>Optimal Range</span>
+                        <span className="hidden sm:inline">Optimal Range</span>
+                        <span className="sm:hidden">Optimal</span>
                         <span>High</span>
                       </div>
-                      <div className="w-full bg-gray-200 rounded-full h-3">
-                        <div className="bg-gray-300 rounded-full h-3 relative">
+                      <div className="w-full bg-gray-200 rounded-full h-2 sm:h-3">
+                        <div className="bg-gray-300 rounded-full h-2 sm:h-3 relative">
                           {/* Optimal range indicator */}
                           <div 
-                            className="absolute bg-green-400 h-3 rounded-full"
+                            className="absolute bg-green-400 h-2 sm:h-3 rounded-full"
                             style={{
                               left: '50%',
                               width: '50%'
@@ -748,7 +840,7 @@ Report Date: ${new Date().toLocaleDateString()}
                           ></div>
                           {/* Current level indicator */}
                           <div 
-                            className="absolute bg-blue-500 h-3 w-1 rounded-full"
+                            className="absolute bg-blue-500 h-2 sm:h-3 w-1 rounded-full"
                             style={{
                               left: `${getProgressPercentage(nutrient.current, nutrient.optimal)}%`
                             }}
@@ -757,18 +849,18 @@ Report Date: ${new Date().toLocaleDateString()}
                       </div>
                     </div>
 
-                    <div className="bg-gray-50 p-4 rounded-lg">
-                      <h4 className="font-semibold text-gray-900 mb-2">Recommendation</h4>
-                      <p className="text-gray-700 text-sm mb-3">{nutrient.recommendation}</p>
+                    <div className="bg-gray-50 p-3 sm:p-4 rounded-lg">
+                      <h4 className="font-semibold text-gray-900 mb-2 text-sm sm:text-base">Recommendation</h4>
+                      <p className="text-gray-700 text-xs sm:text-sm mb-3">{nutrient.recommendation}</p>
                       
                       {/* Fertilizer Details */}
                       {nutrient.fertilizer && (
-                        <div className="bg-white border border-gray-200 rounded-lg p-4 mt-3">
-                          <h5 className="font-semibold text-green-800 mb-3 flex items-center">
+                        <div className="bg-white border border-gray-200 rounded-lg p-3 sm:p-4 mt-3">
+                          <h5 className="font-semibold text-green-800 mb-3 flex items-center text-sm sm:text-base">
                             <span className="mr-2">🌾</span>
                             Fertilizer Recommendation
                           </h5>
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs sm:text-sm">
                             <div>
                               <span className="font-medium text-gray-700">Fertilizer:</span>
                               <p className="text-gray-600">{nutrient.fertilizer.name}</p>
@@ -777,11 +869,11 @@ Report Date: ${new Date().toLocaleDateString()}
                               <span className="font-medium text-gray-700">Amount:</span>
                               <p className="text-gray-600">{nutrient.fertilizer.amount}</p>
                             </div>
-                            <div>
+                            <div className="sm:col-span-2">
                               <span className="font-medium text-gray-700">Timing:</span>
                               <p className="text-gray-600">{nutrient.fertilizer.timing}</p>
                             </div>
-                            <div>
+                            <div className="sm:col-span-2">
                               <span className="font-medium text-gray-700">Application:</span>
                               <p className="text-gray-600">{nutrient.fertilizer.application}</p>
                             </div>
@@ -915,6 +1007,14 @@ Report Date: ${new Date().toLocaleDateString()}
           </div>
         </div>
       </div>
+
+      {/* Field Editor Modal */}
+      <FieldEditor
+        field={editingField}
+        onSave={handleFieldSave}
+        onCancel={handleFieldCancel}
+        isOpen={showFieldEditor}
+      />
     </div>
   )
 }

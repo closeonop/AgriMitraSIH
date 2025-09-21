@@ -1,31 +1,16 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { 
-  MessageCircle, 
-  Send, 
-  Mic, 
-  MicOff, 
-  Volume2, 
-  Sparkles, 
-  Leaf, 
-  Zap, 
-  Loader2,
-  Settings,
-  Sun,
-  Droplets,
-  Sprout,
-  Bug,
-  TrendingUp,
-  MapPin
-} from 'lucide-react'
+import { Send, Mic, MicOff, Volume2, VolumeX, Bot, User, Sparkles, MessageCircle, Leaf, Cloud, TrendingUp, HelpCircle, Lightbulb, Settings, Sun, Sprout, Droplets, Bug, MapPin } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
+import { AdvancedAIResponseEngine } from '../utils/aiResponseEngine'
+import { useVoiceChat } from '../hooks/useVoiceChat'
+import VoiceVisualizer from '../components/VoiceVisualizer'
 
 interface Message {
   id: string
   text: string
-  isUser: boolean
+  sender: 'user' | 'bot'
   timestamp: Date
-  isLoading?: boolean
   category?: string
 }
 
@@ -33,10 +18,27 @@ const ChatBot: React.FC = () => {
   const { t } = useTranslation()
   const [messages, setMessages] = useState<Message[]>([])
   const [input, setInput] = useState('')
-  const [isListening, setIsListening] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
   const [isProcessing, setIsProcessing] = useState(false)
-  const [isSpeaking, setIsSpeaking] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
+  const aiEngine = useRef(new AdvancedAIResponseEngine())
+  
+  // Voice chat integration
+  const voiceChat = useVoiceChat((transcript) => {
+    setInput(transcript)
+    handleSendMessage(transcript)
+  })
+
+  const {
+    voiceState: { isListening, isSpeaking, voiceLevel },
+    startListening,
+    stopListening,
+    speak,
+    stopSpeaking
+  } = voiceChat
+
+  // Check if voice features are supported
+  const isSupported = 'webkitSpeechRecognition' in window || 'SpeechRecognition' in window
 
   const quickQuestions = [
     { icon: Sun, text: "What's the weather forecast for my crops?", category: "weather" },
@@ -56,43 +58,52 @@ const ChatBot: React.FC = () => {
   }, [messages])
 
   const handleSendMessage = async (messageText?: string) => {
-    const text = messageText || input.trim()
-    if (!text) return
+    const textToSend = messageText || input.trim()
+    if (!textToSend) return
 
     const userMessage: Message = {
       id: Date.now().toString(),
-      text,
-      isUser: true,
-      timestamp: new Date()
+      text: textToSend,
+      sender: 'user',
+      timestamp: new Date(),
+      category: getCategoryFromText(textToSend)
     }
 
     setMessages(prev => [...prev, userMessage])
     setInput('')
     setIsProcessing(true)
 
-    // Add loading message
-    const loadingMessage: Message = {
-      id: (Date.now() + 1).toString(),
-      text: '',
-      isUser: false,
-      timestamp: new Date(),
-      isLoading: true
-    }
-    setMessages(prev => [...prev, loadingMessage])
-
-    // Simulate AI response
-    setTimeout(() => {
-      const aiResponse: Message = {
-        id: (Date.now() + 2).toString(),
-        text: generateAIResponse(text),
-        isUser: false,
+    try {
+      // Generate AI response using the enhanced engine
+      const aiResponse = await aiEngine.current.generateAdvancedResponse(textToSend)
+      
+      const botMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        text: aiResponse.text,
+        sender: 'bot',
         timestamp: new Date(),
-        category: getCategoryFromText(text)
+        category: aiResponse.category
       }
 
-      setMessages(prev => prev.filter(m => !m.isLoading).concat([aiResponse]))
+      setMessages(prev => [...prev, botMessage])
+      
+      // Speak the AI response if voice is enabled
+      if (isSupported && !isSpeaking) {
+        speak(aiResponse.text)
+      }
+    } catch (error) {
+      console.error('Error generating response:', error)
+      const errorMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        text: "I'm sorry, I encountered an error. Please try again.",
+        sender: 'bot',
+        timestamp: new Date(),
+        category: 'general'
+      }
+      setMessages(prev => [...prev, errorMessage])
+    } finally {
       setIsProcessing(false)
-    }, 2000)
+    }
   }
 
   const generateAIResponse = (input: string): string => {
@@ -131,19 +142,28 @@ const ChatBot: React.FC = () => {
   }
 
   const toggleListening = () => {
-    setIsListening(!isListening)
-    // Voice recognition logic would go here
+    if (isListening) {
+      stopListening()
+    } else {
+      startListening()
+    }
+  }
+
+  const toggleSpeaking = () => {
+    if (isSpeaking) {
+      stopSpeaking()
+    }
   }
 
   const getCategoryColor = (category?: string) => {
     switch (category) {
-      case 'weather': return 'from-blue-500 to-sky-500'
-      case 'crops': return 'from-green-500 to-emerald-500'
-      case 'irrigation': return 'from-cyan-500 to-blue-500'
-      case 'pest': return 'from-orange-500 to-red-500'
-      case 'market': return 'from-purple-500 to-pink-500'
-      case 'soil': return 'from-amber-500 to-orange-500'
-      default: return 'from-green-500 to-emerald-500'
+      case 'weather': return 'from-blue-500 to-blue-600'
+      case 'crops': return 'from-blue-400 to-blue-500'
+      case 'irrigation': return 'from-blue-600 to-blue-700'
+      case 'pest': return 'from-blue-500 to-indigo-500'
+      case 'market': return 'from-indigo-500 to-blue-600'
+      case 'soil': return 'from-blue-400 to-indigo-400'
+      default: return 'from-blue-500 to-blue-600'
     }
   }
 
@@ -246,39 +266,47 @@ const ChatBot: React.FC = () => {
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     exit={{ opacity: 0, y: -20, scale: 0.95 }}
                     transition={{ duration: 0.3, delay: index * 0.1 }}
-                    className={`flex ${message.isUser ? 'justify-end' : 'justify-start'}`}
+                    className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}
                   >
-                    {message.isLoading ? (
-                      <div className="bg-gray-100 rounded-2xl px-4 py-3 max-w-xs">
-                        <div className="flex items-center space-x-2">
-                          <motion.div
-                            animate={{ rotate: 360 }}
-                            transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-                          >
-                            <Loader2 className="w-4 h-4 text-green-500" />
-                          </motion.div>
-                          <span className="text-sm text-gray-600">AI is thinking...</span>
+                    <div className={`max-w-md px-4 py-3 rounded-2xl ${
+                      message.sender === 'user'
+                        ? 'bg-gradient-to-r from-green-500 to-emerald-500 text-white ml-4' 
+                        : `bg-gradient-to-r ${getCategoryColor(message.category)} text-white mr-4`
+                    }`}>
+                      <p className="text-sm leading-relaxed">{message.text}</p>
+                      {message.category && message.sender === 'bot' && (
+                        <div className="mt-2 flex items-center space-x-2">
+                          <span className="text-xs bg-white/20 px-2 py-1 rounded-full">
+                            {message.category.charAt(0).toUpperCase() + message.category.slice(1)}
+                          </span>
                         </div>
-                      </div>
-                    ) : (
-                      <div className={`max-w-md px-4 py-3 rounded-2xl ${
-                        message.isUser 
-                          ? 'bg-gradient-to-r from-green-500 to-emerald-500 text-white ml-4' 
-                          : `bg-gradient-to-r ${getCategoryColor(message.category)} text-white mr-4`
-                      }`}>
-                        <p className="text-sm leading-relaxed">{message.text}</p>
-                        {message.category && !message.isUser && (
-                          <div className="mt-2 flex items-center space-x-2">
-                            <span className="text-xs bg-white/20 px-2 py-1 rounded-full">
-                              {message.category.charAt(0).toUpperCase() + message.category.slice(1)}
-                            </span>
-                          </div>
-                        )}
-                      </div>
-                    )}
+                      )}
+                    </div>
                   </motion.div>
                 ))}
               </AnimatePresence>
+              
+              {/* Loading indicator */}
+              {isLoading && (
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="flex justify-start"
+                >
+                  <div className="bg-gray-100 rounded-2xl px-4 py-3 max-w-xs">
+                    <div className="flex items-center space-x-2">
+                      <motion.div
+                        animate={{ rotate: 360 }}
+                        transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                      >
+                        <Sparkles className="w-4 h-4 text-green-500" />
+                      </motion.div>
+                      <span className="text-sm text-gray-600">AI is thinking...</span>
+                    </div>
+                  </div>
+                </motion.div>
+              )}
+              
               <div ref={messagesEndRef} />
             </div>
 
@@ -291,33 +319,195 @@ const ChatBot: React.FC = () => {
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
                     onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
-                    placeholder="Ask me about farming, weather, crops, or anything agricultural..."
+                    placeholder={isListening ? "Listening..." : "Ask me about farming, weather, crops, or anything agricultural..."}
                     className="w-full px-4 py-3 rounded-xl border border-green-200 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white/80 backdrop-blur-sm"
-                    disabled={isProcessing}
+                    disabled={isLoading || isListening}
                   />
+                  {/* Voice level indicator */}
+                  {isListening && (
+                    <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+                      <VoiceVisualizer 
+                        isListening={isListening}
+                        isSpeaking={false}
+                        voiceLevel={voiceLevel}
+                        className="w-16 h-6"
+                      />
+                    </div>
+                  )}
                 </div>
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={toggleListening}
-                  className={`p-3 rounded-xl transition-all duration-200 ${
-                    isListening 
-                      ? 'bg-red-500 hover:bg-red-600 text-white' 
-                      : 'bg-green-500 hover:bg-green-600 text-white'
-                  }`}
-                >
-                  {isListening ? <MicOff className="w-5 h-5" /> : <Mic className="w-5 h-5" />}
-                </motion.button>
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={() => handleSendMessage()}
-                  disabled={!input.trim() || isProcessing}
-                  className="p-3 rounded-xl bg-green-500 hover:bg-green-600 text-white transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  <Send className="w-5 h-5" />
-                </motion.button>
+                
+                {/* Voice Controls */}
+                <div className="flex items-center space-x-3">
+                  {/* Enhanced Voice Visualizer */}
+                  <AnimatePresence>
+                    {(isListening || isSpeaking) && (
+                      <motion.div
+                        initial={{ opacity: 0, scale: 0.8, x: -20 }}
+                        animate={{ opacity: 1, scale: 1, x: 0 }}
+                        exit={{ opacity: 0, scale: 0.8, x: -20 }}
+                        className="flex items-center space-x-3 px-4 py-3 bg-gradient-to-r from-blue-50 via-purple-50 to-pink-50 border-2 border-blue-200 rounded-full shadow-lg backdrop-blur-sm"
+                      >
+                        {/* Animated Voice Waves */}
+                        <div className="flex items-center space-x-1">
+                          {[...Array(5)].map((_, i) => (
+                            <motion.div
+                              key={i}
+                              className={`w-1.5 rounded-full ${
+                                isListening 
+                                  ? 'bg-gradient-to-t from-red-500 to-pink-500' 
+                                  : 'bg-gradient-to-t from-purple-500 to-blue-500'
+                              }`}
+                              animate={{
+                                height: [6, 18, 10, 24, 8, 16],
+                                opacity: [0.3, 1, 0.5, 1, 0.4, 0.8]
+                              }}
+                              transition={{
+                                duration: 1.8,
+                                repeat: Infinity,
+                                delay: i * 0.15,
+                                ease: "easeInOut"
+                              }}
+                            />
+                          ))}
+                        </div>
+                        
+                        {/* Status Text with Icon */}
+                        <div className="flex items-center space-x-2">
+                          <motion.div
+                            animate={{ rotate: isListening ? [0, 10, -10, 0] : 0 }}
+                            transition={{ duration: 0.5, repeat: isListening ? Infinity : 0 }}
+                          >
+                            {isListening ? (
+                              <Mic className="w-4 h-4 text-red-500" />
+                            ) : (
+                              <Volume2 className="w-4 h-4 text-purple-500" />
+                            )}
+                          </motion.div>
+                          <span className={`text-sm font-semibold ${
+                            isListening ? 'text-red-600' : 'text-purple-600'
+                          }`}>
+                            {isListening ? 'Listening...' : 'Speaking...'}
+                          </span>
+                        </div>
+                        
+                        {/* Pulse Ring */}
+                        <motion.div
+                          className={`absolute inset-0 rounded-full border-2 ${
+                            isListening ? 'border-red-300' : 'border-purple-300'
+                          }`}
+                          animate={{ scale: [1, 1.1, 1] }}
+                          transition={{ duration: 2, repeat: Infinity }}
+                        />
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+
+                  {/* Enhanced Speaking Control */}
+                  {isSpeaking && (
+                    <motion.button
+                      initial={{ opacity: 0, scale: 0.8 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.8 }}
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      onClick={toggleSpeaking}
+                      className="relative p-3 rounded-full bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white shadow-lg transition-all duration-300"
+                      title="Stop speaking"
+                    >
+                      <VolumeX className="w-5 h-5" />
+                      <motion.div
+                        className="absolute inset-0 rounded-full border-2 border-orange-300"
+                        animate={{ scale: [1, 1.2, 1] }}
+                        transition={{ duration: 1, repeat: Infinity }}
+                      />
+                    </motion.button>
+                  )}
+                  
+                  {/* Enhanced Voice Input Toggle */}
+                  {isSupported && (
+                    <motion.button
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      onClick={toggleListening}
+                      className={`relative p-4 rounded-full transition-all duration-300 shadow-lg ${
+                        isListening 
+                          ? 'bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 text-white' 
+                          : 'bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white'
+                      }`}
+                      title={isListening ? "Stop listening" : "Start voice input"}
+                    >
+                      {isListening ? (
+                        <>
+                          <MicOff className="w-6 h-6" />
+                          <motion.div
+                            className="absolute inset-0 rounded-full border-2 border-red-300"
+                            animate={{ scale: [1, 1.3, 1] }}
+                            transition={{ duration: 0.8, repeat: Infinity }}
+                          />
+                          <motion.div
+                            className="absolute inset-0 rounded-full bg-red-400 opacity-20"
+                            animate={{ scale: [1, 1.5, 1] }}
+                            transition={{ duration: 1.2, repeat: Infinity }}
+                          />
+                        </>
+                      ) : (
+                        <>
+                          <Mic className="w-6 h-6" />
+                          <div className="absolute inset-0 rounded-full bg-gradient-to-r from-blue-400/20 to-purple-400/20" />
+                        </>
+                      )}
+                    </motion.button>
+                  )}
+                  
+                  {/* Enhanced Send Button */}
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={() => handleSendMessage()}
+                    disabled={!input.trim() || isLoading}
+                    className="relative p-3 rounded-full bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 disabled:from-gray-300 disabled:to-gray-400 disabled:cursor-not-allowed text-white shadow-lg transition-all duration-300"
+                    title="Send message"
+                  >
+                    <Send className="w-5 h-5" />
+                    {!input.trim() && !isLoading && (
+                      <div className="absolute inset-0 rounded-full bg-gray-400/50" />
+                    )}
+                  </motion.button>
+                </div>
               </div>
+              
+              {/* Voice status indicator */}
+              {isListening && (
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="mt-3 flex items-center justify-center space-x-3 text-sm text-green-600"
+                >
+                  <VoiceVisualizer 
+                    isListening={isListening}
+                    isSpeaking={false}
+                    voiceLevel={voiceLevel}
+                    className="w-20 h-8"
+                  />
+                  <span className="font-medium">Listening... Speak now</span>
+                </motion.div>
+              )}
+              
+              {isSpeaking && (
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="mt-3 flex items-center justify-center space-x-3 text-sm text-blue-600"
+                >
+                  <VoiceVisualizer 
+                    isListening={false}
+                    isSpeaking={isSpeaking}
+                    voiceLevel={0.7}
+                    className="w-20 h-8"
+                  />
+                  <span className="font-medium">Speaking...</span>
+                </motion.div>
+              )}
             </div>
           </div>
         </div>

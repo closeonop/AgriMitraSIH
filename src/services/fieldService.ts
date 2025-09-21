@@ -302,9 +302,30 @@ export const getFieldsByDistrict = async (district: string): Promise<Field[]> =>
   )
 }
 
-export const getFieldsByCrop = async (crop: string): Promise<Field[]> => {
-  await new Promise(resolve => setTimeout(resolve, 400))
-  return mockFields.filter(field => 
-    field.crops.some(c => c.toLowerCase() === crop.toLowerCase())
-  )
+export const updateFieldSoilData = async (fieldId: string, soilData: Partial<FieldSoilData>): Promise<FieldSoilData | null> => {
+  await new Promise(resolve => setTimeout(resolve, 600))
+  
+  if (mockFieldSoilData[fieldId]) {
+    mockFieldSoilData[fieldId] = {
+      ...mockFieldSoilData[fieldId],
+      ...soilData,
+      lastUpdated: new Date().toISOString().split('T')[0]
+    }
+    return mockFieldSoilData[fieldId]
+  }
+  
+  return null
+}
+
+export const createFieldSoilData = async (fieldId: string, soilData: Omit<FieldSoilData, 'fieldId' | 'lastUpdated'>): Promise<FieldSoilData> => {
+  await new Promise(resolve => setTimeout(resolve, 700))
+  
+  const newSoilData: FieldSoilData = {
+    ...soilData,
+    fieldId,
+    lastUpdated: new Date().toISOString().split('T')[0]
+  }
+  
+  mockFieldSoilData[fieldId] = newSoilData
+  return newSoilData
 }

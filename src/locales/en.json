@@ -550,6 +550,46 @@
       "subtitle": "Increase your crop productivity by at least 10% through data-driven insights, weather patterns, and soil health analysis."
     }
   },
+  "smartRecommendations": {
+    "title": "Smart Recommendations",
+    "subtitle": "AI-powered agricultural guidance for your location",
+    "personalizedRecommendations": "Personalized Recommendations",
+    "selectLocation": "Select Location",
+    "selectLocationFirst": "Please select both district and locality",
+    "selectLocationDescription": "Choose your district and specific locality to get personalized agricultural recommendations for your area.",
+    "noRecommendations": "No recommendations found",
+    "tryDifferentFilters": "Try adjusting your filters or selecting a different location to see more recommendations.",
+    "itemsFound": "recommendations found",
+    "actionItems": "Action Items",
+    "howItWorks": "How It Works",
+    "aiExplanation": "Our AI analyzes your location, season, and local conditions to provide personalized agricultural recommendations.",
+    "seasons": {
+      "kharif": "Kharif (Monsoon)",
+      "rabi": "Rabi (Winter)",
+      "summer": "Summer",
+      "all": "All Seasons"
+    },
+    "ecosystems": {
+      "irrigated": "Irrigated",
+      "rainfed": "Rainfed",
+      "upland": "Upland",
+      "lowland": "Lowland",
+      "coastal": "Coastal",
+      "all": "All Ecosystems"
+    },
+    "categories": {
+      "water": "Water Management",
+      "pest": "Pest & Disease Control",
+      "crop": "Crop Management",
+      "soil": "Soil Health",
+      "weather": "Weather Preparedness"
+    },
+    "priority": {
+      "high": "High Priority",
+      "medium": "Medium Priority",
+      "low": "Low Priority"
+    }
+  },
   "common": {
     "aiPowered": "AI-Powered",
     "smartFarming": "Smart Farming",
