@@ -344,5 +344,188 @@
     "copyright": "ਸਾਰੇ ਅਧਿਕਾਰ ਸੁਰੱਖਿਤ।",
     "madeWith": "ਨਾਲ ਬਣਾਇਆ ਗਿਆ",
     "inIndia": "ਭਾਰਤ ਵਿੱਚ"
+  },
+  "chatbotPreview": {
+    "badge": "AI-ਸੰਚਾਲਿਤ ਸਹਾਇਕ",
+    "title": {
+      "meetYour": "ਮਿਲੋ ਆਪਣੇ",
+      "smartFarming": "ਸਮਾਰਟ ਫਾਰਮਿੰਗ",
+      "assistant": "ਸਹਾਇਕ ਨਾਲ"
+    },
+    "description": "ਸਾਡੇ ਉੱਨਤ AI ਚੈਟਬੋਟ ਨਾਲ ਆਪਣੀਆਂ ਸਾਰੀਆਂ ਖੇਤੀਬਾੜੀ ਲੋੜਾਂ ਲਈ ਤੁਰੰਤ ਜਵਾਬ, ਵਿਅਕਤੀਗਤ ਸਿਫਾਰਸ਼ਾਂ ਅਤੇ ਮਾਹਰ ਮਾਰਗਦਰਸ਼ਨ ਪ੍ਰਾਪਤ ਕਰੋ।",
+    "quickActions": {
+      "cropAdvice": "ਫਸਲ ਸਲਾਹ",
+      "weatherUpdate": "ਮੌਸਮ ਅਪਡੇਟ",
+      "soilAnalysis": "ਮਿੱਟੀ ਵਿਸ਼ਲੇਸ਼ਣ",
+      "pestControl": "ਕੀੜੇ ਨਿਯੰਤਰਣ"
+    },
+    "tryNow": "AI ਸਹਾਇਕ ਹੁਣੇ ਅਜ਼ਮਾਓ",
+    "chatPreview": {
+      "title": "AgriMitra AI",
+      "subtitle": "ਤੁਹਾਡਾ ਸਮਾਰਟ ਫਾਰਮਿੰਗ ਸਹਾਇਕ",
+      "online": "ਔਨਲਾਈਨ",
+      "placeholder": "ਖੇਤੀਬਾੜੀ ਬਾਰੇ ਮੈਨੂੰ ਕੁਝ ਵੀ ਪੁੱਛੋ...",
+      "sampleMessages": {
+        "question1": "ਚਾਵਲ ਬੀਜਣ ਦਾ ਸਭ ਤੋਂ ਵਧੀਆ ਸਮਾਂ ਕੀ ਹੈ?",
+        "answer1": "ਤੁਹਾਡੇ ਸਥਾਨ ਦੇ ਆਧਾਰ 'ਤੇ, ਚਾਵਲ ਲਈ ਸਭ ਤੋਂ ਵਧੀਆ ਬੀਜਣ ਦਾ ਸਮਾਂ ਮਾਨਸੂਨ ਦੇ ਮੌਸਮ ਵਿੱਚ ਹੈ, ਆਮ ਤੌਰ 'ਤੇ ਜੂਨ-ਜੁਲਾਈ।",
+        "question2": "ਮੈਂ ਮਿੱਟੀ ਦੀ ਉਪਜਾਊ ਸ਼ਕਤੀ ਕਿਵੇਂ ਸੁਧਾਰ ਸਕਦਾ ਹਾਂ?",
+        "answer2": "ਮੈਂ ਜੈਵਿਕ ਖਾਦ, ਫਸਲ ਚੱਕਰ, ਅਤੇ ਸਰਵੋਤਮ ਉਪਜਾਊ ਪੱਧਰ ਬਣਾਈ ਰੱਖਣ ਲਈ ਨਿਯਮਤ ਮਿੱਟੀ ਜਾਂਚ ਦੀ ਸਿਫਾਰਸ਼ ਕਰਦਾ ਹਾਂ।",
+        "question3": "ਇਸ ਹਫ਼ਤੇ ਦਾ ਮੌਸਮ ਪੂਰਵਾਨੁਮਾਨ?",
+        "answer3": "25-30°C ਦੇ ਵਿਚਕਾਰ ਤਾਪਮਾਨ ਦੇ ਨਾਲ ਮੱਧਮ ਬਾਰਿਸ਼ ਦੀ ਉਮੀਦ ਹੈ। ਤੁਹਾਡੀਆਂ ਮੌਜੂਦਾ ਫਸਲਾਂ ਲਈ ਬਿਲਕੁਲ ਸਹੀ!"
+      }
+    },
+    "stats": {
+      "support": "24/7 AI ਸਹਾਇਤਾ",
+      "accuracy": "95% ਸਟੀਕਤਾ ਦਰ",
+      "farmers": "1000+ ਖੁਸ਼ ਕਿਸਾਨ",
+      "languages": "ਬਹੁ-ਭਾਸ਼ਾ ਸਹਾਇਤਾ"
+    }
+  },
+  "mobileMenu": {
+    "dashboard": "ਡੈਸ਼ਬੋਰਡ",
+    "predictions": "ਭਵਿੱਖਬਾਣੀਆਂ", 
+    "soilHealth": "ਮਿੱਟੀ ਦੀ ਸਿਹਤ",
+    "cropMonitoring": "ਫਸਲ ਨਿਗਰਾਨੀ",
+    "marketIntel": "ਮਾਰਕੀਟ ਜਾਣਕਾਰੀ",
+    "chatbot": "AI ਸਹਾਇਕ",
+    "settings": "ਸੈਟਿੰਗਜ਼"
+  },
+  "dashboard": {
+    "title": "ਐਗਰੀਮਿੱਤਰ ਡੈਸ਼ਬੋਰਡ",
+    "subtitle": "ਓਡੀਸ਼ਾ ਲਈ ਰੀਅਲ-ਟਾਈਮ ਖੇਤੀਬਾੜੀ ਸੂਝ",
+    "refreshWeather": "ਮੌਸਮ ਰਿਫ੍ਰੈਸ਼ ਕਰੋ",
+    "refresh": "ਰਿਫ੍ਰੈਸ਼",
+    "liveWeatherUpdate": "ਲਾਈਵ ਮੌਸਮ ਅਪਡੇਟ - ਭੁਵਨੇਸ਼ਵਰ",
+    "metrics": {
+      "activeFarms": "ਸਰਗਰਮ ਖੇਤ",
+      "cropYield": "ਫਸਲ ਪੈਦਾਵਾਰ",
+      "soilHealth": "ਮਿੱਟੀ ਦੀ ਸਿਹਤ",
+      "weatherAlerts": "ਮੌਸਮ ਚੇਤਾਵਨੀਆਂ",
+      "excellentCondition": "ਸ਼ਾਨਦਾਰ ਸਥਿਤੀ",
+      "moderate": "ਮੱਧਮ",
+      "low": "ਘੱਟ"
+    },
+    "soilHealthSummary": "ਮਿੱਟੀ ਸਿਹਤ ਸਾਰਾਂਸ਼ - ਓਡੀਸ਼ਾ ਜ਼ਿਲ੍ਹੇ",
+    "goodForCropGrowth": "ਫਸਲ ਵਿਕਾਸ ਲਈ ਚੰਗਾ",
+    "activities": {
+      "newCropPlanted": "ਨਵੀਂ ਫਸਲ ਲਗਾਈ ਗਈ",
+      "irrigationActivated": "ਕਣਕ ਦੀਆਂ ਫਸਲਾਂ ਲਈ ਸਵੈਚਲਿਤ ਸਿੰਚਾਈ ਪ੍ਰਣਾਲੀ ਸਰਗਰਮ",
+      "soilAnalysisReport": "ਮਿੱਟੀ ਵਿਸ਼ਲੇਸ਼ਣ ਰਿਪੋਰਟ"
+    }
+  },
+  "cropMonitoring": {
+    "title": "ਫਸਲ ਨਿਗਰਾਨੀ",
+    "subtitle": "ਵਿਕਾਸ ਪੜਾਅ ਟਰੈਕ ਕਰੋ, ਸਿਹਤ ਦੀ ਨਿਗਰਾਨੀ ਕਰੋ, ਅਤੇ ਬਿਮਾਰੀਆਂ ਦਾ ਪਤਾ ਲਗਾਓ",
+    "currentField": "ਮੌਜੂਦਾ ਖੇਤ",
+    "activeCrops": "ਸਰਗਰਮ ਫਸਲਾਂ",
+    "addNewCrop": "ਨਵੀਂ ਫਸਲ ਸ਼ਾਮਲ ਕਰੋ",
+    "editCrop": "ਫਸਲ ਸੰਪਾਦਿਤ ਕਰੋ",
+    "deleteCrop": "ਫਸਲ ਮਿਟਾਓ",
+    "updateCrop": "ਫਸਲ ਅਪਡੇਟ ਕਰੋ",
+    "addCrop": "ਫਸਲ ਸ਼ਾਮਲ ਕਰੋ",
+    "cropName": "ਫਸਲ ਦਾ ਨਾਮ",
+    "variety": "ਕਿਸਮ",
+    "plantingDate": "ਬੀਜਣ ਦੀ ਤਾਰੀਖ",
+    "expectedHarvest": "ਅਨੁਮਾਨਿਤ ਵਾਢੀ",
+    "area": "ਖੇਤਰਫਲ (ਹੈਕਟੇਅਰ)",
+    "currentStage": "ਮੌਜੂਦਾ ਪੜਾਅ",
+    "health": "ਸਿਹਤ",
+    "progress": "ਤਰੱਕੀ",
+    "icon": "ਆਈਕਨ",
+    "stages": {
+      "germination": "ਅੰਕੁਰਣ",
+      "tillering": "ਕਲੇ ਨਿਕਲਣਾ",
+      "stemExtension": "ਤਣਾ ਵਿਸਤਾਰ",
+      "flowering": "ਫੁੱਲ ਆਉਣਾ",
+      "grainFilling": "ਦਾਣਾ ਭਰਨਾ",
+      "harvested": "ਵਾਢੀ ਹੋਈ"
+    },
+    "healthLevels": {
+      "excellent": "ਸ਼ਾਨਦਾਰ",
+      "good": "ਚੰਗਾ",
+      "fair": "ਠੀਕ",
+      "poor": "ਮਾੜਾ"
+    },
+    "deleteConfirmation": "ਕੀ ਤੁਸੀਂ ਸੱਚਮੁੱਚ ਇਸ ਫਸਲ ਨੂੰ ਮਿਟਾਉਣਾ ਚਾਹੁੰਦੇ ਹੋ? ਇਹ ਕਿਰਿਆ ਵਾਪਸ ਨਹੀਂ ਕੀਤੀ ਜਾ ਸਕਦੀ।",
+    "cancel": "ਰੱਦ ਕਰੋ",
+    "close": "ਬੰਦ ਕਰੋ"
+  },
+  "soilHealth": {
+    "title": "ਮਿੱਟੀ ਸਿਹਤ ਵਿਸ਼ਲੇਸ਼ਣ",
+    "subtitle": "ਵਿਆਪਕ ਮਿੱਟੀ ਵਿਸ਼ਲੇਸ਼ਣ ਅਤੇ ਪੋਸ਼ਕ ਤੱਤ ਸਿਫਾਰਿਸ਼ਾਂ",
+    "customAnalysis": "ਕਸਟਮ ਮਿੱਟੀ ਵਿਸ਼ਲੇਸ਼ਣ",
+    "soilOverview": "ਮਿੱਟੀ ਸਮੀਖਿਆ",
+    "enterSoilParameters": "ਮਿੱਟੀ ਦੇ ਪੈਰਾਮੀਟਰ ਦਾਖਲ ਕਰੋ",
+    "phLevel": "pH ਪੱਧਰ",
+    "nitrogen": "ਨਾਈਟ੍ਰੋਜਨ (ppm)",
+    "phosphorus": "ਫਾਸਫੋਰਸ (ppm)",
+    "potassium": "ਪੋਟਾਸ਼ੀਅਮ (ppm)",
+    "moisture": "ਨਮੀ (%)",
+    "temperature": "ਤਾਪਮਾਨ (°C)",
+    "organicMatter": "ਜੈਵਿਕ ਪਦਾਰਥ (%)",
+    "conductivity": "ਚਾਲਕਤਾ (dS/m)",
+    "acidic": "ਤੇਜ਼ਾਬੀ",
+    "neutral": "ਨਿਰਪੱਖ",
+    "alkaline": "ਖਾਰੀ",
+    "optimal": "ਸਰਵੋਤਮ",
+    "good": "ਚੰਗਾ",
+    "moderate": "ਮੱਧਮ",
+    "noData": "ਕੋਈ ਡੇਟਾ ਨਹੀਂ",
+    "soilTypeClassification": "ਮਿੱਟੀ ਕਿਸਮ ਵਰਗੀਕਰਣ",
+    "soilTypeRecommendations": "ਮਿੱਟੀ ਕਿਸਮ ਸਿਫਾਰਿਸ਼ਾਂ",
+    "overallSoilHealthScore": "ਸਮੁੱਚਾ ਮਿੱਟੀ ਸਿਹਤ ਸਕੋਰ",
+    "chooseField": "ਇਸਦੇ ਮਿੱਟੀ ਵਿਸ਼ਲੇਸ਼ਣ ਨੂੰ ਦੇਖਣ ਲਈ ਉੱਪਰ ਇੱਕ ਖੇਤ ਚੁਣੋ"
+  },
+  "weatherForecast": {
+    "title": "ਮੌਸਮ ਪੂਰਵਾਨੁਮਾਨ",
+    "subtitle": "7-ਦਿਨ ਮੌਸਮ ਭਵਿੱਖਬਾਣੀਆਂ ਅਤੇ ਖੇਤੀਬਾੜੀ ਸੂਝ",
+    "temperatureAlert": "ਤਾਪਮਾਨ 5°C ਤੋਂ ਹੇਠਾਂ ਡਿੱਗ ਸਕਦਾ ਹੈ। ਸੰਵੇਦਨਸ਼ੀਲ ਫਸਲਾਂ ਅਤੇ ਪਸ਼ੂਆਂ ਦੀ ਸੁਰੱਖਿਆ ਕਰੋ।",
+    "hotWeatherAdvice": "ਗਰਮ ਮੌਸਮ ਦੀ ਉਮੀਦ - ਸਿੰਚਾਈ ਵਧਾਓ ਅਤੇ ਸੰਵੇਦਨਸ਼ੀਲ ਫਸਲਾਂ ਲਈ ਛਾਂ ਪ੍ਰਦਾਨ ਕਰੋ।"
+  },
+  "marketIntelligence": {
+    "title": "ਮਾਰਕੀਟ ਬੁੱਧੀ",
+    "subtitle": "ਰੀਅਲ-ਟਾਈਮ ਫਸਲ ਕੀਮਤਾਂ, ਮਾਰਕੀਟ ਰੁਝਾਨ, ਅਤੇ ਖੇਤੀਬਾੜੀ ਖ਼ਬਰਾਂ",
+    "marketOverview": "ਮਾਰਕੀਟ ਸਮੀਖਿਆ",
+    "marketAnalysis": "ਮਾਰਕੀਟ ਵਿਸ਼ਲੇਸ਼ਣ",
+    "bestPerforming": "ਸਭ ਤੋਂ ਵਧੀਆ ਪ੍ਰਦਰਸ਼ਨ ਕਰਨ ਵਾਲੀਆਂ ਫਸਲਾਂ",
+    "declining": "ਘਟਦੀਆਂ ਫਸਲ ਕੀਮਤਾਂ",
+    "marketInsights": "ਮਾਰਕੀਟ ਸੂਝ",
+    "grainMarketsStable": "ਅਨਾਜ ਮਾਰਕੀਟ ਮੱਧਮ ਉੱਪਰਵਾਲੇ ਰੁਝਾਨ ਨਾਲ ਸਥਿਰ ਰਹਿੰਦੇ ਹਨ",
+    "marketNews": "ਮਾਰਕੀਟ ਖ਼ਬਰਾਂ",
+    "compareMarkets": "ਮਾਰਕੀਟਾਂ ਦੀ ਤੁਲਨਾ ਕਰੋ"
+  },
+  "home": {
+    "features": {
+      "aiPrediction": {
+        "title": "AI ਪੈਦਾਵਾਰ ਭਵਿੱਖਬਾਣੀ",
+        "description": "ਉੱਨਤ AI ਐਲਗੋਰਿਦਮ ਅਤੇ ਇਤਿਹਾਸਕ ਡੇਟਾ ਦੀ ਵਰਤੋਂ ਕਰਕੇ ਸਟੀਕ ਫਸਲ ਪੈਦਾਵਾਰ ਭਵਿੱਖਬਾਣੀਆਂ ਪ੍ਰਾਪਤ ਕਰੋ।"
+      },
+      "irrigation": {
+        "title": "ਸਮਾਰਟ ਸਿੰਚਾਈ",
+        "description": "ਮੌਸਮ ਅਤੇ ਮਿੱਟੀ ਦੀ ਸਥਿਤੀ ਦੇ ਆਧਾਰ 'ਤੇ ਬੁੱਧੀਮਾਨ ਸਿੰਚਾਈ ਸਿਫਾਰਿਸ਼ਾਂ ਨਾਲ ਪਾਣੀ ਦੀ ਵਰਤੋਂ ਨੂੰ ਅਨੁਕੂਲਿਤ ਕਰੋ।"
+      },
+      "soilAnalysis": {
+        "title": "ਮਿੱਟੀ ਸਿਹਤ ਵਿਸ਼ਲੇਸ਼ਣ",
+        "description": "ਵਿਆਪਕ ਵਿਸ਼ਲੇਸ਼ਣ ਅਤੇ ਵਿਅਕਤੀਗਤ ਸਿਫਾਰਿਸ਼ਾਂ ਨਾਲ ਮਿੱਟੀ ਦੀ ਸਿਹਤ ਦੀ ਨਿਗਰਾਨੀ ਅਤੇ ਸੁਧਾਰ ਕਰੋ।"
+      },
+      "cropManagement": {
+        "title": "ਫਸਲ ਪ੍ਰਬੰਧਨ",
+        "description": "ਵਿਸਤ੍ਰਿਤ ਨਿਗਰਾਨੀ ਅਤੇ ਵਿਕਾਸ ਪੜਾਅ ਵਿਸ਼ਲੇਸ਼ਣ ਨਾਲ ਕਈ ਫਸਲਾਂ ਨੂੰ ਟਰੈਕ ਅਤੇ ਪ੍ਰਬੰਧਿਤ ਕਰੋ।"
+      }
+    },
+    "stats": {
+      "supportedCrops": "ਸਮਰਥਿਤ ਫਸਲਾਂ"
+    },
+    "hero": {
+      "title": "AI-ਸੰਚਾਲਿਤ ਫਸਲ ਪੈਦਾਵਾਰ ਭਵਿੱਖਬਾਣੀ ਅਤੇ ਅਨੁਕੂਲਨ ਪਲੇਟਫਾਰਮ",
+      "subtitle": "ਡੇਟਾ-ਸੰਚਾਲਿਤ ਸੂਝ, ਮੌਸਮ ਪੈਟਰਨ, ਅਤੇ ਮਿੱਟੀ ਸਿਹਤ ਵਿਸ਼ਲੇਸ਼ਣ ਦੁਆਰਾ ਆਪਣੀ ਫਸਲ ਉਤਪਾਦਕਤਾ ਨੂੰ ਘੱਟੋ-ਘੱਟ 10% ਵਧਾਓ।"
+    }
+  },
+  "common": {
+    "aiPowered": "AI-ਸੰਚਾਲਿਤ",
+    "smartFarming": "ਸਮਾਰਟ ਫਾਰਮਿੰਗ",
+    "getInstant": "ਤੁਰੰਤ ਪ੍ਰਾਪਤ ਕਰੋ",
+    "transformYour": "ਆਪਣੇ ਨੂੰ ਬਦਲੋ",
+    "experienceTheFuture": "ਭਵਿੱਖ ਦਾ ਅਨੁਭਵ ਕਰੋ"
   }
 }

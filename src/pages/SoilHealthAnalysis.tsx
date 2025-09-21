@@ -228,72 +228,72 @@ const SoilHealthAnalysis = () => {
     // Calculate nitrogen status and recommendations
     const nitrogenStatus = soilData.nitrogen < 150 ? 'low' : soilData.nitrogen > 300 ? 'high' : 'optimal'
     recommendations.push({
-      nutrient: 'Nitrogen',
+      nutrient: t('soilHealth.nitrogen'),
       current: soilData.nitrogen,
-      optimal: nitrogenStatus === 'optimal' ? 'Optimal' : '150-300 ppm',
-      recommendation: nitrogenStatus === 'low' ? 'Apply nitrogen-rich fertilizer' : 
-                    nitrogenStatus === 'high' ? 'Reduce nitrogen application' : 'Maintain current levels',
+      optimal: nitrogenStatus === 'optimal' ? t('soilHealth.optimal') : '150-300 ppm',
+      recommendation: nitrogenStatus === 'low' ? t('soilHealth.applyNitrogenFertilizer') : 
+                    nitrogenStatus === 'high' ? t('soilHealth.reduceNitrogenApplication') : t('soilHealth.maintainCurrentLevels'),
       priority: nitrogenStatus === 'optimal' ? 'low' : 'high',
       status: nitrogenStatus,
       icon: '🌱',
       fertilizer: nitrogenStatus === 'low' ? {
-        name: 'Urea (46-0-0)',
-        amount: '50-75 kg/hectare',
-        timing: 'Split application: 50% at planting, 50% at tillering',
-        application: 'Broadcast and incorporate into soil'
+        name: t('soilHealth.ureaFertilizer'),
+        amount: t('soilHealth.ureaAmount'),
+        timing: t('soilHealth.ureaTiming'),
+        application: t('soilHealth.ureaApplication')
       } : nitrogenStatus === 'high' ? {
-        name: 'Reduce current fertilizer',
-        amount: 'Skip next application',
-        timing: 'Monitor soil levels monthly',
-        application: 'Allow natural depletion'
+        name: t('soilHealth.reduceCurrentFertilizer'),
+        amount: t('soilHealth.skipNextApplication'),
+        timing: t('soilHealth.monitorSoilLevels'),
+        application: t('soilHealth.allowNaturalDepletion')
       } : undefined
     })
     
     // Calculate phosphorus status and recommendations
     const phosphorusStatus = soilData.phosphorus < 20 ? 'low' : soilData.phosphorus > 50 ? 'high' : 'optimal'
     recommendations.push({
-      nutrient: 'Phosphorus',
+      nutrient: t('soilHealth.phosphorus'),
       current: soilData.phosphorus,
-      optimal: phosphorusStatus === 'optimal' ? 'Optimal' : '20-50 ppm',
-      recommendation: phosphorusStatus === 'low' ? 'Apply phosphorus fertilizer (DAP)' : 
-                    phosphorusStatus === 'high' ? 'Reduce phosphorus application' : 'Maintain current levels',
+      optimal: phosphorusStatus === 'optimal' ? t('soilHealth.optimal') : '20-50 ppm',
+      recommendation: phosphorusStatus === 'low' ? t('soilHealth.applyPhosphorusFertilizer') : 
+                    phosphorusStatus === 'high' ? t('soilHealth.reducePhosphorusApplication') : t('soilHealth.maintainCurrentLevels'),
       priority: phosphorusStatus === 'optimal' ? 'low' : 'medium',
       status: phosphorusStatus,
       icon: '🧪',
       fertilizer: phosphorusStatus === 'low' ? {
-        name: 'DAP (18-46-0)',
-        amount: '100-125 kg/hectare',
-        timing: 'Apply at planting/sowing',
-        application: 'Band placement 2-3 cm below seed'
+        name: t('soilHealth.dapFertilizer'),
+        amount: t('soilHealth.dapAmount'),
+        timing: t('soilHealth.dapTiming'),
+        application: t('soilHealth.dapApplication')
       } : phosphorusStatus === 'high' ? {
-        name: 'Reduce phosphorus input',
-        amount: 'Use low-P fertilizers',
-        timing: 'Next growing season',
-        application: 'Switch to nitrogen-only fertilizers'
+        name: t('soilHealth.reducePhosphorusInput'),
+        amount: t('soilHealth.useLowPFertilizers'),
+        timing: t('soilHealth.nextGrowingSeason'),
+        application: t('soilHealth.switchToNitrogenOnly')
       } : undefined
     })
     
     // Calculate potassium status and recommendations
     const potassiumStatus = soilData.potassium < 100 ? 'low' : soilData.potassium > 200 ? 'high' : 'optimal'
     recommendations.push({
-      nutrient: 'Potassium',
+      nutrient: t('soilHealth.potassium'),
       current: soilData.potassium,
-      optimal: potassiumStatus === 'optimal' ? 'Optimal' : '100-200 ppm',
-      recommendation: potassiumStatus === 'low' ? 'Apply potassium fertilizer (MOP)' : 
-                    potassiumStatus === 'high' ? 'Reduce potassium application' : 'Maintain current levels',
+      optimal: potassiumStatus === 'optimal' ? t('soilHealth.optimal') : '100-200 ppm',
+      recommendation: potassiumStatus === 'low' ? t('soilHealth.applyPotassiumFertilizer') : 
+                    potassiumStatus === 'high' ? t('soilHealth.reducePotassiumApplication') : t('soilHealth.maintainCurrentLevels'),
       priority: potassiumStatus === 'optimal' ? 'low' : 'medium',
       status: potassiumStatus,
       icon: '⚡',
       fertilizer: potassiumStatus === 'low' ? {
-        name: 'MOP (0-0-60)',
-        amount: '40-60 kg/hectare',
-        timing: 'Apply before planting',
-        application: 'Broadcast and mix with soil'
+        name: t('soilHealth.mopFertilizer'),
+        amount: t('soilHealth.mopAmount'),
+        timing: t('soilHealth.mopTiming'),
+        application: t('soilHealth.mopApplication')
       } : potassiumStatus === 'high' ? {
-        name: 'Reduce potassium input',
-        amount: 'Skip K fertilizers',
-        timing: 'Current season',
-        application: 'Use NPK with lower K content'
+        name: t('soilHealth.reducePotassiumInput'),
+        amount: t('soilHealth.skipKFertilizers'),
+        timing: t('soilHealth.currentSeason'),
+        application: t('soilHealth.useNPKWithLowerK')
       } : undefined
     })
     
@@ -434,17 +434,17 @@ Report Date: ${new Date().toLocaleDateString()}
           <div className="flex items-center justify-between mb-4">
             <div>
               <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">
-                Soil Health Analysis
+                {t('soilHealth.title')}
               </h1>
               <p className="text-lg text-gray-600">
-                Comprehensive soil analysis and nutrient recommendations
+                {t('soilHealth.subtitle')}
                 {selectedField && (
-                  <span className="text-green-600"> for {selectedField.name}</span>
+                  <span className="text-green-600"> {t('soilHealth.forField', { name: selectedField.name })}</span>
                 )}
               </p>
             </div>
             <div className="text-right">
-              <div className="text-sm text-gray-500">Last analysis</div>
+              <div className="text-sm text-gray-500">{t('soilHealth.lastAnalysis')}</div>
               <div className="text-sm font-medium text-gray-700">{analysisDate}</div>
             </div>
           </div>
@@ -453,7 +453,7 @@ Report Date: ${new Date().toLocaleDateString()}
         {/* Field Selection */}
         <div className="card-elegant p-6 mb-8">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-bold text-gray-900">Select Field</h2>
+            <h2 className="text-xl font-bold text-gray-900">{t('soilHealth.selectField')}</h2>
             <button 
               onClick={runNewAnalysis}
               disabled={isAnalyzing || !selectedField}
@@ -466,10 +466,10 @@ Report Date: ${new Date().toLocaleDateString()}
               {isAnalyzing ? (
                 <>
                   <span className="inline-block animate-spin mr-2">⚡</span>
-                  Analyzing...
+                  {t('soilHealth.analyzing')}
                 </>
               ) : (
-                <>📊 New Analysis</>
+                <>📊 {t('soilHealth.newAnalysis')}</>
               )}
             </button>
           </div>
@@ -477,7 +477,7 @@ Report Date: ${new Date().toLocaleDateString()}
           {loading || dataLoading ? (
             <div className="flex justify-center items-center py-8">
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-500"></div>
-              <span className="ml-2 text-gray-600">Loading fields...</span>
+              <span className="ml-2 text-gray-600">{t('soilHealth.loadingFields')}</span>
             </div>
           ) : (
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -493,7 +493,7 @@ Report Date: ${new Date().toLocaleDateString()}
                 >
                   <div className="text-2xl mb-2">🌾</div>
                   <div className="font-medium">{field.name}</div>
-                  <div className="text-sm text-gray-500">{field.area} hectares</div>
+                  <div className="text-sm text-gray-500">{t('soilHealth.hectares', { area: field.area })}</div>
                   <div className="text-xs text-gray-400">{field.location.address}</div>
                 </button>
               ))}

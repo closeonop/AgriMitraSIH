@@ -387,5 +387,174 @@
       "message": "Thank you for reaching out. We'll get back to you soon!",
       "button": "Send Another Message"
     }
+  },
+  "chatbotPreview": {
+    "badge": "AI-Powered Assistant",
+    "title": {
+      "meetYour": "Meet Your",
+      "smartFarming": "Smart Farming",
+      "assistant": "Assistant"
+    },
+    "description": "Get instant answers, personalized recommendations, and expert guidance for all your agricultural needs with our advanced AI chatbot.",
+    "quickActions": {
+      "cropAdvice": "Crop Advice",
+      "weatherUpdate": "Weather Update", 
+      "soilAnalysis": "Soil Analysis",
+      "pestControl": "Pest Control"
+    },
+    "tryNow": "Try AI Assistant Now",
+    "chatPreview": {
+      "title": "AgriMitra AI",
+      "subtitle": "Your Smart Farming Assistant",
+      "online": "Online",
+      "placeholder": "Ask me anything about farming...",
+      "sampleMessages": {
+        "question1": "What's the best time to plant rice?",
+        "answer1": "Based on your location, the optimal planting time for rice is during monsoon season, typically June-July.",
+        "question2": "How can I improve soil fertility?",
+        "answer2": "I recommend organic compost, crop rotation, and regular soil testing to maintain optimal fertility levels.",
+        "question3": "Weather forecast for this week?",
+        "answer3": "Expect moderate rainfall with temperatures between 25-30°C. Perfect for your current crops!"
+      }
+    },
+    "stats": {
+      "support": "24/7 AI Support",
+      "accuracy": "95% Accuracy Rate", 
+      "farmers": "1000+ Happy Farmers",
+      "languages": "Multi-Language Support"
+    }
+  },
+  "mobileMenu": {
+    "dashboard": "Dashboard",
+    "predictions": "Predictions", 
+    "soilHealth": "Soil Health",
+    "cropMonitoring": "Crop Monitor",
+    "marketIntel": "Market Intel",
+    "chatbot": "AI Assistant",
+    "settings": "Settings"
+  },
+  "dashboard": {
+    "title": "AgriMitra Dashboard",
+    "subtitle": "Real-time agricultural insights for Odisha",
+    "refreshWeather": "Refresh Weather",
+    "refresh": "Refresh",
+    "liveWeatherUpdate": "Live Weather Update - Bhubaneswar",
+    "activeFarms": "Active Farms",
+    "cropYield": "Crop Yield",
+    "soilHealth": "Soil Health",
+    "weatherAlerts": "Weather Alerts",
+    "fromLastMonth": "from last month",
+    "weatherOverview": "Odisha Weather Overview",
+    "soilHealthSummary": "Soil Health Summary - Odisha Districts",
+    "phLevel": "pH Level",
+    "nitrogen": "Nitrogen",
+    "moisture": "Moisture",
+    "optimalRange": "Optimal range",
+    "recentActivities": "Recent Activities",
+    "newCropPlanted": "New crop planted",
+    "irrigationCompleted": "Irrigation completed",
+    "soilAnalysisReport": "Soil analysis report",
+    "hoursAgo": "hours ago"
+  },
+  "cropMonitoring": {
+    "title": "Crop Monitoring",
+    "subtitle": "Track growth stages, monitor health, and detect diseases",
+    "currentField": "Current Field:",
+    "editCrop": "Edit Crop",
+    "cropName": "Crop Name *",
+    "cropNamePlaceholder": "Enter crop name",
+    "variety": "Variety *",
+    "varietyPlaceholder": "Enter variety",
+    "plantingDate": "Planting Date *",
+    "expectedHarvest": "Expected Harvest *"
+  },
+  "soilHealth": {
+    "title": "Soil Health Analysis",
+    "subtitle": "Comprehensive soil analysis and nutrient recommendations",
+    "forField": "for {{name}}",
+    "lastAnalysis": "Last analysis",
+    "selectField": "Select Field",
+    "analyzing": "Analyzing...",
+    "newAnalysis": "New Analysis",
+    "loadingFields": "Loading fields...",
+    "hectares": "{{area}} hectares",
+    "nitrogen": "Nitrogen",
+    "phosphorus": "Phosphorus",
+    "potassium": "Potassium",
+    "optimal": "Optimal",
+    "maintainCurrentLevels": "Maintain current levels",
+    "applyNitrogenFertilizer": "Apply nitrogen-rich fertilizer",
+    "reduceNitrogenApplication": "Reduce nitrogen application",
+    "applyPhosphorusFertilizer": "Apply phosphorus fertilizer (DAP)",
+    "reducePhosphorusApplication": "Reduce phosphorus application",
+    "applyPotassiumFertilizer": "Apply potassium fertilizer (MOP)",
+    "reducePotassiumApplication": "Reduce potassium application",
+    "ureaFertilizer": "Urea (46-0-0)",
+    "ureaAmount": "50-75 kg/hectare",
+    "ureaTiming": "Split application: 50% at planting, 50% at tillering",
+    "ureaApplication": "Broadcast and incorporate into soil",
+    "dapFertilizer": "DAP (18-46-0)",
+    "dapAmount": "100-125 kg/hectare",
+    "dapTiming": "Apply at planting/sowing",
+    "dapApplication": "Band placement 2-3 cm below seed",
+    "mopFertilizer": "MOP (0-0-60)",
+    "mopAmount": "40-60 kg/hectare",
+    "mopTiming": "Apply before planting",
+    "mopApplication": "Broadcast and mix with soil",
+    "reduceCurrentFertilizer": "Reduce current fertilizer",
+    "skipNextApplication": "Skip next application",
+    "monitorSoilLevels": "Monitor soil levels monthly",
+    "allowNaturalDepletion": "Allow natural depletion",
+    "reducePhosphorusInput": "Reduce phosphorus input",
+    "useLowPFertilizers": "Use low-P fertilizers",
+    "nextGrowingSeason": "Next growing season",
+    "switchToNitrogenOnly": "Switch to nitrogen-only fertilizers",
+    "reducePotassiumInput": "Reduce potassium input",
+    "skipKFertilizers": "Skip K fertilizers",
+    "currentSeason": "Current season",
+    "useNPKWithLowerK": "Use NPK with lower K content"
+  },
+  "marketIntelligence": {
+    "title": "Market Intelligence",
+    "subtitle": "Real-time crop prices, market trends, and agricultural news",
+    "lastUpdated": "Last updated",
+    "minutesAgo": "{{count}} minutes ago",
+    "marketOverview": "Market Overview",
+    "priceTrends": "Price Trends",
+    "marketNews": "Market News"
+  },
+  "home": {
+    "features": {
+      "aiPrediction": {
+        "title": "AI Yield Prediction",
+        "description": "Get accurate crop yield predictions using advanced AI algorithms and historical data."
+      },
+      "irrigation": {
+        "title": "Smart Irrigation",
+        "description": "Optimize water usage with intelligent irrigation recommendations based on weather and soil conditions."
+      },
+      "soilAnalysis": {
+        "title": "Soil Health Analysis",
+        "description": "Monitor and improve soil health with comprehensive analysis and personalized recommendations."
+      },
+      "cropManagement": {
+        "title": "Crop Management",
+        "description": "Track and manage multiple crops with detailed monitoring and growth stage analysis."
+      }
+    },
+    "stats": {
+      "supportedCrops": "Supported Crops"
+    },
+    "hero": {
+      "title": "AI-Powered Crop Yield Prediction and Optimization Platform",
+      "subtitle": "Increase your crop productivity by at least 10% through data-driven insights, weather patterns, and soil health analysis."
+    }
+  },
+  "common": {
+    "aiPowered": "AI-Powered",
+    "smartFarming": "Smart Farming",
+    "getInstant": "Get instant",
+    "transformYour": "Transform Your",
+    "experienceTheFuture": "Experience the future"
   }
 }

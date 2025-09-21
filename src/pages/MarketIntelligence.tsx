@@ -230,15 +230,15 @@ const MarketIntelligence = () => {
           <div className="flex items-center justify-between mb-4">
             <div>
               <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">
-                Market Intelligence
+                {t('marketIntelligence.title')}
               </h1>
               <p className="text-lg text-gray-600">
-                Real-time crop prices, market trends, and agricultural news
+                {t('marketIntelligence.subtitle')}
               </p>
             </div>
             <div className="text-right">
-              <div className="text-sm text-gray-500">Last updated</div>
-              <div className="text-sm font-medium text-gray-700">5 minutes ago</div>
+              <div className="text-sm text-gray-500">{t('marketIntelligence.lastUpdated')}</div>
+              <div className="text-sm font-medium text-gray-700">{t('marketIntelligence.minutesAgo', { count: 5 })}</div>
             </div>
           </div>
         </div>
@@ -246,7 +246,7 @@ const MarketIntelligence = () => {
         {/* Market Overview */}
         <div className="card-elegant p-6 mb-8">
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-bold text-gray-900">Market Overview</h2>
+            <h2 className="text-2xl font-bold text-gray-900">{t('marketIntelligence.marketOverview')}</h2>
             <div className="flex space-x-2">
               {['1d', '7d', '1m', '3m'].map((timeframe) => (
                 <button
@@ -303,7 +303,7 @@ const MarketIntelligence = () => {
           {/* Price Trends Chart */}
           <div className="lg:col-span-2">
             <div className="card-elegant p-6 mb-8">
-              <h2 className="text-2xl font-bold text-gray-900 mb-6">Price Trends</h2>
+              <h2 className="text-2xl font-bold text-gray-900 mb-6">{t('marketIntelligence.priceTrends')}</h2>
               
               {/* Simple trend visualization */}
               <div className="bg-gray-50 p-6 rounded-xl">
@@ -408,7 +408,7 @@ const MarketIntelligence = () => {
           <div className="lg:col-span-1">
             {/* Market News */}
             <div className="card-elegant p-6 mb-6">
-              <h3 className="text-xl font-bold text-gray-900 mb-4">Market News</h3>
+              <h3 className="text-xl font-bold text-gray-900 mb-4">{t('marketIntelligence.marketNews')}</h3>
               
               <div className="space-y-4">
                 {marketNews.map((news) => (

@@ -19,6 +19,7 @@ import {
 } from 'lucide-react'
 import { locationWeatherData, odishaTownsData } from '../utils/mockData'
 import { WeatherService } from '../services/weatherService'
+import { useTranslation } from 'react-i18next'
 
 // Updated Odisha weather data for dashboard
 const odishaWeatherData = [
@@ -83,6 +84,7 @@ const getTrendIcon = (trend: string) => {
 }
 
 export default function Dashboard() {
+  const { t } = useTranslation()
   const [realTimeWeather, setRealTimeWeather] = useState<any>(null)
   const [isLoadingRealTime, setIsLoadingRealTime] = useState(false)
   const weatherService = new WeatherService()
@@ -110,8 +112,8 @@ export default function Dashboard() {
         {/* Header */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 lg:mb-8">
           <div className="space-y-1">
-            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900">AgriMitra Dashboard</h1>
-            <p className="text-sm sm:text-base lg:text-lg text-gray-600">Real-time agricultural insights for Odisha</p>
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900">{t('dashboard.title')}</h1>
+            <p className="text-sm sm:text-base lg:text-lg text-gray-600">{t('dashboard.subtitle')}</p>
           </div>
           <div className="flex gap-2 w-full sm:w-auto">
             <Button
@@ -126,8 +128,8 @@ export default function Dashboard() {
               ) : (
                 <RefreshCw className="h-4 w-4 mr-2" />
               )}
-              <span className="hidden sm:inline">Refresh Weather</span>
-              <span className="sm:hidden">Refresh</span>
+              <span className="hidden sm:inline">{t('dashboard.refreshWeather')}</span>
+              <span className="sm:hidden">{t('dashboard.refresh')}</span>
             </Button>
           </div>
         </div>
@@ -138,7 +140,7 @@ export default function Dashboard() {
             <div className="flex items-center gap-3">
               <div className="w-3 h-3 bg-blue-500 rounded-full animate-pulse flex-shrink-0"></div>
               <div className="flex-1 min-w-0">
-                <h3 className="font-medium text-blue-900 text-sm sm:text-base">Live Weather Update - Bhubaneswar</h3>
+                <h3 className="font-medium text-blue-900 text-sm sm:text-base">{t('dashboard.liveWeatherUpdate')}</h3>
                 <p className="text-blue-700 text-xs sm:text-sm truncate sm:whitespace-normal">
                   {realTimeWeather.temperature}°C, {realTimeWeather.condition} • Humidity: {realTimeWeather.humidity}% • Wind: {realTimeWeather.windSpeed} km/h
                 </p>
@@ -151,52 +153,52 @@ export default function Dashboard() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6 px-2 sm:px-0">
           <Card className="shadow-sm hover:shadow-md transition-shadow">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 px-4 lg:px-6 pt-4 lg:pt-6">
-              <CardTitle className="text-xs lg:text-sm font-medium">Active Farms</CardTitle>
+              <CardTitle className="text-xs lg:text-sm font-medium">{t('dashboard.activeFarms')}</CardTitle>
               <Leaf className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent className="px-4 lg:px-6 pb-4 lg:pb-6">
               <div className="text-xl lg:text-2xl font-bold">2,847</div>
               <p className="text-xs text-muted-foreground">
-                +12% from last month
+                {t('dashboard.fromLastMonth', { change: '+12%' })}
               </p>
             </CardContent>
           </Card>
           
           <Card className="shadow-sm hover:shadow-md transition-shadow">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 px-4 lg:px-6 pt-4 lg:pt-6">
-              <CardTitle className="text-xs lg:text-sm font-medium">Crop Yield</CardTitle>
+              <CardTitle className="text-xs lg:text-sm font-medium">{t('dashboard.cropYield')}</CardTitle>
               <BarChart3 className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent className="px-4 lg:px-6 pb-4 lg:pb-6">
               <div className="text-xl lg:text-2xl font-bold">94.2%</div>
               <p className="text-xs text-muted-foreground">
-                +5.1% from last season
+                {t('dashboard.fromLastSeason', { change: '+5.1%' })}
               </p>
             </CardContent>
           </Card>
           
           <Card className="shadow-sm hover:shadow-md transition-shadow">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 px-4 lg:px-6 pt-4 lg:pt-6">
-              <CardTitle className="text-xs lg:text-sm font-medium">Soil Health</CardTitle>
+              <CardTitle className="text-xs lg:text-sm font-medium">{t('dashboard.soilHealth')}</CardTitle>
               <TrendingUp className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent className="px-4 lg:px-6 pb-4 lg:pb-6">
               <div className="text-xl lg:text-2xl font-bold">87%</div>
               <p className="text-xs text-muted-foreground">
-                Excellent condition
+                {t('dashboard.excellentCondition')}
               </p>
             </CardContent>
           </Card>
           
           <Card className="shadow-sm hover:shadow-md transition-shadow">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 px-4 lg:px-6 pt-4 lg:pt-6">
-              <CardTitle className="text-xs lg:text-sm font-medium">Weather Alerts</CardTitle>
+              <CardTitle className="text-xs lg:text-sm font-medium">{t('dashboard.weatherAlerts')}</CardTitle>
               <Cloud className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent className="px-4 lg:px-6 pb-4 lg:pb-6">
               <div className="text-xl lg:text-2xl font-bold">3</div>
               <p className="text-xs text-muted-foreground">
-                2 moderate, 1 low
+                {t('dashboard.alertsSummary')}
               </p>
             </CardContent>
         </Card>
@@ -207,7 +209,7 @@ export default function Dashboard() {
           <CardHeader className="px-4 lg:px-6 pt-4 lg:pt-6">
             <CardTitle className="flex items-center gap-2 text-lg lg:text-xl">
               <Cloud className="h-5 w-5" />
-              Odisha Weather Overview
+              {t('dashboard.weatherOverview')}
             </CardTitle>
           </CardHeader>
           <CardContent className="px-4 lg:px-6 pb-4 lg:pb-6">
@@ -250,40 +252,40 @@ export default function Dashboard() {
           <CardHeader className="px-4 lg:px-6 pt-4 lg:pt-6">
             <CardTitle className="flex items-center gap-2 text-lg lg:text-xl">
               <Leaf className="h-5 w-5" />
-              Soil Health Summary - Odisha Districts
+              {t('dashboard.soilHealthSummary')}
             </CardTitle>
           </CardHeader>
           <CardContent className="px-4 lg:px-6 pb-4 lg:pb-6">
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
               <div className="bg-gradient-to-br from-green-50 to-emerald-50 p-4 lg:p-6 rounded-lg border hover:shadow-sm transition-shadow">
                 <div className="flex items-center justify-between mb-3 lg:mb-4">
-                  <h3 className="font-semibold text-gray-900 text-sm lg:text-base">pH Level</h3>
+                  <h3 className="font-semibold text-gray-900 text-sm lg:text-base">{t('dashboard.phLevel')}</h3>
                   <div className="text-xl lg:text-2xl">🧪</div>
                 </div>
                 <div className="text-xl lg:text-2xl font-bold text-green-600 mb-2">6.8</div>
-                <div className="text-xs lg:text-sm text-gray-600 mb-3 lg:mb-4">Optimal range: 6.0-7.0</div>
+                <div className="text-xs lg:text-sm text-gray-600 mb-3 lg:mb-4">{t('dashboard.optimalRange')}</div>
                 <div className="bg-green-200 rounded-full h-2">
                   <div className="bg-green-500 rounded-full h-2 transition-all duration-300" style={{ width: '85%' }}></div>
                 </div>
               </div>
               <div className="bg-gradient-to-br from-blue-50 to-cyan-50 p-4 lg:p-6 rounded-lg border hover:shadow-sm transition-shadow">
                 <div className="flex items-center justify-between mb-3 lg:mb-4">
-                  <h3 className="font-semibold text-gray-900 text-sm lg:text-base">Nitrogen</h3>
+                  <h3 className="font-semibold text-gray-900 text-sm lg:text-base">{t('dashboard.nitrogen')}</h3>
                   <div className="text-xl lg:text-2xl">🌿</div>
                 </div>
-                <div className="text-xl lg:text-2xl font-bold text-blue-600 mb-2">Medium</div>
-                <div className="text-xs lg:text-sm text-gray-600 mb-3 lg:mb-4">Good for crop growth</div>
+                <div className="text-xl lg:text-2xl font-bold text-blue-600 mb-2">{t('dashboard.medium')}</div>
+                <div className="text-xs lg:text-sm text-gray-600 mb-3 lg:mb-4">{t('dashboard.goodForCropGrowth')}</div>
                 <div className="bg-blue-200 rounded-full h-2">
                   <div className="bg-blue-500 rounded-full h-2 transition-all duration-300" style={{ width: '70%' }}></div>
                 </div>
               </div>
               <div className="bg-gradient-to-br from-purple-50 to-violet-50 p-4 lg:p-6 rounded-lg border hover:shadow-sm transition-shadow sm:col-span-2 lg:col-span-1">
                 <div className="flex items-center justify-between mb-3 lg:mb-4">
-                  <h3 className="font-semibold text-gray-900 text-sm lg:text-base">Moisture</h3>
+                  <h3 className="font-semibold text-gray-900 text-sm lg:text-base">{t('dashboard.moisture')}</h3>
                   <div className="text-xl lg:text-2xl">💧</div>
                 </div>
                 <div className="text-xl lg:text-2xl font-bold text-purple-600 mb-2">78%</div>
-                <div className="text-xs lg:text-sm text-gray-600 mb-3 lg:mb-4">Adequate moisture level</div>
+                <div className="text-xs lg:text-sm text-gray-600 mb-3 lg:mb-4">{t('dashboard.adequateMoistureLevel')}</div>
                 <div className="bg-purple-200 rounded-full h-2">
                   <div className="bg-purple-500 rounded-full h-2 transition-all duration-300" style={{ width: '78%' }}></div>
                 </div>
@@ -295,7 +297,7 @@ export default function Dashboard() {
         {/* Recent Activities */}
         <Card className="shadow-sm">
           <CardHeader className="px-4 lg:px-6 pt-4 lg:pt-6">
-            <CardTitle className="text-lg lg:text-xl">Recent Activities</CardTitle>
+            <CardTitle className="text-lg lg:text-xl">{t('dashboard.recentActivities')}</CardTitle>
           </CardHeader>
           <CardContent className="px-4 lg:px-6 pb-4 lg:pb-6">
             <div className="space-y-3 lg:space-y-4">
@@ -303,30 +305,30 @@ export default function Dashboard() {
                 <div className="text-lg lg:text-xl flex-shrink-0">🌱</div>
                 <div className="flex-1 min-w-0">
                   <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 sm:gap-0">
-                    <p className="font-semibold text-gray-900 text-sm lg:text-base">New crop planted</p>
-                    <span className="text-xs lg:text-sm text-gray-500 flex-shrink-0">2 hours ago</span>
+                    <p className="font-semibold text-gray-900 text-sm lg:text-base">{t('dashboard.newCropPlanted')}</p>
+                    <span className="text-xs lg:text-sm text-gray-500 flex-shrink-0">{t('dashboard.hoursAgo', { count: 2 })}</span>
                   </div>
-                  <p className="text-xs lg:text-sm text-gray-600">Tomatoes planted in Field A - 2.5 hectares</p>
+                  <p className="text-xs lg:text-sm text-gray-600">{t('dashboard.tomatoesPlanted')}</p>
                 </div>
               </div>
               <div className="flex items-start space-x-3 lg:space-x-4 p-3 lg:p-4 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors">
                 <div className="text-lg lg:text-xl flex-shrink-0">💧</div>
                 <div className="flex-1 min-w-0">
                   <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 sm:gap-0">
-                    <p className="font-semibold text-gray-900 text-sm lg:text-base">Irrigation completed</p>
-                    <span className="text-xs lg:text-sm text-gray-500 flex-shrink-0">5 hours ago</span>
+                    <p className="font-semibold text-gray-900 text-sm lg:text-base">{t('dashboard.irrigationCompleted')}</p>
+                    <span className="text-xs lg:text-sm text-gray-500 flex-shrink-0">{t('dashboard.hoursAgo', { count: 5 })}</span>
                   </div>
-                  <p className="text-xs lg:text-sm text-gray-600">Automated irrigation system activated for wheat crops</p>
+                  <p className="text-xs lg:text-sm text-gray-600">{t('dashboard.automatedIrrigation')}</p>
                 </div>
               </div>
               <div className="flex items-start space-x-3 lg:space-x-4 p-3 lg:p-4 bg-yellow-50 rounded-lg hover:bg-yellow-100 transition-colors">
                 <div className="text-lg lg:text-xl flex-shrink-0">📊</div>
                 <div className="flex-1 min-w-0">
                   <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 sm:gap-0">
-                    <p className="font-semibold text-gray-900 text-sm lg:text-base">Soil analysis report</p>
-                    <span className="text-xs lg:text-sm text-gray-500 flex-shrink-0">1 day ago</span>
+                    <p className="font-semibold text-gray-900 text-sm lg:text-base">{t('dashboard.soilAnalysisReport')}</p>
+                    <span className="text-xs lg:text-sm text-gray-500 flex-shrink-0">{t('dashboard.dayAgo', { count: 1 })}</span>
                   </div>
-                  <p className="text-xs lg:text-sm text-gray-600">pH levels and nutrient analysis completed for all fields</p>
+                  <p className="text-xs lg:text-sm text-gray-600">{t('dashboard.phLevelsAnalysis')}</p>
                 </div>
               </div>
             </div>

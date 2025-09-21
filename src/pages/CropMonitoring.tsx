@@ -315,13 +315,13 @@ const CropMonitoring = () => {
           <div className="flex items-center justify-between mb-4">
             <div>
               <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">
-                Crop Monitoring
+                {t('cropMonitoring.title')}
               </h1>
               <p className="text-lg text-gray-600">
-                Track growth stages, monitor health, and detect diseases
+                {t('cropMonitoring.subtitle')}
                 {selectedField && (
                   <span className="block text-sm text-green-600 mt-1">
-                    Current Field: {selectedField.name} ({selectedField.size} ha)
+                    {t('cropMonitoring.currentField', { name: selectedField.name, size: selectedField.size })}
                   </span>
                 )}
 
@@ -338,7 +338,7 @@ const CropMonitoring = () => {
           >
             <div className="bg-white rounded-lg p-6 w-full max-w-md max-h-[90vh] overflow-y-auto shadow-xl relative">
               <div className="flex items-center justify-between mb-4">
-                <h3 className="text-xl font-bold text-gray-900">Edit Crop</h3>
+                <h3 className="text-xl font-bold text-gray-900">{t('cropMonitoring.editCrop')}</h3>
                 <button 
                   onClick={() => {
                     setShowEditModal(false)
@@ -356,34 +356,34 @@ const CropMonitoring = () => {
               <div className="space-y-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Crop Name *
+                    {t('cropMonitoring.cropName')} *
                   </label>
                   <input
                     type="text"
                     value={editingCrop.name}
                     onChange={(e) => setEditingCrop({...editingCrop, name: e.target.value})}
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                    placeholder="e.g., Winter Wheat"
+                    placeholder={t('cropMonitoring.cropNamePlaceholder')}
                   />
                 </div>
                 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Variety *
+                    {t('cropMonitoring.variety')} *
                   </label>
                   <input
                     type="text"
                     value={editingCrop.variety}
                     onChange={(e) => setEditingCrop({...editingCrop, variety: e.target.value})}
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                    placeholder="e.g., HD-2967"
+                    placeholder={t('cropMonitoring.varietyPlaceholder')}
                   />
                 </div>
                 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Planting Date *
+                      {t('cropMonitoring.plantingDate')} *
                     </label>
                     <input
                       type="date"
@@ -395,7 +395,7 @@ const CropMonitoring = () => {
                   
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Expected Harvest *
+                      {t('cropMonitoring.expectedHarvest')} *
                     </label>
                     <input
                       type="date"
