@@ -67,7 +67,7 @@ export const FloatingLabelInput = React.forwardRef<
           onFocus={handleFocus}
           onBlur={handleBlur}
           className={cn(
-            "peer w-full px-4 pt-7 pb-3 text-sm bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200",
+            "peer w-full px-4 pt-6 pb-3 text-sm bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200",
             "placeholder-transparent",
             inputClassName
           )}
@@ -77,7 +77,7 @@ export const FloatingLabelInput = React.forwardRef<
         <motion.label
           initial={false}
           animate={{
-            top: isFloating ? "0.75rem" : "1.5rem",
+            top: isFloating ? "0.5rem" : "1.25rem",
             fontSize: isFloating ? "0.75rem" : "0.875rem",
             color: isFocused
               ? "rgb(59 130 246)" // blue-500
@@ -183,7 +183,7 @@ export const FloatingLabelTextarea = React.forwardRef<
           onBlur={handleBlur}
           rows={rows}
           className={cn(
-            "peer w-full px-4 pt-7 pb-3 text-sm bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 resize-vertical",
+            "peer w-full px-4 pt-6 pb-3 text-sm bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 resize-vertical",
             "placeholder-transparent",
             textareaClassName
           )}
@@ -193,7 +193,7 @@ export const FloatingLabelTextarea = React.forwardRef<
         <motion.label
           initial={false}
           animate={{
-            top: isFloating ? "0.75rem" : "1.5rem",
+            top: isFloating ? "0.5rem" : "1.25rem",
             fontSize: isFloating ? "0.75rem" : "0.875rem",
             color: isFocused
               ? "rgb(59 130 246)" // blue-500

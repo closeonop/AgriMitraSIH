@@ -170,7 +170,6 @@ const ContactForm = () => {
                     type="text"
                     value={formData.subject}
                     onChange={handleChange}
-                    placeholder={t('contact.form.subjectPlaceholder1', 'General Inquiry')}
                     className="w-full h-14 px-4 pt-6 pb-2 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-300"
                   />
                 </motion.div>
